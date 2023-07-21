@@ -1,7 +1,7 @@
 ﻿namespace Portfolio.API.Services.Models
 {
     using System.ComponentModel.DataAnnotations;
-    public class RegisterDto
+    public class ApplicationUserRegisterDto
     {
         [Required]
         [MinLength(3)]
