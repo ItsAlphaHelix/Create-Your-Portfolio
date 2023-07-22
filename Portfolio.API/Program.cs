@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.API.Data;
 using Portfolio.API.Data.Models;
 using Portfolio.API.Services.AccountService;
-using System.Text;
 using Portfolio.Data.Repositories;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +29,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<PortfolioDBContext>();
 
 var secretKey = builder.Configuration["SecretKey"];
-var jwtKey = Encoding.ASCII.GetBytes("aZmN7icOxwrKG7Hc8Pg5Kup/KilJnHd859QFGhSSnjI4ipw94N4pndJ6MK7tUVBScoUyjKiGcIIYh/CjOxN/aMBKB/gG/TsZjClx0umv2cM+B5rcULlF123QwFdI+QfwHfPcSmzxUO6xAWFsBuWoJ9r3iSutjgjAswJYvkxIj20LKc7+bNQq3CBY6waaCHVIgWf0vhE/RT2+gN5XZyOGqOPzPk6Yivo0JhylOC+L/XzkwITdzmtxPvtUNzkg5Sd2NV24Hf6Eo/90/UNduSg56O5bj4alVUsaTNc0w4/1fDpibZIR4g9kgA8FN4CMyX7MRxnULNY3Orya+MPEaudm0w==");
+var jwtKey = Encoding.ASCII.GetBytes(secretKey);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

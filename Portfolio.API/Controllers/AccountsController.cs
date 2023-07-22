@@ -1,31 +1,29 @@
 ﻿namespace Portfolio.API.Controllers
 {
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.WebUtilities;
-    using Portfolio.API.Data.Models;
     using Portfolio.API.Services.AccountService;
     using Portfolio.API.Services.Dtos;
     using Portfolio.API.Services.Dtos.AccountDtos;
     using Portfolio.API.Services.Models;
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Text;
 
-    [Route("api/[controller]")]
+    [Route("api/accounts")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly IAccountsService accountsService;
 
-        public AccountController(IAccountsService accountsService)
+        public AccountsController(IAccountsService accountsService)
         {
             this.accountsService = accountsService;
         }
 
 
         [HttpPost]
-        [Route("/register")]
+        [AllowAnonymous]
+        [Route("register")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] ApplicationUserRegisterDto userRegisterModel)
         {
             var result = await accountsService.RegisterUser(userRegisterModel);
@@ -48,7 +46,7 @@
         }
 
         [HttpPost]
-        [Route("/login")]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody] ApplicationUserLoginDto userLoginModel)
         {
             var user = new ApplicationUserLoginResponseDto();

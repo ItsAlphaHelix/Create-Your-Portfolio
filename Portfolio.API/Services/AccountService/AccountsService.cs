@@ -57,7 +57,9 @@
 
             var authenticatedUser = new ApplicationUserLoginResponseDto()
             {
+                Id = findUser.Id,
                 Email = findUser.Email,
+                Username = findUser.UserName,
                 AccessToken = findUser.AccessToken,
                 RefreshToken = findUser.RefreshToken
             };
@@ -113,33 +115,6 @@
 
             userRepository.Update(user);
             await userRepository.SaveChangesAsync();
-
-
-            //var key = Encoding.ASCII.GetBytes
-            //(configuration["SecretKey"]);
-            //var tokenDescriptor = new SecurityTokenDescriptor
-            //{
-            //    Subject = new ClaimsIdentity(new[]
-            //    {
-            //    new Claim("Id", Guid.NewGuid().ToString()),
-            //    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            //    new Claim(JwtRegisteredClaimNames.Email, user.UserName),
-            //    new Claim(JwtRegisteredClaimNames.Jti,
-            //    Guid.NewGuid().ToString())
-            // }),
-            //    Expires = DateTime.UtcNow.AddHours(1.5),
-            //    SigningCredentials = new SigningCredentials
-            //    (new SymmetricSecurityKey(key),
-            //    SecurityAlgorithms.HmacSha512Signature)
-            //};
-            //var tokenHandler = new JwtSecurityTokenHandler();
-            //var token = tokenHandler.CreateToken(tokenDescriptor);
-            //user.AccessToken = tokenHandler.WriteToken(token);
-            //user.RefreshToken = GenerateRefreshToken();
-            //user.RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1.5);
-
-            //userRepository.Update(user);
-            //await userRepository.SaveChangesAsync();
         }
 
         private static string GenerateRefreshToken()
