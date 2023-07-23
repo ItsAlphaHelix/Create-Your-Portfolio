@@ -20,13 +20,12 @@
 
 
         [HttpPost]
-        [AllowAnonymous]
         [Route("register")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] ApplicationUserRegisterDto userRegisterModel)
         {
-            var result = await accountsService.RegisterUser(userRegisterModel);
+            var result = await accountsService.RegisterUserAsync(userRegisterModel);
 
             if (!result.Succeeded)
             {
@@ -47,13 +46,16 @@
 
         [HttpPost]
         [Route("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] ApplicationUserLoginDto userLoginModel)
         {
             var user = new ApplicationUserLoginResponseDto();
 
             try
             {
-                user = await accountsService.AuthenticateUser(userLoginModel);
+                user = await accountsService.AuthenticateUserAsync(userLoginModel);
             }
             catch (NullReferenceException e)
             {
@@ -70,5 +72,46 @@
             return Ok(user);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("refresh-token")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> RefreshAccessToken([FromQuery] string refreshToken, [FromQuery] string userId)
+        {
+            var result = new ApplicationUserTokensDto();
+
+            try
+            {
+                result = await accountsService.RefreshAccessTokenAsync(refreshToken, userId);
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (MemberAccessException)
+            {
+                return Forbid();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("get-user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetUser([FromQuery] string userId)
+        {
+            var user = await accountsService.GetUserAsync(userId);
+
+            if (user == null)
+            {
+                return BadRequest(userId);
+            }
+
+            return Ok(user);
+        }
     }
 }

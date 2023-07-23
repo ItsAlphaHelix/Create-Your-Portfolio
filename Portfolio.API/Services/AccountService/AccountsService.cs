@@ -1,5 +1,6 @@
 ﻿namespace Portfolio.API.Services.AccountService
 {
+    using Microsoft.AspNetCore.DataProtection;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
@@ -31,7 +32,7 @@
             this.userRepository = userRepository;
         }
 
-        public async Task<ApplicationUserLoginResponseDto> AuthenticateUser(ApplicationUserLoginDto user)
+        public async Task<ApplicationUserLoginResponseDto> AuthenticateUserAsync(ApplicationUserLoginDto user)
         {
             var findUser = userManager.FindByEmailAsync(user.Email).GetAwaiter().GetResult();
 
@@ -67,7 +68,7 @@
             return authenticatedUser;
         }
 
-        public async Task<IdentityResult> RegisterUser(ApplicationUserRegisterDto applicationUser)
+        public async Task<IdentityResult> RegisterUserAsync(ApplicationUserRegisterDto applicationUser)
         {
             var user = new ApplicationUser()
             {
@@ -82,7 +83,7 @@
             return registeredUser;
         }
 
-        public async Task<ApplicationUser> GetUserByEmail(string email)
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
         {
             var user = await userManager.FindByEmailAsync(email);
 
@@ -117,6 +118,44 @@
             await userRepository.SaveChangesAsync();
         }
 
+        public async Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, string userId)
+        {
+            //var decodedUserId = dataProtector.Unprotect(userId);
+            var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
+            if (user == null)
+            {
+                throw new NullReferenceException("The is not found.");
+            }
+
+            if (refreshToken != user.RefreshToken || DateTime.UtcNow > user.RefreshTokenExpirationDate)
+            {
+                throw new MemberAccessException("Wrong credentials");
+            }
+
+            await GenerateTokens(user);
+
+            var tokensResponse = new ApplicationUserTokensDto()
+            {
+                AccessToken = user.AccessToken,
+                RefreshToken = user.RefreshToken,
+            };
+
+            return tokensResponse;
+        }
+
+        public async Task<ApplicationUserDto> GetUserAsync(string userId)
+        {
+            //var unprotectedUserId = dataProtector.Unprotect(userId);
+            var user = await userManager.FindByIdAsync(userId);
+
+            var resultUser = new ApplicationUserDto()
+            {
+                UserName = user.UserName,
+                Email = user.Email
+            };
+
+            return resultUser;
+        }
         private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
