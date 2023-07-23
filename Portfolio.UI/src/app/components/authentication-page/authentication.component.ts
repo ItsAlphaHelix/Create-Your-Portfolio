@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { filter, first } from 'rxjs';
@@ -12,9 +12,30 @@ import { AccountsService } from 'src/app/services/account/accounts.service';
   templateUrl: './authentication.component.html',
   styleUrls: ['./authentication.component.css']
 })
-export class AuthenticationComponent {
+export class AuthenticationComponent implements OnInit {
 
   constructor(private accountsService: AccountsService, private router: Router) { }
+
+  ngOnInit() {
+    if (this.accountsService.getAccessToken()) {
+      this.router.navigate(['/home']);
+    }
+    
+    const loginTab = document.querySelector('.login-tab');
+    const signupTab = document.querySelector('.signup-tab');
+    const loginTabContent = document.getElementById('login-tab-content');
+    const signupTabContent = document.getElementById('signup-tab-content');
+
+    loginTab?.addEventListener('click', () => {
+      signupTabContent?.classList.remove('active');
+      loginTabContent?.classList.add('active');
+    });
+    signupTab?.addEventListener('click', () => {
+      loginTabContent?.classList.remove('active');
+      signupTabContent?.classList.add('active');
+    });
+  }
+  
 
   registerForm = new FormGroup({
     username: new FormControl("", Validators.required),
@@ -28,7 +49,7 @@ export class AuthenticationComponent {
 
       ]),
     confirmPassword: new FormControl("", Validators.required),
-    acceptTACCheckbox: new FormControl(false, Validators.requiredTrue)
+    //acceptTACCheckbox: new FormControl(false, Validators.requiredTrue)
   });
 
   formRequest!: RegisterRequest
@@ -52,14 +73,12 @@ export class AuthenticationComponent {
     }
 
     this.accountsService.loginUser(this.loginRequest)
-      .pipe(filter(x => !!x), first())
       .subscribe(response => {
         sessionStorage.setItem("userId", response.id);
         sessionStorage.setItem("email", response.email)
         sessionStorage.setItem("accessToken", response.accessToken)
         sessionStorage.setItem("refreshToken", response.refreshToken)
         this.router.navigate(['/'])
-        console.log('Successfully loged in user!');
       })
   }
 
@@ -72,9 +91,12 @@ export class AuthenticationComponent {
       password: this.registerForm.value.password!,
       confirmPassword: this.registerForm.value.confirmPassword!
     }
-    this.accountsService.registerUser(this.formRequest).subscribe(response => {
-      // this.router.navigate(['/post-register'], { queryParams: { email: response.protectedEmail } });
-      console.log("Successfully registered!")
+      this.accountsService.registerUser(this.formRequest).subscribe(response => {
+      this.router.navigate(['/'])
     });
+  }
+
+  onLogout(): void {
+      this.accountsService.logout();
   }
 }

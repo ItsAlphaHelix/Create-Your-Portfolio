@@ -7,13 +7,14 @@ import { Observable, of } from 'rxjs';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
 import { LoginRequest } from '../../models/account-models/login-request-model';
 import { LoginResponse } from 'src/app/models/account-models/login-response-model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountsService {
   
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -32,4 +33,11 @@ export class AccountsService {
    loginUser(request: LoginRequest): Observable<LoginResponse> {
      return this.http.post<LoginResponse>(routes.LOGIN_ENDPOINT, request);
    }
+
+  logout() {
+    sessionStorage.clear();
+    if (!this.getAccessToken()) {
+      this.router.navigate(['/login']);
+    }
+  }
 }

@@ -17,4 +17,9 @@ export class AppComponent {
     return this.accountsService.isLoggedIn;
   
   }
+
+  onLogout() {
+    this.accountsService.logout();
+    this.router.navigate(['/authentication']);
+  }
 }

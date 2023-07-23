@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CanActivate, Router} from "@angular/router";
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
 import { Observable } from "rxjs";
 import { AccountsService } from "../account/accounts.service";
 
@@ -15,6 +15,8 @@ export class AuthGuard implements CanActivate {
     ) { }
 
     canActivate(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot
     ): Observable<boolean> | Promise<boolean> | boolean {
         if (!this.accountsService.getAccessToken()){
             this.router.navigate(['/authentication']);

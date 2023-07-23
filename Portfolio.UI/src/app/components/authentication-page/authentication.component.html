@@ -35,14 +35,14 @@
             <div class="form-wrap">
                 <!-- TABS -->
                 <div class="tabs">
-                    <h3 class="login-tab"><a class="log-in active" href="#login-tab-content"><span>Login</span></a></h3>
-                    <h3 class="signup-tab"><a class="sign-up" href="#signup-tab-content"><span>Sign Up</span></a></h3>
+                    <h3 class="login-tab"><a class="log-in active" href=""><span>Login</span></a></h3>
+                    <h3 class="signup-tab"><a class="sign-up" href=""><span>Sign Up</span></a></h3>
                 </div>
                 <!-- TABS CONTENT -->
                 <div class="tabs-content">
                     <!-- TABS CONTENT LOGIN -->
                     <div id="login-tab-content" class="active">
-                        <form class="login-form" action="" method="post" [formGroup]="loginForm">
+                        <form class="login-form" method="post" [formGroup]="loginForm">
                             <input type="text" class="input" id="user_login" autocomplete="off"
                                 placeholder="Email" formControlName="email">
                             <input type="password" class="input" id="user_pass" autocomplete="off"
@@ -58,7 +58,7 @@
                     </div>
                     <!-- TABS CONTENT SIGNUP -->
                     <div id="signup-tab-content">
-                        <form class="signup-form" action="" method="post" [formGroup]="registerForm">
+                        <form class="signup-form" method="post" [formGroup]="registerForm">
                             <input type="email" class="input" id="user_email" autocomplete="off" placeholder="Email" formControlName="email">
                             <input type="text" class="input" id="user_name" autocomplete="off" placeholder="Username" formControlName="username">
                             <input type="text" class="input" id="firs_name" autocomplete="off" placeholder="First name" formControlName="firstName">
