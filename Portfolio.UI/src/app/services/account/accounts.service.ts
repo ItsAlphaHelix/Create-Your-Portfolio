@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import * as routes from 'src/app/services/shared/routes.contants';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
 import { LoginRequest } from '../../models/account-models/login-request-model';
 import { LoginResponse } from 'src/app/models/account-models/login-response-model';
@@ -11,11 +11,19 @@ import { LoginResponse } from 'src/app/models/account-models/login-response-mode
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService {
+export class AccountsService {
   
   constructor(private http: HttpClient) {}
 
   headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+  get isLoggedIn(): Observable<boolean> {
+    return of(this.getAccessToken() ? true : false);
+  }
+
+  getAccessToken() {
+    return sessionStorage.getItem('accessToken');
+  }
 
   registerUser(request: RegisterRequest): Observable<RegisterRequest> {
     return this.http.post<RegisterRequest>(routes.REGISTER_ENDPOINT, request);

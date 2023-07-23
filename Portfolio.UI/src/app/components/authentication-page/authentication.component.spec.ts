@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AuthenticationComponent } from './authentication.component';
+
+
 
 describe('AuthenticationComponent', () => {
   let component: AuthenticationComponent;
@@ -8,9 +9,9 @@ describe('AuthenticationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuthenticationComponent ]
+      declarations: [AuthenticationComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AuthenticationComponent);
     component = fixture.componentInstance;

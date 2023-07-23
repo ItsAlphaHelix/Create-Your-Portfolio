@@ -1,10 +1,11 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { filter, first } from 'rxjs';
 import { LoginRequest } from 'src/app/models/account-models/login-request-model';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
-import { AccountService } from 'src/app/services/account/accounts.service';
+import { AccountsService } from 'src/app/services/account/accounts.service';
 
 @Component({
   selector: 'app-authentication',
@@ -13,7 +14,7 @@ import { AccountService } from 'src/app/services/account/accounts.service';
 })
 export class AuthenticationComponent {
 
-  constructor(private accountsService: AccountService) { }
+  constructor(private accountsService: AccountsService, private router: Router) { }
 
   registerForm = new FormGroup({
     username: new FormControl("", Validators.required),
@@ -44,12 +45,6 @@ export class AuthenticationComponent {
 
   loginRequest!: LoginRequest
 
-  isLoginMode = true; // Initially, the component is in login mode
-
-  toggleMode() {
-    this.isLoginMode = !this.isLoginMode;
-  }
-
   onLogin(): void {
     this.loginRequest = {
       email: this.loginForm.value.email!,
@@ -57,13 +52,13 @@ export class AuthenticationComponent {
     }
 
     this.accountsService.loginUser(this.loginRequest)
-      //.pipe(filter(x => !!x), first())
+      .pipe(filter(x => !!x), first())
       .subscribe(response => {
         sessionStorage.setItem("userId", response.id);
-        sessionStorage.setItem("userName", response.userName)
         sessionStorage.setItem("email", response.email)
         sessionStorage.setItem("accessToken", response.accessToken)
         sessionStorage.setItem("refreshToken", response.refreshToken)
+        this.router.navigate(['/'])
         console.log('Successfully loged in user!');
       })
   }
