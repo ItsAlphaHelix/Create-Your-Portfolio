@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationComponent } from './components/authentication-page/authentication.component';
-import { HomeComponent } from './components/home/home.component';
+import { HomeComponent } from './components/home-page/home.component';
 
 @NgModule({
   declarations: [
