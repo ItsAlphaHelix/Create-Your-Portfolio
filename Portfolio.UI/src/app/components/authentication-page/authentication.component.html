@@ -45,13 +45,13 @@
                         <form class="login-form" method="post" [formGroup]="loginForm">
                             <input type="text" class="input" id="user_login" autocomplete="off" placeholder="Email" matInput  formControlName="email" [ngClass]="{ 'is-invalid': clickLogin && loginForm.controls['email'].invalid}">
                             <div *ngIf="clickLogin && loginForm.controls['email'].invalid" class="text-danger">
-                                <div *ngIf="loginForm.controls['email'].hasError('required')">Email is required</div>
-                                <div *ngIf="loginForm.controls['email'].hasError('email')">Invalid email address</div>
-                                <div *ngIf="loginForm.controls['email'].hasError('noExistEmail')">Email does not exist</div>
+                                <div *ngIf="loginForm.controls['email'].hasError('required')">Email is required.</div>
+                                <div *ngIf="loginForm.controls['email'].hasError('email')">Invalid email address.</div>
+                                <div *ngIf="loginForm.controls['email'].hasError('noExistEmail')">The email you provided does not exist.</div>
                             </div>
                             <input type="password" class="input" id="user_pass" autocomplete="off" placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': clickLogin && loginForm.controls['password'].errors}">
                             <div *ngIf="clickLogin && loginForm.controls['password'].errors" class="text-danger">
-                                <div *ngIf="loginForm.controls['password'].hasError('required')">Password is required</div>
+                                <div *ngIf="loginForm.controls['password'].hasError('required')">Password is required.</div>
                                 <div *ngIf="loginForm.controls['password'].hasError('Unauthorized')">The password you’ve entered is incorrect.</div>
                             </div>
                             <input type="checkbox" class="checkbox" checked id="remember_me">
@@ -68,20 +68,30 @@
                         <form class="signup-form" method="post" [formGroup]="registerForm">
                             <input type="email" class="input" id="user_email" autocomplete="off" placeholder="Email" formControlName="email"[ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['email'].invalid}">
                             <div *ngIf="clickRegister && registerForm.controls['email'].invalid" class="text-danger">
-                                <div *ngIf="loginForm.controls['email'].hasError('required')">Email is required</div>
-                                <div *ngIf="loginForm.controls['email'].hasError('email')">Invalid email address</div>
+                                <div *ngIf="registerForm.controls['email'].hasError('required')">Email is required.</div>
+                                <div *ngIf="registerForm.controls['email'].hasError('email')">Invalid email address.</div>
+                                <div *ngIf="registerForm.controls['email'].hasError('emailAlreadyTaken')">The email you provided is already taken.</div>
                             </div>
                             <input type="text" class="input" id="name" autocomplete="off" placeholder="Username" formControlName="username" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['username'].invalid}">
                             <div *ngIf="clickRegister && registerForm.controls['username'].invalid" class="text-danger">
-                                <div *ngIf="registerForm.controls['username'].hasError('required')">Username is required</div>
+                                <div *ngIf="registerForm.controls['username'].hasError('required')">Username is required.</div>
+                                <div *ngIf="registerForm.controls['username'].hasError('usernameAlreadyTaken')">The username you provided is already
+                                    taken.</div>
+                            </div>
+                            <input type="text" class="input" id="full_name" autocomplete="off" placeholder="First And Last Name" formControlName="fullName" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['fullName'].invalid}">
+                            <div *ngIf="clickRegister && registerForm.controls['fullName'].invalid" class="text-danger">
+                                <div *ngIf="registerForm.controls['fullName'].hasError('required')">The names are required.</div>
                             </div>
                             <input type="password" class="input" id="password" autocomplete="off" placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['password'].invalid}">
-                            <div *ngIf="clickRegister && registerForm.controls['username'].invalid" class="text-danger">
-                                <div *ngIf="registerForm.controls['password'].hasError('required')">Password is required</div>
+                            <div *ngIf="clickRegister && registerForm.controls['password'].invalid" class="text-danger">
+                                <div *ngIf="registerForm.controls['password'].hasError('required')">Password is required.</div>
                             </div>
                             <input type="password" class="input" id="confirm_pass" autocomplete="off"
                                 placeholder="Confirm password" formControlName="confirmPassword" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['confirmPassword'].invalid}">
-                                <div *ngIf="registerForm.controls['confirmPassword'].hasError('passwordMatchValidator')">Password is required</div>
+                                <div *ngIf="clickRegister && registerForm.controls['confirmPassword'].invalid" class="text-danger">
+                                    <div *ngIf="registerForm.controls['confirmPassword'].hasError('required')">Password is required.</div>
+                                    <div *ngIf="registerForm.controls['confirmPassword'].hasError('passwordMismatch')">Password doesn't match.</div>
+                                </div>
                             <input type="submit" class="button" value="Sign Up" (click)="onRegister()">
                         </form>
 

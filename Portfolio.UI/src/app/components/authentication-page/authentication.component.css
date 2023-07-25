@@ -137,7 +137,7 @@ a.button:hover {
     padding-top: 40px;
     width: 100%;
     height: 100vh;
-    overflow: auto;
+    overflow: hidden;
     background: -moz-linear-gradient(48deg, rgba(42, 46, 54, 1) 0%, rgba(97, 107, 125, 1) 100%);
     background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, rgba(42, 46, 54, 1)), color-stop(100%, rgba(97, 107, 125, 1)));
     background: -webkit-linear-gradient(48deg, rgba(42, 46, 54, 1) 0%, rgba(97, 107, 125, 1) 100%);

@@ -4,6 +4,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { Router } from '@angular/router';
 import { catchError, filter, first, throwError } from 'rxjs';
 import { LoginRequest } from 'src/app/models/account-models/login-request-model';
+import { LoginResponse } from 'src/app/models/account-models/login-response-model';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
 import { AccountsService } from 'src/app/services/account/accounts.service';
 
@@ -20,7 +21,7 @@ export class AuthenticationComponent implements OnInit {
     if (this.accountsService.getAccessToken()) {
       this.router.navigate(['/home']);
     }
-    
+
     const loginTab = document.querySelector('.login-tab');
     const signupTab = document.querySelector('.signup-tab');
     const loginTabContent = document.getElementById('login-tab-content');
@@ -35,16 +36,26 @@ export class AuthenticationComponent implements OnInit {
       signupTabContent?.classList.add('active');
     });
   }
-  
+
   private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
-    if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value)
+    if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
+
       return null;
-    else
+
+    } else if (formGroup.get('confirmPassword')?.value === '') {
+
+      return { required: true };
+
+    } else {
+
+      this.registerForm.controls['confirmPassword'].setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
+    }
   };
 
   registerForm = new FormGroup({
     username: new FormControl("", Validators.required),
+    fullName: new FormControl("", Validators.required),
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("",
       [
@@ -79,23 +90,29 @@ export class AuthenticationComponent implements OnInit {
     this.clickLogin = true;
 
     if (this.loginForm.invalid) {
-        return;
+      return;
     }
 
     this.accountsService.loginUser(this.loginRequest)
-      .subscribe(response => {
-        sessionStorage.setItem("userId", response.id);
-        sessionStorage.setItem("email", response.email)
-        sessionStorage.setItem("accessToken", response.accessToken)
-        sessionStorage.setItem("refreshToken", response.refreshToken)
-        this.router.navigate(['/'])   
-      },
-      (error: HttpErrorResponse) => {
-        if (error.status === 404) {
-          this.loginForm.controls['email'].setErrors({ 'noExistEmail': true });
-        } else if (error.status === 401) {
-            this.loginForm.controls['password'].setErrors({'Unauthorized': true});
-        } 
+      .subscribe({
+        next: (response: LoginResponse) => {
+          sessionStorage.setItem("userId", response.id);
+          sessionStorage.setItem("email", response.email)
+          sessionStorage.setItem("accessToken", response.accessToken)
+          sessionStorage.setItem("refreshToken", response.refreshToken)
+          this.router.navigate(['/'])
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 404) {
+
+            this.loginForm.controls['email'].setErrors({ noExistEmail: true });
+
+          } else if (error.status === 401) {
+
+            this.loginForm.controls['password'].setErrors({ Unauthorized: true });
+
+          }
+        }
       }
       );
   }
@@ -108,18 +125,43 @@ export class AuthenticationComponent implements OnInit {
     if (this.registerForm.invalid) {
       return;
     }
+
     this.formRequest = {
       email: this.registerForm.value.email!,
       username: this.registerForm.value.username!,
+      fullName: this.registerForm.value.fullName!,
       password: this.registerForm.value.password!,
       confirmPassword: this.registerForm.value.confirmPassword!
     }
-        this.accountsService.registerUser(this.formRequest).subscribe(response => {
+    this.accountsService.registerUser(this.formRequest).subscribe({
+      next: () => {
         location.reload();
-    });
+      },
+      error: (error: HttpErrorResponse) => {
+
+        if (error.status == 400) {
+
+          const usernameErrorMessage = error.error[0].description;
+          const username = this.formRequest.username
+
+          const emailErrorMessage = error.error;
+
+          if (usernameErrorMessage === `Username '${username}' is already taken.`) {
+
+            this.registerForm.controls['username'].setErrors({ 'usernameAlreadyTaken': true });
+
+          } else if (emailErrorMessage === 'Email address is already taken.') {
+
+            this.registerForm.controls['email'].setErrors({ 'emailAlreadyTaken': true });
+
+          }
+        }
+      }
+    }
+    );
   }
 
   onLogout(): void {
-      this.accountsService.logout();
+    this.accountsService.logout();
   }
 }
