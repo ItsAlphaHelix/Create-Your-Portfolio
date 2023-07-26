@@ -43,7 +43,7 @@
                     <!-- TABS CONTENT LOGIN -->
                     <div id="login-tab-content" class="active">
                         <form class="login-form" method="post" [formGroup]="loginForm">
-                            <input type="text" class="input" id="user_login" autocomplete="off" placeholder="Email" matInput  formControlName="email" [ngClass]="{ 'is-invalid': clickLogin && loginForm.controls['email'].invalid}">
+                            <input type="text" class="input" id="user_login" autocomplete="off" placeholder="Email" formControlName="email" [ngClass]="{ 'is-invalid': clickLogin && loginForm.controls['email'].invalid}">
                             <div *ngIf="clickLogin && loginForm.controls['email'].invalid" class="text-danger">
                                 <div *ngIf="loginForm.controls['email'].hasError('required')">Email is required.</div>
                                 <div *ngIf="loginForm.controls['email'].hasError('email')">Invalid email address.</div>
@@ -83,6 +83,7 @@
                                 <div *ngIf="registerForm.controls['fullName'].hasError('required')">The names are required.</div>
                             </div>
                             <input type="password" class="input" id="password" autocomplete="off" placeholder="Password" formControlName="password" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['password'].invalid}">
+                            
                             <div *ngIf="clickRegister && registerForm.controls['password'].invalid" class="text-danger">
                                 <div *ngIf="registerForm.controls['password'].hasError('required')">Password is required.</div>
                             </div>

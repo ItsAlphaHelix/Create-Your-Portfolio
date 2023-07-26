@@ -1,0 +1,47 @@
+<div class="authentication container-body">
+    <div class="animated bounceInDown">
+        <div class="container">
+            <span class="error animated tada" id="msg"></span>
+            <form name="form1" class="box" [formGroup]="registerForm">
+                <h4 style="font-size: 30px;">Create Your Portfolio<span> Account.</span></h4>
+                <br>
+                <!-- <h5>Sign in to your account.</h5> -->
+                <input type="text" name="email" placeholder="Email" autocomplete="off" formControlName="email" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['email'].invalid}">
+                <div *ngIf="clickRegister && registerForm.controls['email'].invalid" class="text-danger">
+                    <div *ngIf="registerForm.controls['email'].hasError('required')">Email is required.</div>
+                    <div *ngIf="registerForm.controls['email'].hasError('email')">Invalid email address.</div>
+                    <div *ngIf="registerForm.controls['email'].hasError('emailAlreadyTaken')">The email you provided is already taken.
+                    </div>
+                </div>
+                <input type="text" class="input" id="name" autocomplete="off" placeholder="Username" formControlName="username" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['username'].invalid}">
+                <div *ngIf="clickRegister && registerForm.controls['username'].invalid" class="text-danger">
+                    <div *ngIf="registerForm.controls['username'].hasError('required')">Username is required.</div>
+                    <div *ngIf="registerForm.controls['username'].hasError('usernameAlreadyTaken')">The username you provided is already
+                        taken.</div>
+                </div>
+                <input type="text" class="input" id="first_name" autocomplete="off" placeholder="First Name" formControlName="firstName" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['firstName'].invalid}">
+                <div *ngIf="clickRegister && registerForm.controls['firstName'].invalid" class="text-danger">
+                    <div *ngIf="registerForm.controls['firstName'].hasError('required')">The first name is required.</div>
+                </div>
+                <input type="text" class="input" id="last_name" autocomplete="off" placeholder="Last Name"
+                    formControlName="lastName" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['lastName'].invalid}">
+                    <div *ngIf="clickRegister && registerForm.controls['lastName'].invalid" class="text-danger">
+                        <div *ngIf="registerForm.controls['lastName'].hasError('required')">The last name is required.</div>
+                    </div>
+                <i class="typcn typcn-eye" id="eye"></i>
+                <input type="password" name="password" placeholder="Passsword" id="pwd" autocomplete="off" formControlName="password">
+                <div *ngIf="clickRegister && registerForm.controls['password'].invalid" class="text-danger">
+                    <div *ngIf="registerForm.controls['password'].hasError('required')">Password is required.</div>
+                </div>
+                <input type="password" class="input" id="confirm_pass" autocomplete="off" placeholder="Confirm password" formControlName="confirmPassword" [ngClass]="{ 'is-invalid': clickRegister && registerForm.controls['confirmPassword'].invalid}">
+                <div *ngIf="clickRegister && registerForm.controls['confirmPassword'].invalid" class="text-danger">
+                    <div *ngIf="registerForm.controls['confirmPassword'].hasError('required')">Password is required.</div>
+                    <div *ngIf="registerForm.controls['confirmPassword'].hasError('passwordMismatch')">Password doesn't match.</div>
+                </div>
+                <a href="#" class="forgetpass" >Forgot Password?</a>
+                <input type="submit" value="Sign in" class="btn1" (click)="onRegister()">
+            </form>
+            <a routerLink="/login" class="dnthave">Are you have an account? Sign in</a>
+        </div>
+    </div>
+</div>
