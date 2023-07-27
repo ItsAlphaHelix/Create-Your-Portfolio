@@ -1,4 +1,4 @@
-﻿namespace Portfolio.API.Services.Dtos.AccountDtos
+﻿namespace Portfolio.API.Services.Dtos.AccountsDtos
 {
     public class ApplicationUserTokensDto
     {

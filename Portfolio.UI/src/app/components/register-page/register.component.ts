@@ -71,37 +71,37 @@ export class RegisterComponent {
 
     this.clickRegister = true;
 
-    // let countOfExceptions = 0;
+    let countOfExceptions = 0;
 
-    // if (this.registerForm.controls['email'].invalid) {
-    //   countOfExceptions++;
-    // }
+    if (this.registerForm.controls['email'].invalid) {
+      countOfExceptions++;
+    }
 
-    // if (this.registerForm.controls['username'].invalid) {
-    //   countOfExceptions++;
-    // }
+    if (this.registerForm.controls['username'].invalid) {
+      countOfExceptions++;
+    }
 
-    // if (this.registerForm.controls['firstName'].invalid) {
-    //   countOfExceptions++;
-    // }
+    if (this.registerForm.controls['firstName'].invalid) {
+      countOfExceptions++;
+    }
 
-    // if (this.registerForm.controls['lastName'].invalid) {
-    //   countOfExceptions++;
-    // }
+    if (this.registerForm.controls['lastName'].invalid) {
+      countOfExceptions++;
+    }
 
-    // if (this.registerForm.controls['password'].invalid) {
-    //   countOfExceptions++;
-    // }
+    if (this.registerForm.controls['password'].invalid) {
+      countOfExceptions++;
+    }
 
-    // if (this.registerForm.controls['confirmPassword'].invalid) {
-    //   countOfExceptions++;
-    // }
+    if (this.registerForm.controls['confirmPassword'].invalid) {
+      countOfExceptions++;
+    }
 
     if (this.registerForm.invalid) {
 
-      // if (countOfExceptions === 6) {
-      //   this.ExtendHeightOnContainer();
-      // }
+      if (countOfExceptions === 6) {
+        this.ExtendHeightOnContainer();
+      }
 
       return;
     }
@@ -120,21 +120,33 @@ export class RegisterComponent {
       },
       error: (error: HttpErrorResponse) => {
 
-          const usernameErrorMessage = error.error[0].description;
-          const username = this.formRequest.username
+        const firstNameMessage = error.error.errors.FirstName[0];
+        const userNameMessage = error.error.errors[0].description;
 
-          const emailErrorMessage = error.error;
+        const emailMessage = error.error;
+        
+        const username = this.formRequest.username
 
-          if (usernameErrorMessage === `Username '${username}' is already taken.`) {
+        if(error.status == 400) {
+          if (userNameMessage === `Username '${username}' is already taken.`) {
 
             this.registerForm.controls['username'].setErrors({ 'usernameAlreadyTaken': true });
 
-          } else if (emailErrorMessage === 'Email address is already taken.') {
+          }
+
+          if (emailMessage === 'Email address is already taken.') {
 
             this.registerForm.controls['email'].setErrors({ 'emailAlreadyTaken': true });
 
           }
+
+          if (firstNameMessage === 'The first name length shouldn\'t be less than 3 symbols.') {
+
+            this.registerForm.controls['firstName'].setErrors({ 'firstNameLength': true });
+
+          }
         }
+      }
     }
     );
   }

@@ -1,9 +1,9 @@
-﻿namespace Portfolio.API.Services.AccountService
+﻿namespace Portfolio.API.Services.AccountsService
 {
     using Microsoft.AspNetCore.Identity;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Services.Dtos;
-    using Portfolio.API.Services.Dtos.AccountDtos;
+    using Portfolio.API.Services.Dtos.AccountsDtos;
     using Portfolio.API.Services.Models;
     public interface IAccountsService
     {

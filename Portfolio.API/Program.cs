@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.API.Data;
 using Portfolio.API.Data.Models;
+using Portfolio.API.ExceptionMiddlewares;
 using Portfolio.API.Services.AccountService;
+using Portfolio.API.Services.AccountsService;
 using Portfolio.Data.Repositories;
 using System.Text;
 
@@ -67,6 +69,8 @@ app.UseCors(option => option.WithOrigins(angularAppUrl)
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

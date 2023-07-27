@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Portfolio.API.Services.Dtos.AccountDtos
+namespace Portfolio.API.Services.Dtos.AccountsDtos
 {
     public class ApplicationUserLoginDto
     {

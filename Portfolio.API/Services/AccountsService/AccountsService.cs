@@ -1,15 +1,16 @@
 ﻿namespace Portfolio.API.Services.AccountService
 {
-    using Microsoft.AspNetCore.DataProtection;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
     using Portfolio.API.Data.Models;
+    using Portfolio.API.Services.AccountsService;
     using Portfolio.API.Services.Dtos;
-    using Portfolio.API.Services.Dtos.AccountDtos;
+    using Portfolio.API.Services.Dtos.AccountsDtos;
     using Portfolio.API.Services.Models;
     using Portfolio.Data.Repositories;
     using System.IdentityModel.Tokens.Jwt;
+    using System.Net;
     using System.Security.Claims;
     using System.Security.Cryptography;
     using System.Text;
@@ -49,10 +50,11 @@
             //}
 
             var isAuthenticated = await userManager.CheckPasswordAsync(findUser, user.Password);
-            if (!isAuthenticated)
-            {
-                throw new MemberAccessException("The credentials are wrong.");
-            }
+
+                if (!isAuthenticated)
+                {
+                    throw new MemberAccessException("Wrong password.");
+                }
 
             await GenerateTokens(findUser);
 
@@ -72,11 +74,18 @@
         {
             var user = new ApplicationUser()
             {
-                UserName = applicationUser.Username,
+                UserName = applicationUser.UserName,
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
                 Email = applicationUser.Email
             };
+
+            bool isEmailTaken = await userRepository.AllAsNoTracking().AnyAsync(x => x.Email == user.Email);
+
+            if (isEmailTaken == true)
+            {
+                throw new InvalidOperationException("Email address is already taken.");
+            }
 
             var registeredUser = await userManager.CreateAsync(user, applicationUser.Password);
 
@@ -124,7 +133,7 @@
             var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
             if (user == null)
             {
-                throw new NullReferenceException("The is not found.");
+                throw new NullReferenceException("The user is not found.");
             }
 
             if (refreshToken != user.RefreshToken || DateTime.UtcNow > user.RefreshTokenExpirationDate)

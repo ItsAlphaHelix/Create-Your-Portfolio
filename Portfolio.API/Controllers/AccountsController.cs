@@ -1,11 +1,14 @@
 ﻿namespace Portfolio.API.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Portfolio.API.Services.AccountService;
+    using Portfolio.API.Services.AccountsService;
     using Portfolio.API.Services.Dtos;
-    using Portfolio.API.Services.Dtos.AccountDtos;
+    using Portfolio.API.Services.Dtos.AccountsDtos;
     using Portfolio.API.Services.Models;
+    using System.ComponentModel.DataAnnotations;
+    using System.Net;
 
     [Route("api/accounts")]
     [ApiController]
@@ -25,17 +28,28 @@
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] ApplicationUserRegisterDto userRegisterModel)
         {
-            var result = await accountsService.RegisterUserAsync(userRegisterModel);
+            _ = new IdentityResult();
+            IdentityResult result;
 
-            if (!result.Succeeded)
+            try
             {
-                return BadRequest(result.Errors);
+                result = await accountsService.RegisterUserAsync(userRegisterModel);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest(result.Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
             return Ok(result);
+
             //var user = await accountsService.GetUserByEmail(userRegisterModel.Email);
 
-          //var emailConfirmationToken = await accountsService.GenerateConfirmationEmailToken(user);
+            //var emailConfirmationToken = await accountsService.GenerateConfirmationEmailToken(user);
 
             //await emailService.SendConfirmationMail(emailConfirmationToken, user);
 

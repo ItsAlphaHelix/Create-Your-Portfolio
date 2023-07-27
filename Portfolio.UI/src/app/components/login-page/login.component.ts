@@ -41,20 +41,20 @@ export class LoginComponent implements OnInit {
 
   formRequest!: LoginComponent
 
-  clickLogin = false;
-
+  
   loginForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("",
       [
         Validators.required,
         //Validators.pattern('^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$'),
-
+        
       ])
-  });
-
-
-  
+    });
+    
+    
+    
+  clickLogin = false;
 
   loginRequest!: LoginRequest
 
