@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { AccountsService } from './services/account/accounts.service';
+import { Component, OnInit } from '@angular/core';
+import { AccountsService } from './services/accounts.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,12 +10,12 @@ import { Router } from '@angular/router';
 export class AppComponent {
   constructor(
     private accountsService: AccountsService,
-    private router: Router) {}
-    
-   get isUserLoggedIn() {
-    
+    private router: Router,) { }
+
+  get isUserLoggedIn() {
+
     return this.accountsService.isLoggedIn;
-  
+
   }
 
   onLogout() {

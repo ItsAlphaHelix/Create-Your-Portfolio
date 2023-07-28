@@ -6,18 +6,9 @@
             <h4 style="font-size: 30px;">Login to your portfolio<span> account.</span></h4>
             <br>
                 <!-- <h5>Sign in to your account.</h5> -->
-                <input type="text" name="email" placeholder="Email" autocomplete="off" formControlName="email" [ngClass]="{ 'is-invalid': clickLogin && loginForm.controls['email'].invalid}">
-                <div *ngIf="clickLogin && loginForm.controls['email'].invalid" class="text-danger">
-                    <div *ngIf="loginForm.controls['email'].hasError('required')">Email is required.</div>
-                    <div *ngIf="loginForm.controls['email'].hasError('email')">Invalid email address.</div>
-                    <div *ngIf="loginForm.controls['email'].hasError('noExistEmail')">The email you provided does not exist.</div>
-                </div>
+                <input type="text" name="email" placeholder="Email" autocomplete="off" formControlName="email" >
                 <i class="typcn typcn-eye" id="eye"></i>
-                <input type="password" name="password" placeholder="Passsword" id="pwd" autocomplete="off" formControlName="password" [ngClass]="{ 'is-invalid': clickLogin && loginForm.controls['password'].errors}">
-                <div *ngIf="clickLogin && loginForm.controls['password'].errors" class="text-danger">
-                    <div *ngIf="loginForm.controls['password'].hasError('required')">Password is required.</div>
-                    <div *ngIf="loginForm.controls['password'].hasError('Unauthorized')">The password you’ve entered is incorrect.</div>
-                </div>
+                <input type="password" name="password" placeholder="Passsword" id="pwd" autocomplete="off" formControlName="password" >
                 <div style="margin-right: 60%;">
                     <input type="checkbox" class="rdm" checked id="remember_me">
                     <label for="remember_me" style="color: white;">Remember me</label>

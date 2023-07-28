@@ -6,7 +6,7 @@ import { catchError, filter, first, throwError } from 'rxjs';
 import { LoginRequest } from 'src/app/models/account-models/login-request-model';
 import { LoginResponse } from 'src/app/models/account-models/login-response-model';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
-import { AccountsService } from 'src/app/services/account/accounts.service';
+import { AccountsService } from 'src/app/services/accounts.service';
 
 @Component({
   selector: 'app-authentication',

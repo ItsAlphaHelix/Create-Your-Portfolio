@@ -2,11 +2,11 @@ import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { catchError, filter, first, throwError } from 'rxjs';
-import { LoginRequest } from 'src/app/models/account-models/login-request-model';
-import { LoginResponse } from 'src/app/models/account-models/login-response-model';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
-import { AccountsService } from 'src/app/services/account/accounts.service';
+import { AccountsService } from 'src/app/services/accounts.service';
+import { ClientSideValidationService } from 'src/app/services/client-side-validation.service';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +15,13 @@ import { AccountsService } from 'src/app/services/account/accounts.service';
 })
 export class RegisterComponent {
 
-  constructor(private accountsService: AccountsService, private router: Router, private elementRef: ElementRef, private renderer: Renderer2) { }
+  constructor(private accountsService: AccountsService,
+     private router: Router,
+      private elementRef: ElementRef,
+       private renderer: Renderer2,
+        private clientSideValidationService: ClientSideValidationService,
+         private toastr: ToastrService
+        ) { }
 
   private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
     if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
@@ -33,18 +39,6 @@ export class RegisterComponent {
     }
   };
 
-  private ExtendHeightOnContainer() {
-    const containerElement = this.elementRef.nativeElement.querySelector('.container');
-
-    const currentHeight = containerElement.offsetHeight;
-    const newHeight = currentHeight + 300;
-
-    if (newHeight > 1200) {
-      return;
-    }
-
-    this.renderer.setStyle(containerElement, 'height', newHeight + 'px');
-  }
 
   @ViewChild('containerRef', { static: true }) containerRef: ElementRef | undefined;
 
@@ -65,46 +59,9 @@ export class RegisterComponent {
 
   formRequest!: RegisterRequest
 
-  clickRegister = false;
-
   onRegister(): void {
 
-    this.clickRegister = true;
-
-    let countOfExceptions = 0;
-
-    if (this.registerForm.controls['email'].invalid) {
-      countOfExceptions++;
-    }
-
-    if (this.registerForm.controls['username'].invalid) {
-      countOfExceptions++;
-    }
-
-    if (this.registerForm.controls['firstName'].invalid) {
-      countOfExceptions++;
-    }
-
-    if (this.registerForm.controls['lastName'].invalid) {
-      countOfExceptions++;
-    }
-
-    if (this.registerForm.controls['password'].invalid) {
-      countOfExceptions++;
-    }
-
-    if (this.registerForm.controls['confirmPassword'].invalid) {
-      countOfExceptions++;
-    }
-
-    if (this.registerForm.invalid) {
-
-      if (countOfExceptions === 6) {
-        this.ExtendHeightOnContainer();
-      }
-
-      return;
-    }
+    this.clientSideValidationService.RegisterFormValidation(undefined, this.registerForm);
 
     this.formRequest = {
       email: this.registerForm.value.email!,
@@ -115,37 +72,14 @@ export class RegisterComponent {
       confirmPassword: this.registerForm.value.confirmPassword!
     }
     this.accountsService.registerUser(this.formRequest).subscribe({
+
       next: () => {
+
+        this.toastr.success('You are successfully registered!');
         this.router.navigate(['/login']);
       },
       error: (error: HttpErrorResponse) => {
-
-        const firstNameMessage = error.error.errors.FirstName[0];
-        const userNameMessage = error.error.errors[0].description;
-
-        const emailMessage = error.error;
-        
-        const username = this.formRequest.username
-
-        if(error.status == 400) {
-          if (userNameMessage === `Username '${username}' is already taken.`) {
-
-            this.registerForm.controls['username'].setErrors({ 'usernameAlreadyTaken': true });
-
-          }
-
-          if (emailMessage === 'Email address is already taken.') {
-
-            this.registerForm.controls['email'].setErrors({ 'emailAlreadyTaken': true });
-
-          }
-
-          if (firstNameMessage === 'The first name length shouldn\'t be less than 3 symbols.') {
-
-            this.registerForm.controls['firstName'].setErrors({ 'firstNameLength': true });
-
-          }
-        }
+        this.clientSideValidationService.RegisterFormValidation(error);
       }
     }
     );

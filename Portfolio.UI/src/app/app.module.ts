@@ -9,6 +9,8 @@ import { AuthenticationComponent } from './components/authentication-page/authen
 import { HomeComponent } from './components/home-page/home.component';
 import { RegisterComponent } from './components/register-page/register.component';
 import { LoginComponent } from './components/login-page/login.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -25,8 +27,13 @@ import { LoginComponent } from './components/login-page/login.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+    })
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
