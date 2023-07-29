@@ -23,7 +23,15 @@ builder.Services.AddDbContext<PortfolioDBContext>(options =>
     options.UseSqlServer(connectionString);
 });
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
+    options.User.RequireUniqueEmail = true;
+})
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<PortfolioDBContext>();
 
