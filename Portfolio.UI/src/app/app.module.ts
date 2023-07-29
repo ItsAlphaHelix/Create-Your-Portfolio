@@ -5,20 +5,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AuthenticationComponent } from './components/authentication-page/authentication.component';
 import { HomeComponent } from './components/home-page/home.component';
 import { RegisterComponent } from './components/register-page/register.component';
 import { LoginComponent } from './components/login-page/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthenticationComponent,
     HomeComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    ForgottenPasswordComponent
   ],
   imports: [
     RouterModule,
