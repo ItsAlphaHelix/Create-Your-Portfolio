@@ -1,6 +1,5 @@
 ﻿namespace Portfolio.API.Services.EmailService.EmailSender
 {
-    using Microsoft.Extensions.Options;
     using SendGrid;
     using SendGrid.Helpers.Mail;
     public class SendGridEmailSender

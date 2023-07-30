@@ -30,7 +30,7 @@
             var htmlString = GenerateHtmlContent(token, user.Id, "ConfirmEmailTemplate.html", "ConfirmEmailUrl");
 
             await emailSender.SendEmailAsync(
-                "create-your-portfolio@gmail.com",
+                "CreateYourPortfolio22@gmail.com",
                 "Create-Your-Portfolio",
                 user.Email,
                 "Confirm Email Address",
@@ -71,7 +71,7 @@
 
             var htmlContent = string.Format(
                 htmlString,
-                "http://localhost:4200/",
+                "https://localhost:7126/",
                 urlToFrontEnd,
                 emailToken,
                 secondParameter);
