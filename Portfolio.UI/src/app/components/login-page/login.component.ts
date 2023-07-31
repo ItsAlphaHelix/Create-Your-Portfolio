@@ -18,7 +18,10 @@ import { ClientSideValidationService } from 'src/app/services/client-side-valida
 export class LoginComponent implements OnInit {
 
 
-  constructor(private accountsService: AccountsService, private router: Router, private elementRef: ElementRef, private renderer: Renderer2, private toastr: ToastrService, private clientSideValidationService: ClientSideValidationService) { }
+  constructor(private accountsService: AccountsService,
+     private router: Router,
+      private toastr: ToastrService,
+       private clientSideValidationService: ClientSideValidationService) { }
 
   ngOnInit() {
     if (this.accountsService.getAccessToken()) {
@@ -34,9 +37,7 @@ export class LoginComponent implements OnInit {
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("",
       [
-        Validators.required,
-        //Validators.pattern('^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$'),
-
+        Validators.required
       ])
   });
 

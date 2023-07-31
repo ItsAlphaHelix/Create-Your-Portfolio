@@ -1,5 +1,5 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -17,8 +17,6 @@ export class RegisterComponent {
 
   constructor(private accountsService: AccountsService,
      private router: Router,
-      private elementRef: ElementRef,
-       private renderer: Renderer2,
         private clientSideValidationService: ClientSideValidationService,
          private toastr: ToastrService
         ) { }
@@ -50,7 +48,7 @@ export class RegisterComponent {
     password: new FormControl("",
       [
         Validators.required,
-        //Validators.pattern('^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$'),
+        Validators.pattern('^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$'),
 
       ]),
     confirmPassword: new FormControl("", Validators.required),
@@ -60,8 +58,11 @@ export class RegisterComponent {
   formRequest!: RegisterRequest
 
   onRegister(): void {
-
-    this.clientSideValidationService.RegisterFormValidation(undefined, this.registerForm);
+    
+    if (this.registerForm.invalid) {
+      this.clientSideValidationService.RegisterFormValidation(undefined, this.registerForm);
+      return;
+    }
 
     this.formRequest = {
       email: this.registerForm.value.email!,
