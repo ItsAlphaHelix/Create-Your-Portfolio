@@ -10,7 +10,6 @@ using Portfolio.API.ExceptionMiddlewares;
 using Portfolio.API.Services.AccountService;
 using Portfolio.API.Services.AccountsService;
 using Portfolio.Data.Repositories;
-using Portfolio.API.Services.EmailService.EmailSender;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,12 +27,11 @@ builder.Services.AddDbContext<PortfolioDBContext>(options =>
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6;
     options.User.RequireUniqueEmail = true;
+    options.Password.RequiredLength = 8;
+    options.Lockout.MaxFailedAccessAttempts = 3;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+    options.SignIn.RequireConfirmedEmail = true;
 })
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<PortfolioDBContext>();
@@ -58,11 +56,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//var sendGridKey = builder.Configuration["ApiKeys:SendGridKey"];
-//var sendGrid = new SendGridEmailSender(sendGridKey);
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-//builder.Services.AddScoped(x => new SendGridEmailSender(sendGridKey));
 
 var app = builder.Build();
 

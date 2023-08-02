@@ -10,7 +10,6 @@
     using Portfolio.API.Services.Models;
     using Portfolio.Data.Repositories;
     using System.IdentityModel.Tokens.Jwt;
-    using System.Net;
     using System.Security.Claims;
     using System.Security.Cryptography;
     using System.Text;
@@ -107,7 +106,7 @@
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(this.configuration["SecretKey"]);
+            var key = Encoding.ASCII.GetBytes(this.configuration["ApiKeys:JWTKey"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

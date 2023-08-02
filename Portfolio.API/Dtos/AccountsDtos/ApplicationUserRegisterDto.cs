@@ -21,6 +21,7 @@
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]
+        [RegularExpression(@"^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
