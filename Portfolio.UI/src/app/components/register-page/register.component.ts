@@ -78,10 +78,10 @@ export class RegisterComponent {
 
         this.toastr.success('You are successfully registered!');
         this.router.navigate(['/login']);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.clientSideValidationService.RegisterFormValidation(error);
       }
+      // error: (error: HttpErrorResponse) => {
+      //   this.clientSideValidationService.RegisterFormValidation(error);
+      // }
     }
     );
   }

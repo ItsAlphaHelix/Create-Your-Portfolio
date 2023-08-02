@@ -41,78 +41,22 @@ export class ClientSideValidationService {
       }
 
     }
-
-    if (error !== undefined) {
-      if (error.status === 400) {
-
-        if (error.error === "Email address is already taken.") {
-
-          this.toastr.error('The email you provided is already taken!');
-
-        }
-
-        if (error.error instanceof Array) {
-
-          this.toastr.error('The username you provided is already taken!');
-
-        } else if (error.error instanceof Object) {
-
-          if (error.error.errors.FirstName !== undefined) {
-
-            if (error.error.errors.FirstName[0] === "The first name length shouldn't be less than 3 symbols.") {
-
-              this.toastr.error('The length of the first name must be between 3 and 30 characters!');
-
-            } else {
-
-              this.toastr.error('The first name should start with a capital letter, and it should contain only letters!');
-
-            }
-
-          } else if (error.error.errors.LastName !== undefined) {
-
-            if (error.error.errors.LastName[0] === "The last name length shouldn't be less than 3 symbols.") {
-
-              this.toastr.error('The length of the last name must be between 3 and 30 characters!');
-
-            } else {
-
-              this.toastr.error('The last name should start with a capital letter, and it should contain only letters!');
-
-            }
-          }
-        }
-      }
-    }
   }
 
-  LoginFormValidation(error?: HttpErrorResponse, loginForm?: FormGroup) {
+  LoginFormValidation(loginForm: FormGroup) {
 
     if (loginForm !== undefined) {
 
       if (loginForm.controls['email'].hasError('required') || loginForm.controls['password'].hasError('required')) {
 
         this.toastr.error('All fields are required');
+        return;
 
       }
       if (loginForm.controls['email'].invalid && !loginForm.controls['email'].hasError('required')) {
 
         this.toastr.error('Invalid email address!');
-
-      }
-    }
-
-    if (error !== undefined) {
-
-      if (error.status === 404) {
-
-        this.toastr.error('Your email or password is incorrect. Please try again!');
-
-      } else if (error.status === 401) {
-
-        this.toastr.error('Your email or password is incorrect. Please try again!');
-      } else {
-        console.log(error)
+        return;
       }
     }
   }

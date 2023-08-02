@@ -46,7 +46,11 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
 
-    this.clientSideValidationService.LoginFormValidation(undefined, this.loginForm)
+    
+    if (this.loginForm.invalid) {
+      this.clientSideValidationService.LoginFormValidation(this.loginForm)
+      return;
+    }
 
     this.loginRequest = {
       email: this.loginForm.value.email!,
@@ -63,12 +67,12 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem("refreshToken", response.refreshToken);
           this.toastr.success('You are successfully logged in!');
           this.router.navigate(['/']);
-        },
-        error: (error: HttpErrorResponse) => {
-
-          this.clientSideValidationService.LoginFormValidation(error);
-
         }
+        // error: (error: HttpErrorResponse) => {
+
+        //  // this.clientSideValidationService.LoginFormValidation(error);
+        //   this.toastr.error(error.error);
+        // }
       });
   }
 }
