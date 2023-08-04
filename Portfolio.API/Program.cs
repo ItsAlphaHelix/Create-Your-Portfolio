@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -7,9 +8,12 @@ using Microsoft.IdentityModel.Tokens;
 using Portfolio.API.Data;
 using Portfolio.API.Data.Models;
 using Portfolio.API.ExceptionMiddlewares;
+using Portfolio.API.Extensions;
 using Portfolio.API.Services.AccountService;
 using Portfolio.API.Services.AccountsService;
+using Portfolio.API.Services.PhotoService;
 using Portfolio.Data.Repositories;
+using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +40,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<PortfolioDBContext>();
 
-var secretKey = builder.Configuration["ApiKeys:JWTKey"];
+var secretKey = builder.Configuration["JWTKey"];
 var jwtKey = Encoding.ASCII.GetBytes(secretKey);
 builder.Services.AddAuthentication(options =>
 {
@@ -58,15 +62,13 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.ConfigureExceptionHandler();
+app.ConfigureBuiltinExceptionHandler(app.Environment);
 
 app.UseHttpsRedirection();
 
@@ -79,7 +81,7 @@ app.UseCors(option => option.WithOrigins(angularAppUrl)
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

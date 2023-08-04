@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Portfolio.API.Errors;
     using Portfolio.API.Services.AccountsService;
     using Portfolio.API.Services.Dtos;
     using Portfolio.API.Services.Dtos.AccountsDtos;
@@ -31,7 +32,7 @@
         {
             _ = new IdentityResult();
             IdentityResult result;
-
+            
             try
             {
                 result = await accountsService.RegisterUserAsync(userRegisterModel);
@@ -43,7 +44,7 @@
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return Conflict(ex.Message);
             }
 
             return Ok(result);
@@ -62,7 +63,6 @@
         [HttpPost]
         [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] ApplicationUserLoginDto userLoginModel)
         {
@@ -71,10 +71,6 @@
             try
             {
                 user = await accountsService.AuthenticateUserAsync(userLoginModel);
-            }
-            catch (NullReferenceException e)
-            {
-                return NotFound(e.Message);
             }
             catch (Exception e)
             {

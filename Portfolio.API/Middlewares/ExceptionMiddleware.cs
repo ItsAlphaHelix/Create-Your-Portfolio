@@ -1,44 +1,62 @@
 ﻿namespace Portfolio.API.ExceptionMiddlewares
 {
     using Newtonsoft.Json;
+    using Portfolio.API.Errors;
     using System.Net;
     public class ExceptionMiddleware
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate next;
+        private readonly ILogger<ExceptionMiddleware> logger;
+        private readonly IHostEnvironment env;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionMiddleware> logger,
+            IHostEnvironment env)
         {
-            _next = next;
+            this.next = next;
+            this.logger = logger;
+            this.env = env;
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+                ApiError response;
+                HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+                string message;
+                var exceptionType = ex.GetType();
+
+                if (exceptionType == typeof(UnauthorizedAccessException))
+                {
+                    statusCode = HttpStatusCode.Forbidden;
+                    message = "You are not authorized.";
+                }
+                else
+                {
+                    statusCode = HttpStatusCode.InternalServerError;
+                    message = "Some unknow error occured.";
+                }
+
+                if (env.IsDevelopment())
+                {
+                    response = new ApiError((int)statusCode, ex.Message, ex.StackTrace.ToString());
+                }
+                else
+                {
+                    response = new ApiError((int)statusCode, message);
+                }
+
+                this.logger.LogError(ex, ex.Message);
+                context.Response.StatusCode = (int)statusCode;
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync(response.ToString()); 
             }
-        }
-
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
-        {
-            var statusCode = HttpStatusCode.InternalServerError;
-            var message = "Internal Server Error";
-
-            if (exception is InvalidOperationException)
-            {
-                statusCode = HttpStatusCode.BadRequest;
-                message = exception.Message;
-            }
-
-            context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)statusCode;
-
-            var result = JsonConvert.SerializeObject(new { error = message });
-            return context.Response.WriteAsync(result);
         }
     }
 }

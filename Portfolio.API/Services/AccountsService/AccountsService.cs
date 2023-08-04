@@ -34,12 +34,9 @@
 
         public async Task<ApplicationUserLoginResponseDto> AuthenticateUserAsync(ApplicationUserLoginDto user)
         {
-            var findUser = userManager.FindByEmailAsync(user.Email).GetAwaiter().GetResult();
+            //I don't need to check if the user is null because, in case they are, the boolean "IsAuthenticated" will automatically throw an exception for invalid email or password.
 
-            if (findUser == null)
-            {
-                throw new NullReferenceException("The user can not be null");
-            }
+            var findUser = userManager.FindByEmailAsync(user.Email).GetAwaiter().GetResult();
 
             //var isEmailConfirmed = await userManager.IsEmailConfirmedAsync(findUser);
 
@@ -52,7 +49,7 @@
 
                 if (!isAuthenticated)
                 {
-                    throw new MemberAccessException("Wrong password.");
+                    throw new MemberAccessException("Invalid email or password!");
                 }
 
             await GenerateTokens(findUser);
@@ -102,11 +99,12 @@
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(this.configuration["ApiKeys:JWTKey"]);
+            var key = Encoding.ASCII.GetBytes(this.configuration["JWTKey"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

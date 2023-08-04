@@ -7,12 +7,12 @@
         public string UserName { get; set; }
 
         [Required]
-        [MinLength(3, ErrorMessage = "The first name length shouldn't be less than 3 symbols.")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "The first name must consist of 3 to 30 letters only")]
         [RegularExpression(@"[A-Z]{1}[\w]+", ErrorMessage = "The first name should start with a capital letter, and it should contain only letters.")]
         public string FirstName { get; set; }
 
         [Required]
-        [MinLength(3, ErrorMessage = "The last name length shouldn't be less than 3 symbols.")]
+        [StringLength(30, MinimumLength = 3, ErrorMessage = "The last name must consist of 3 to 30 letters only")]
         [RegularExpression(@"[A-Z]{1}[\w]+", ErrorMessage = "The last name should start with a capital letter, and it should contain only letters.")]
         public string LastName { get; set; }
 
