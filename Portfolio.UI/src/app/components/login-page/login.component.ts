@@ -68,11 +68,6 @@ export class LoginComponent implements OnInit {
           this.toastr.success('You are successfully logged in!');
           this.router.navigate(['/']);
         }
-        // error: (error: HttpErrorResponse) => {
-
-        //  // this.clientSideValidationService.LoginFormValidation(error);
-        //   this.toastr.error(error.error);
-        // }
       });
   }
 }

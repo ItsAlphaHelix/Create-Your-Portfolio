@@ -37,9 +37,6 @@ export class RegisterComponent {
     }
   };
 
-
-  @ViewChild('containerRef', { static: true }) containerRef: ElementRef | undefined;
-
   registerForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     username: new FormControl("", Validators.required),
@@ -60,7 +57,7 @@ export class RegisterComponent {
   onRegister(): void {
     
     if (this.registerForm.invalid) {
-      this.clientSideValidationService.RegisterFormValidation(undefined, this.registerForm);
+      this.clientSideValidationService.RegisterFormValidation(this.registerForm);
       return;
     }
 
@@ -79,9 +76,6 @@ export class RegisterComponent {
         this.toastr.success('You are successfully registered!');
         this.router.navigate(['/login']);
       }
-      // error: (error: HttpErrorResponse) => {
-      //   this.clientSideValidationService.RegisterFormValidation(error);
-      // }
     }
     );
   }

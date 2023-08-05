@@ -12,7 +12,7 @@ export class ClientSideValidationService {
 
   constructor(private toastr: ToastrService) { }
 
-  RegisterFormValidation(error?: HttpErrorResponse, registerForm?: FormGroup) {
+  RegisterFormValidation(registerForm?: FormGroup) {
 
     if (registerForm !== undefined) {
 

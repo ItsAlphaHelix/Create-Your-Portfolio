@@ -14,7 +14,6 @@ import { __param } from 'tslib';
   providedIn: 'root'
 })
 export class AccountsService {
-  [x: string]: any;
 
   constructor(private http: HttpClient, private router: Router) { }
 

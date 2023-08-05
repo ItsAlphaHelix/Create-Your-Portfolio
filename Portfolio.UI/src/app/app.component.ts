@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AccountsService } from './services/accounts.service';
+import { UserProfileService } from './services/user-profile.service';
+import { interval } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,15 +9,64 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  imageURL: string = '\\assets\\img\\600x600.jpg';
+  hasProfilePicture: boolean = false;
+
   constructor(
     private accountsService: AccountsService,
-    private router: Router,) { }
+    private router: Router,
+    private userProfileService: UserProfileService,) {}
+
+  ngOnInit(): void {
+      interval(1).subscribe(() => {
+        this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
+          if (loggedIn) {
+            this.getProfilePicture();
+          }
+        });
+      });
+  }
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  openFileInput(): void {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.style.display = 'none';
+    fileInput.addEventListener('change', (event) => this.handleFileInputChange(event));
+    document.body.appendChild(fileInput);
+    fileInput.click();
+    document.body.removeChild(fileInput);
+  }
+
+  handleFileInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.userProfileService.uploadUserProfilePicture(file).subscribe(
+        (response) => {
+          if (response) {
+            this.imageURL = response.imageUrl;
+          }
+        }
+      );
+    }
+  }
+
+  getProfilePicture(): void {
+          this.userProfileService.getUserProfilePicture().subscribe(
+            (response) => {
+              if (response) {
+                this.imageURL = response.imageUrl;
+              }
+            }
+          );
+  }
 
   get isUserLoggedIn() {
-
     return this.accountsService.isLoggedIn;
-
   }
 
   onLogout() {
