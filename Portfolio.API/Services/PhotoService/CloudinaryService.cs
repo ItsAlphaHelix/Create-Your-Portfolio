@@ -7,11 +7,11 @@
     using Portfolio.API.Data.Models;
     using Portfolio.Data.Repositories;
 
-    public class PhotoService : IPhotoService
+    public class CloudinaryService : ICloudinaryService
     {
         private readonly Cloudinary cloudinary;
         private readonly IRepository<UserImage> userImageRepository;
-        public PhotoService(
+        public CloudinaryService(
             IConfiguration configuration,
             IRepository<UserImage> userImageRepository)
         {
@@ -23,7 +23,7 @@
                 cloudinary = new Cloudinary(account);
             this.userImageRepository = userImageRepository;
         }
-        public async Task<string> GetUserProfileImageUrl(string userId)
+        public async Task<string> GetUserProfilePictureUrlAsync(string userId)
         {
             var user = await this.userImageRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId);
 
@@ -35,7 +35,7 @@
             return user.ProfileImageUrl;
         }
 
-        public async Task<ImageUploadResult> UploadPhotoAsync(IFormFile file)
+        public async Task<ImageUploadResult> UploadProfilePictureAsync(IFormFile file)
         {
             var uploadResult = new ImageUploadResult();
 
@@ -45,7 +45,6 @@
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
-                    //Todo see height and width of the image in frontend after that change the values!
                     Transformation = new Transformation()
                     .Height(600).Width(600)
                 };

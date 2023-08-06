@@ -1,27 +1,23 @@
 ﻿namespace Portfolio.API.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ImagesDtos;
     using Portfolio.API.Services.PhotoService;
     using Portfolio.Data.Repositories;
-    using System.ComponentModel.DataAnnotations;
-    using System.Diagnostics.Contracts;
     using System.Security.Claims;
-    using System.Security.Principal;
 
     [Route("api/user-profile")]
     [ApiController]
     [Authorize]
-    public class UserProfileController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly IPhotoService photoService;
+        private readonly ICloudinaryService photoService;
         private readonly IRepository<UserImage> userImageRepository;
 
-        public UserProfileController(
-            IPhotoService photoService,
+        public UserController(
+            ICloudinaryService photoService,
             IRepository<UserImage> userImageRepository)
         {
             this.photoService = photoService;
@@ -32,7 +28,7 @@
         [HttpPost]
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
         {
-            var result = await this.photoService.UploadPhotoAsync(file);
+            var result = await this.photoService.UploadProfilePictureAsync(file);
 
             if (result.Error != null)
             {
@@ -59,11 +55,11 @@
         }
 
         [HttpGet("get-profile-image/{userId}")]
-        public async Task<IActionResult> GetProfileImage(string userId)
+        public async Task<IActionResult> GetUserProfileImage(string userId)
         {
             try
             {
-                var imageUrl = await this.photoService.GetUserProfileImageUrl(userId);
+                var imageUrl = await this.photoService.GetUserProfilePictureUrlAsync(userId);
                 return Ok(new { imageUrl });
             }
             catch (Exception ex)

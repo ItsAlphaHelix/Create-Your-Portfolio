@@ -62,7 +62,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 var app = builder.Build();
 
