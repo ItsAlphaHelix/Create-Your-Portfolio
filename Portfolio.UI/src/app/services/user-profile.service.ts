@@ -41,7 +41,7 @@ export class UserProfileService {
 
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${jwtToken}`)
-
+    debugger;
     return this.http.get<{ imageUrl: string }>(api, { headers });
   }
 }

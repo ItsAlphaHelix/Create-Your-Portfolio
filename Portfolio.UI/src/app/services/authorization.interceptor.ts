@@ -17,15 +17,17 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private toastr: ToastrService) { }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler){
-    return next.handle(request)
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          const errorMessage = this.setError(error);
-          this.toastr.error(errorMessage);
-          return throwError(errorMessage);
-        })
-      );
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          throw new Error('The content is not found!');
+        }
+        const errorMessage = this.setError(error);
+        this.toastr.error(errorMessage);
+        throw new Error(errorMessage);
+      })
+    );
   }
 
   setError(error: HttpErrorResponse): string {

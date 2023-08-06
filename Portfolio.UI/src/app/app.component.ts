@@ -1,8 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, DebugNode, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AccountsService } from './services/accounts.service';
 import { UserProfileService } from './services/user-profile.service';
-import { interval } from 'rxjs';
-import { Router } from '@angular/router';
+import { delay, interval, take } from 'rxjs';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,21 +11,22 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   imageURL: string = '\\assets\\img\\600x600.jpg';
-  hasProfilePicture: boolean = false;
 
   constructor(
     private accountsService: AccountsService,
     private router: Router,
-    private userProfileService: UserProfileService,) {}
-
+    private userProfileService: UserProfileService,) { }
   ngOnInit(): void {
-      interval(1).subscribe(() => {
+    
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
         this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
           if (loggedIn) {
             this.getProfilePicture();
           }
         });
-      });
+      }
+    });
   }
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -56,13 +57,13 @@ export class AppComponent implements OnInit {
   }
 
   getProfilePicture(): void {
-          this.userProfileService.getUserProfilePicture().subscribe(
-            (response) => {
-              if (response) {
-                this.imageURL = response.imageUrl;
-              }
-            }
-          );
+    this.userProfileService.getUserProfilePicture().subscribe(
+      (response) => {
+        if (response) {
+          this.imageURL = response.imageUrl;
+        }
+      }
+    );
   }
 
   get isUserLoggedIn() {
