@@ -6,8 +6,9 @@
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string ProfileImageUrl { get; set; }
+        public string? ProfileImageUrl { get; set; }
+
+        public string?  HomePageImageUrl { get; set; }
 
         [Required]
         public string UserId { get; set; }
