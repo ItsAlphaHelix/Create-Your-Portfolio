@@ -35,6 +35,32 @@
             return user.ProfileImageUrl;
         }
 
+        public async Task<ImageUploadResult> UploadHomePagePictureAsyn(IFormFile file)
+        {
+            ImageUploadResult uploadResult = await UploadPictureToCloudinary(file);
+
+            return uploadResult;
+        }
+
+        private async Task<ImageUploadResult> UploadPictureToCloudinary(IFormFile file)
+        {
+            var uploadResult = new ImageUploadResult();
+
+            if (file.Length > 0)
+            {
+                using var stream = file.OpenReadStream();
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(file.FileName, stream),
+                    Transformation = new Transformation()
+                    .Height(1920).Width(1280)
+                };
+                uploadResult = await cloudinary.UploadAsync(uploadParams);
+            }
+
+            return uploadResult;
+        }
+
         public async Task<ImageUploadResult> UploadProfilePictureAsync(IFormFile file)
         {
             var uploadResult = new ImageUploadResult();

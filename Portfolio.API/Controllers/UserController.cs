@@ -1,5 +1,6 @@
 ﻿namespace Portfolio.API.Controllers
 {
+    using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
@@ -7,6 +8,7 @@
     using Portfolio.API.Services.PhotoService;
     using Portfolio.Data.Repositories;
     using System.Security.Claims;
+    using System.Text.RegularExpressions;
 
     [Route("api/user-profile")]
     [ApiController]
@@ -24,7 +26,7 @@
             this.userImageRepository = userImageRepository;
         }
 
-        [Route("upload-image")]
+        [Route("upload-profile-image")]
         [HttpPost]
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
         {
@@ -36,10 +38,49 @@
             }
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            
+
             var photo = new UserImage()
             {
                 ProfileImageUrl = result.SecureUrl.AbsoluteUri,
+                UserId = userId
+            };
+
+            UploadImageDto responseDto = await SaveImageUrlToDatabase(result, photo);
+
+            return Ok(responseDto);
+        }
+
+        private async Task<UploadImageDto> SaveImageUrlToDatabase(ImageUploadResult result, UserImage photo)
+        {
+            //Todo seperate logic for save to database;
+            await this.userImageRepository.AddAsync(photo);
+            await this.userImageRepository.SaveChangesAsync();
+
+            string profilePictureUrl = result.Url.AbsoluteUri;
+
+            var responseDto = new UploadImageDto()
+            {
+                ImageUrl = profilePictureUrl
+            };
+            return responseDto;
+        }
+
+        [Route("upload-homepage-image")]
+        [HttpPost]
+        public async Task<IActionResult> UploadHomePageImage(IFormFile file)
+        {
+            var result = await this.photoService.UploadHomePagePictureAsync(file);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var photo = new UserImage()
+            {
+                HomePageImageUrl = result.SecureUrl.AbsoluteUri,
                 UserId = userId
             };
 
