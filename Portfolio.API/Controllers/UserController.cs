@@ -1,6 +1,5 @@
 ﻿namespace Portfolio.API.Controllers
 {
-    using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
@@ -8,29 +7,24 @@
     using Portfolio.API.Services.PhotoService;
     using Portfolio.Data.Repositories;
     using System.Security.Claims;
-    using System.Text.RegularExpressions;
 
     [Route("api/user-profile")]
     [ApiController]
     [Authorize]
-    public class UserController : ControllerBase
+    public class UserController: ControllerBase
     {
-        private readonly ICloudinaryService photoService;
-        private readonly IRepository<UserImage> userImageRepository;
+        private readonly IImageService imageService;
 
-        public UserController(
-            ICloudinaryService photoService,
-            IRepository<UserImage> userImageRepository)
+        public UserController(IImageService imageService)
         {
-            this.photoService = photoService;
-            this.userImageRepository = userImageRepository;
+            this.imageService = imageService;
         }
 
         [Route("upload-profile-image")]
         [HttpPost]
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
         {
-            var result = await this.photoService.UploadProfilePictureAsync(file);
+            var result = await this.imageService.UploadProfileImageAsync(file);
 
             if (result.Error != null)
             {
@@ -39,37 +33,24 @@
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var photo = new UserImage()
+            var userProfileImage = new UserProfileImage()
             {
                 ProfileImageUrl = result.SecureUrl.AbsoluteUri,
                 UserId = userId
             };
 
-            UploadImageDto responseDto = await SaveImageUrlToDatabase(result, photo);
-
-            return Ok(responseDto);
-        }
-
-        private async Task<UploadImageDto> SaveImageUrlToDatabase(ImageUploadResult result, UserImage photo)
-        {
-            //Todo seperate logic for save to database;
-            await this.userImageRepository.AddAsync(photo);
-            await this.userImageRepository.SaveChangesAsync();
-
             string profilePictureUrl = result.Url.AbsoluteUri;
 
-            var responseDto = new UploadImageDto()
-            {
-                ImageUrl = profilePictureUrl
-            };
-            return responseDto;
+            var responseDto = await this.imageService.SaveImageUrlToDatabase(profilePictureUrl, userProfileImage);
+
+            return Ok(responseDto);
         }
 
         [Route("upload-homepage-image")]
         [HttpPost]
         public async Task<IActionResult> UploadHomePageImage(IFormFile file)
         {
-            var result = await this.photoService.UploadHomePagePictureAsync(file);
+            var result = await this.imageService.UploadHomePageImageAsync(file);
 
             if (result.Error != null)
             {
@@ -78,19 +59,15 @@
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var photo = new UserImage()
+            var userHomePageImage = new UserHomePageImage()
             {
                 HomePageImageUrl = result.SecureUrl.AbsoluteUri,
                 UserId = userId
             };
 
-            await this.userImageRepository.AddAsync(photo);
-            await this.userImageRepository.SaveChangesAsync();
+            string profilePictureUrl = result.Url.AbsoluteUri;
 
-            var responseDto = new UploadImageDto()
-            {
-                ImageUrl = result.Url.AbsoluteUri
-            };
+            var responseDto = await this.imageService.SaveImageUrlToDatabase(profilePictureUrl, null, userHomePageImage);
 
             return Ok(responseDto);
         }
@@ -100,7 +77,7 @@
         {
             try
             {
-                var imageUrl = await this.photoService.GetUserProfilePictureUrlAsync(userId);
+                var imageUrl = await this.imageService.GetUserProfileImageUrlAsync(userId);
                 return Ok(new { imageUrl });
             }
             catch (Exception ex)

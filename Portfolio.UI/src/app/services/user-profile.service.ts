@@ -29,7 +29,20 @@ export class UserProfileService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post(routes.UPLOAD_IMAGE_ENDPOINT, formData, { headers });
+    return this.http.post(routes.UPLOAD_PROFILE_IMAGE_ENDPOINT, formData, { headers });
+  }
+
+  uploadUserHomePagePicture(file: File): Observable<any> {
+    const jwtToken = this.getJwtToken();
+    // Add the token to the request headers
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`);
+
+    debugger
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(routes.UPLOAD_HOME_PAGE_IMAGE_ENDPOINT, formData, { headers });
   }
 
   getUserProfilePicture(): Observable<any> {
@@ -41,7 +54,6 @@ export class UserProfileService {
 
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${jwtToken}`)
-    debugger;
     return this.http.get<{ imageUrl: string }>(api, { headers });
   }
 }
