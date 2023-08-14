@@ -8,8 +8,6 @@ namespace Portfolio.API.Data.Models
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid().ToString();
-
-            this.UserImages = new HashSet<UserImage>();
         }
 
         [Required]
@@ -34,6 +32,8 @@ namespace Portfolio.API.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public ICollection<UserImage> UserImages { get; set; }
+        public UserProfileImage UserProfileImage { get; set; }
+
+        public UserHomePageImage UserHomePageImage { get; set; } 
     }
 }
