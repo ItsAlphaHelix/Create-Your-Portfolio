@@ -16,12 +16,12 @@
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
-        public DbSet<UserProfileImage> UserProfileImages { get; set; }
-
-        public DbSet<UserHomePageImage> UserHomePageImages { get; set; }
+        public DbSet<UserImage> UserImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+           // builder.Entity<UserImage>()
+           //.HasKey(x => new { x.Id, x.UserId });
             base.OnModelCreating(builder);
         }
     }

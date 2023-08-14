@@ -1,13 +1,14 @@
 ﻿namespace Portfolio.API.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
-    public class UserProfileImage
+    public class UserImage
     {
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string ProfileImageUrl { get; set; }
+        public string? ProfileImageUrl { get; set; }
+
+        public string?  HomePageImageUrl { get; set; }
 
         [Required]
         public string UserId { get; set; }
