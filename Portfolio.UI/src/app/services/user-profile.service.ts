@@ -56,4 +56,16 @@ export class UserProfileService {
       .set('Authorization', `Bearer ${jwtToken}`)
     return this.http.get<{ imageUrl: string }>(api, { headers });
   }
+
+  getUserHomePagePicture(): Observable<any> {
+    debugger
+    const jwtToken = this.getJwtToken();
+    const userId = this.getUserId();
+
+    const api = `${environment.baseUrlApi}/api/user-profile/get-home-page-image/${userId}`
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`)
+    return this.http.get<{ imageUrl: string }>(api, { headers });
+  }
 }

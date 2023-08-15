@@ -1,4 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, resolveForwardRef } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { AccountsService } from 'src/app/services/accounts.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 
 @Component({
@@ -9,9 +11,22 @@ import { UserProfileService } from 'src/app/services/user-profile.service';
 export class HomeComponent implements OnInit{
   imageURL: string = '';
 
-  constructor(private userProfileService: UserProfileService) {}
+  constructor(
+    private userProfileService: UserProfileService,
+    private accountsService: AccountsService,
+    private router: Router) {}
 
   ngOnInit(): void {
+    this.getHomePagePicture();
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof NavigationEnd) {
+    //     this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
+    //       if (loggedIn) {
+    //         this.getHomePagePicture();
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -39,5 +54,17 @@ export class HomeComponent implements OnInit{
         }
       );
     }
+  }
+
+  getHomePagePicture(): void {
+    debugger
+    this.userProfileService.getUserHomePagePicture().subscribe(
+      (response) => {
+        if (response) {
+
+          this.imageURL = response.imageUrl;
+        }
+      }
+    );
   }
 }
