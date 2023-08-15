@@ -30,11 +30,11 @@
 
         public async Task<string> GetUserHomePageImageUrlAsync(string userId)
         {
-            var user = await this.userHomePageRepository.AllAsNoTracking()
+            var user = await this.userProfileImageRepository.AllAsNoTracking()
                 .Where(x => x.UserId == userId)
                 .Select(x => new UploadImageDto()
                 {
-                    ImageUrl = x.HomePageImageUrl
+                    ImageUrl = x.ProfileImageUrl
 
                 }).FirstOrDefaultAsync();
 
@@ -100,8 +100,8 @@
         }
         public async Task<ImageUploadResult> UploadHomePageImageAsync(IFormFile file)
         {
-            int heigth = 1920;
-            int width = 1280;
+            int heigth = 1280;
+            int width = 1920;
 
             ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width);
 
@@ -134,6 +134,24 @@
             }
 
             return uploadResult;
+        }
+
+        public async Task<string> GetUserHomepageImageUrlAsync(string userId)
+        {
+            var user = await this.userHomePageRepository.AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new UploadImageDto()
+                {
+                    ImageUrl = x.HomePageImageUrl
+
+                }).FirstOrDefaultAsync();
+
+            if (user == null || string.IsNullOrEmpty(user.ImageUrl))
+            {
+                throw new Exception("User or home page image not found.");
+            }
+
+            return user.ImageUrl;
         }
     }
 }

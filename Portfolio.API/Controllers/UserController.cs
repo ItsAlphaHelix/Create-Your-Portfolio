@@ -10,7 +10,7 @@
 
     [Route("api/user-profile")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class UserController: ControllerBase
     {
         private readonly IImageService imageService;
@@ -78,6 +78,20 @@
             try
             {
                 var imageUrl = await this.imageService.GetUserProfileImageUrlAsync(userId);
+                return Ok(new { imageUrl });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("get-home-page-image/{userId}")]
+        public async Task<IActionResult> GetUserHomePageImage(string userId)
+        {
+            try
+            {
+                var imageUrl = await this.imageService.GetUserHomePageImageUrlAsync(userId);
                 return Ok(new { imageUrl });
             }
             catch (Exception ex)
