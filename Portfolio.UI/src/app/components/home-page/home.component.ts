@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, resolveForwardRef } from '@angular/core';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 
 @Component({
@@ -7,7 +7,7 @@ import { UserProfileService } from 'src/app/services/user-profile.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit{
-  //imageURL: string = '\\assets\\img\\hero-bg.jpg';
+  imageURL: string = '';
 
   constructor(private userProfileService: UserProfileService) {}
 
@@ -33,11 +33,8 @@ export class HomeComponent implements OnInit{
       const file = target.files[0];
       this.userProfileService.uploadUserHomePagePicture(file).subscribe(
         (response) => {
-          if (response) {
-            const heroClass = document.getElementById('#hero');
-            if (heroClass) {
-              heroClass.style.background = `url(${response.imageUrl}),  top center`;
-            }
+          if (response) {     
+            this.imageURL = response.imageUrl;
           }
         }
       );
