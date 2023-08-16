@@ -108,5 +108,22 @@
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("get-user")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetUser([FromQuery] string userId)
+        {
+            var user = await this.accountsService.GetUserAsync(userId);
+
+            if (user == null)
+            {
+                return BadRequest(userId);
+            }
+
+            return Ok(user);
+        }
     }
 }

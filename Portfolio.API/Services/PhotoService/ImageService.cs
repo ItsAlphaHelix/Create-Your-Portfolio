@@ -30,11 +30,11 @@
 
         public async Task<string> GetUserHomePageImageUrlAsync(string userId)
         {
-            var user = await this.userProfileImageRepository.AllAsNoTracking()
+            var user = await this.userHomePageRepository.AllAsNoTracking()
                 .Where(x => x.UserId == userId)
                 .Select(x => new UploadImageDto()
                 {
-                    ImageUrl = x.ProfileImageUrl
+                    ImageUrl = x.HomePageImageUrl
 
                 }).FirstOrDefaultAsync();
 

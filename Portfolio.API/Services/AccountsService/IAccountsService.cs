@@ -36,5 +36,12 @@
         /// <param name="userId"> The user's Id </param>
         /// <returns> A model containing both Refresh and Access tokens </returns>
         Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, string userId);
+
+        /// <summary>
+        /// Getting the user by ID.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<ApplicationUserDto> GetUserAsync(string userId);
     }
 }

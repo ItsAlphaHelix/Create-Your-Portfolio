@@ -156,8 +156,8 @@
 
             var resultUser = new ApplicationUserDto()
             {
-                UserName = user.UserName,
-                Email = user.Email
+                FirstName = user.FirstName,
+                LastName = user.LastName,
             };
 
             return resultUser;

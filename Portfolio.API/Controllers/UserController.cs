@@ -3,14 +3,12 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
-    using Portfolio.API.Dtos.ImagesDtos;
     using Portfolio.API.Services.PhotoService;
-    using Portfolio.Data.Repositories;
     using System.Security.Claims;
 
     [Route("api/user-profile")]
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class UserController: ControllerBase
     {
         private readonly IImageService imageService;
