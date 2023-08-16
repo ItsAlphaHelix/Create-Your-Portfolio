@@ -52,6 +52,8 @@ export class AuthInterceptor implements HttpInterceptor {
             errorMessage = error.error.errors.FirstName[0];
           } else if (error.error.errors.LastName) {
             errorMessage = error.error.errors.LastName[0];
+          } else if (error.error.errors.jobTitle) {
+            errorMessage = error.error.errors.jobTitle[0];
           }
           break;
        }

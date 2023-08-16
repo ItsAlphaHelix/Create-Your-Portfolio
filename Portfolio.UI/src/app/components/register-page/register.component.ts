@@ -42,6 +42,7 @@ export class RegisterComponent {
     username: new FormControl("", Validators.required),
     firstName: new FormControl("", Validators.required),
     lastName: new FormControl("", Validators.required),
+    jobTitle: new FormControl("", Validators.required),
     password: new FormControl("",
       [
         Validators.required,
@@ -55,7 +56,7 @@ export class RegisterComponent {
   formRequest!: RegisterRequest
 
   onRegister(): void {
-    
+    debugger
     if (this.registerForm.invalid) {
       this.clientSideValidationService.RegisterFormValidation(this.registerForm);
       return;
@@ -66,6 +67,7 @@ export class RegisterComponent {
       username: this.registerForm.value.username!,
       firstName: this.registerForm.value.firstName!,
       lastName: this.registerForm.value.lastName!,
+      jobTitle: this.registerForm.value.jobTitle!,
       password: this.registerForm.value.password!,
       confirmPassword: this.registerForm.value.confirmPassword!
     }
