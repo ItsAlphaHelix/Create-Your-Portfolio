@@ -6,19 +6,18 @@
                 <h4 style="font-size: 30px;">Create Your Portfolio<span> Account.</span></h4>
                 <br>
                 <!-- <h5>Sign in to your account.</h5> -->
-                <input type="text" name="email" placeholder="Email" autocomplete="off" formControlName="email">
-                <input type="text" class="input" id="name" autocomplete="off" placeholder="Username" formControlName="username">
-                <input type="text" class="input" id="first_name" autocomplete="off" placeholder="First Name" formControlName="firstName">
-                <input type="text" class="input" id="last_name" autocomplete="off" placeholder="Last Name"
-                    formControlName="lastName">                  
+                <input type="text" name="email" placeholder="Email" formControlName="email">
+                <input type="text" class="input" id="name" placeholder="Username" formControlName="username">
+                <input type="text" class="input" id="first_name" placeholder="First Name" formControlName="firstName">
+                <input type="text" class="input" id="last_name" placeholder="Last Name" formControlName="lastName">
+                <input type="text" class="input" id="job"  placeholder="Job"> 
                 <i class="typcn typcn-eye" id="eye"></i>
-                <input type="password" name="password" placeholder="Passsword" id="pwd" autocomplete="off" formControlName="password">
-                <input type="password" class="input" id="confirm_pass" autocomplete="off" placeholder="Confirm password" formControlName="confirmPassword">
-                <a href="#" class="forgetpass" >Forgot Password?</a>
-
-                <input type="submit" value="Sign in" class="btn1" (click)="onRegister()">
+                <input type="password" name="password" placeholder="Passsword" id="pwd" ormControlName="password">
+                <input type="password" class="input" id="confirm_pass" placeholder="Confirm password" formControlName="confirmPassword">
+                
+                <input type="submit" value="Register" class="register-button" (click)="onRegister()">
             </form>
-            <a routerLink="/login" class="dnthave">Are you have an account? Sign in</a>
+            <a routerLink="/login" class="dnthave">Are you have an account? Log in</a>
         </div>
     </div>
 </div>

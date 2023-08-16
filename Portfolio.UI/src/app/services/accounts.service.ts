@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import * as routes from 'src/app/shared/routes.contants';
@@ -9,6 +9,7 @@ import { LoginRequest } from '../models/account-models/login-request-model';
 import { LoginResponse } from 'src/app/models/account-models/login-response-model';
 import { Router } from '@angular/router';
 import { __param } from 'tslib';
+import { UserResponse } from '../models/account-models/user-response-model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,11 @@ export class AccountsService {
 
   loginUser(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(routes.LOGIN_ENDPOINT, request);
+  }
+
+  getUserById(userId: string): Observable<UserResponse> {
+    const params = { userId };
+    return this.http.get<UserResponse>(routes.GET_USER_ENDPOINT, { params });
   }
 
   logout() {

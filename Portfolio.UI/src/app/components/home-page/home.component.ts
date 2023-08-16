@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, resolveForwardRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { UserResponse } from 'src/app/models/account-models/user-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 
@@ -9,7 +10,7 @@ import { UserProfileService } from 'src/app/services/user-profile.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit{
-  imageURL: string = '';
+  imageURL: string | undefined;
 
   constructor(
     private userProfileService: UserProfileService,
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit{
 
   ngOnInit(): void {
     this.getHomePagePicture();
+    this.getUser();
     // this.router.events.subscribe((event) => {
     //   if (event instanceof NavigationEnd) {
     //     this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
@@ -61,9 +63,24 @@ export class HomeComponent implements OnInit{
     this.userProfileService.getUserHomePagePicture().subscribe(
       (response) => {
         if (response) {
-
           this.imageURL = response.imageUrl;
         }
+      }
+    );
+  }
+
+  private getUserId() {
+    return sessionStorage.getItem('userId') || '';
+  }
+
+  userResonse: UserResponse | undefined
+
+  getUser(): void {
+    const userId = this.getUserId();
+    debugger
+    this.accountsService.getUserById(userId).subscribe(
+      (response) => {
+        this.userResonse = response;
       }
     );
   }

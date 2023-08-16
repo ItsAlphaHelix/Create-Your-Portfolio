@@ -1,8 +1,9 @@
-import { HttpClient, HttpEventType, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import * as routes from 'src/app/shared/routes.contants';
 import { environment } from 'src/environments/environment';
+import { UserResponse } from '../models/account-models/user-response-model';
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +59,6 @@ export class UserProfileService {
   }
 
   getUserHomePagePicture(): Observable<any> {
-    debugger
     const jwtToken = this.getJwtToken();
     const userId = this.getUserId();
 

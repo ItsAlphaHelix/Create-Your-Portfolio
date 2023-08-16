@@ -122,7 +122,7 @@ label span {
     left: 7.5%;
 }
 
-.btn1 {
+.login-button {
     border: 0;
     background: #7f5feb;
     color: #dfdeee;
@@ -131,7 +131,7 @@ label span {
     height: 49px;
     font-size: 16px;
     position: absolute;
-    top: 79%;
+    top: 75%;
     left: 8%;
     transition: 0.3s;
     cursor: pointer;
@@ -150,9 +150,9 @@ label span {
 }
 
 .forgetpass {
-    position: relative;
-    float: right;
-    right: 28px;
+    position: absolute;
+    top: 88%;
+    left: 24%;
 }
 
 .dnthave {

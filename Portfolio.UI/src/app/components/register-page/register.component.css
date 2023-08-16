@@ -123,7 +123,7 @@ label span {
     left: 7.5%;
 }
 
-.btn1 {
+.register-button {
     border: 0;
     background: #7f5feb;
     color: #dfdeee;
@@ -132,7 +132,7 @@ label span {
     height: 49px;
     font-size: 16px;
     position: absolute;
-    top: 79%;
+    top: 84%;
     left: 8%;
     transition: 0.3s;
     cursor: pointer;
@@ -148,12 +148,6 @@ label span {
     margin-top: 0px;
     color: #dfdeee;
     font-size: 13px;
-}
-
-.forgetpass {
-    position: relative;
-    float: right;
-    right: 28px;
 }
 
 .dnthave {

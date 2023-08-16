@@ -11,12 +11,12 @@
                 <input type="password" name="password" placeholder="Passsword" id="pwd" autocomplete="off" formControlName="password" >
                 <div style="margin-right: 60%;">
                     <input type="checkbox" class="rdm" checked id="remember_me">
-                    <label for="remember_me" style="color: white;">Remember me</label>
+                    <label for="remember_me" style="color: white;">Remember me!</label>
                 </div>
-                <a routerLink="/forgot-password" class="forgetpass" style="bottom: 24px">Forgot Password?</a>
-                <input type="submit" value="Sign in" class="btn1" (click)="onLogin()">
+                <input type="submit" value="Log in" class="login-button" (click)="onLogin()">
             </form>
-            <a routerLink="/register" class="dnthave">Don’t have an account? Sign up</a>
+            <a routerLink="/forgot-password" class="forgetpass">Forgot Password?</a>
+            <a routerLink="/register" class="dnthave">Don’t have an account? Register</a>
         </div>
     </div>
 </div>
