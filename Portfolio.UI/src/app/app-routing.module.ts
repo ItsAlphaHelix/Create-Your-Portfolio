@@ -1,17 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
-import { HomeComponent } from './components/home-page/home.component';
-import { RegisterComponent } from './components/register-page/register.component';
-import { LoginComponent } from './components/login-page/login.component';
-import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password.component';
+import { HomeComponent } from './components/home-page/home-page.component';
+import { RegisterComponent } from './components/register-page/register-page.component';
+import { LoginComponent } from './components/login-page/login-page.component';
+import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', redirectTo: '/', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  {path: 'forgot-password', component: ForgottenPasswordComponent}
+  { path: 'forgot-password', component: ForgottenPasswordComponent },
+  { path: '**', component: ErrorPageComponent}
 ];
 
 @NgModule({

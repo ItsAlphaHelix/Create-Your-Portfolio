@@ -8,20 +8,20 @@ import { LoginRequest } from 'src/app/models/account-models/login-request-model'
 import { LoginResponse } from 'src/app/models/account-models/login-response-model';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { ClientSideValidationService } from 'src/app/services/client-side-validation.service';
+import { ClientSideValidation} from 'src/app/services/client-side-validation';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  templateUrl: './login-page.component.html',
+  styleUrls: ['./login-page.component.css']
 })
 export class LoginComponent implements OnInit {
 
 
   constructor(private accountsService: AccountsService,
-     private router: Router,
-      private toastr: ToastrService,
-       private clientSideValidationService: ClientSideValidationService) { }
+    private router: Router,
+    private toastr: ToastrService,
+    private clientSideValidation: ClientSideValidation) { }
 
   ngOnInit() {
     if (this.accountsService.getAccessToken()) {
@@ -46,9 +46,9 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
 
-    
+
     if (this.loginForm.invalid) {
-      this.clientSideValidationService.LoginFormValidation(this.loginForm)
+      this.clientSideValidation.LoginFormValidation(this.loginForm)
       return;
     }
 

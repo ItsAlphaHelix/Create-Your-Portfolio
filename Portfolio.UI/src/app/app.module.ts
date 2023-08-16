@@ -5,13 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HomeComponent } from './components/home-page/home.component';
-import { RegisterComponent } from './components/register-page/register.component';
-import { LoginComponent } from './components/login-page/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password.component';
 import { AuthInterceptor } from './services/authorization.interceptor';
+import { HomeComponent } from './components/home-page/home-page.component';
+import { RegisterComponent } from './components/register-page/register-page.component';
+import { LoginComponent } from './components/login-page/login-page.component';
+import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AuthInterceptor } from './services/authorization.interceptor';
     HomeComponent,
     RegisterComponent,
     LoginComponent,
-    ForgottenPasswordComponent
+    ForgottenPasswordComponent,
+    ErrorPageComponent
   ],
   imports: [
     RouterModule,
@@ -31,7 +33,7 @@ import { AuthInterceptor } from './services/authorization.interceptor';
     BrowserAnimationsModule,
     ToastrModule.forRoot({
     })
-    
+
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

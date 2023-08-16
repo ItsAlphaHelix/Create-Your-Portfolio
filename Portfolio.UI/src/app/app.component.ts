@@ -1,8 +1,8 @@
 import { Component, DebugNode, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AccountsService } from './services/accounts.service';
 import { UserProfileService } from './services/user-profile.service';
-import { delay, interval, take } from 'rxjs';
-import { NavigationEnd, Router } from '@angular/router';
+import { Observable, delay, interval, of, take } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UserResponse } from './models/account-models/user-response-model';
 
 @Component({
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   constructor(
     private accountsService: AccountsService,
     private router: Router,
-    private userProfileService: UserProfileService,) { }
+    private userProfileService: UserProfileService) { }
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -70,16 +70,16 @@ export class AppComponent implements OnInit {
   private getUserId() {
     return sessionStorage.getItem('userId') || '';
   }
-  
+
   userResonse: UserResponse | undefined
 
   getUser(): void {
     const userId = this.getUserId();
-    
+
     this.accountsService.getUserById(userId).subscribe(
-        (response) => {
-            this.userResonse = response;
-        }
+      (response) => {
+        this.userResonse = response;
+      }
     );
   }
 

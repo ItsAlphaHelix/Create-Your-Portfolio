@@ -6,8 +6,8 @@ import { UserProfileService } from 'src/app/services/user-profile.service';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.css']
 })
 export class HomeComponent implements OnInit{
   imageURL: string | undefined;

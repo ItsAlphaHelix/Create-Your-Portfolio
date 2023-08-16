@@ -8,7 +8,7 @@ import { timeout } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ClientSideValidationService {
+export class ClientSideValidation {
 
   constructor(private toastr: ToastrService) { }
 

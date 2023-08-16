@@ -6,20 +6,20 @@ import { ToastrService } from 'ngx-toastr';
 import { catchError, filter, first, throwError } from 'rxjs';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { ClientSideValidationService } from 'src/app/services/client-side-validation.service';
+import { ClientSideValidation } from 'src/app/services/client-side-validation';
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  templateUrl: './register-page.component.html',
+  styleUrls: ['./register-page.component.css']
 })
 export class RegisterComponent {
 
   constructor(private accountsService: AccountsService,
-     private router: Router,
-        private clientSideValidationService: ClientSideValidationService,
-         private toastr: ToastrService
-        ) { }
+    private router: Router,
+    private clientSideValidation: ClientSideValidation,
+    private toastr: ToastrService
+  ) { }
 
   private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
     if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
@@ -58,7 +58,7 @@ export class RegisterComponent {
   onRegister(): void {
     debugger
     if (this.registerForm.invalid) {
-      this.clientSideValidationService.RegisterFormValidation(this.registerForm);
+      this.clientSideValidation.RegisterFormValidation(this.registerForm);
       return;
     }
 
