@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild, resolveForwardRef } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild, resolveForwardRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { UserResponse } from 'src/app/models/account-models/user-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
+import Typed from 'typed.js';
 
 @Component({
   selector: 'app-home',
@@ -15,9 +16,17 @@ export class HomeComponent implements OnInit{
   constructor(
     private userProfileService: UserProfileService,
     private accountsService: AccountsService,
-    private router: Router) {}
+    private router: Router,
+    private renderer: Renderer2) {}
+
+  @ViewChild('typed') typedElement!: ElementRef;
 
   ngOnInit(): void {
+    
+    this.renderer.listen('window', 'load', () => {
+      this.initTyped();
+    });
+
     this.getHomePagePicture();
     this.getUser();
     // this.router.events.subscribe((event) => {
@@ -29,6 +38,21 @@ export class HomeComponent implements OnInit{
     //     });
     //   }
     // });
+  }
+
+  private initTyped(): void {
+    
+    const typedStrings = this.typedElement.nativeElement.getAttribute('data-typed-items');
+    
+    console.log(typedStrings) 
+    const typedStringsArray = typedStrings.split(',');
+    new Typed('.typed', {
+      strings: typedStringsArray,
+      loop: true,
+      typeSpeed: 100,
+      backSpeed: 50,
+      backDelay: 2000
+    });
   }
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
