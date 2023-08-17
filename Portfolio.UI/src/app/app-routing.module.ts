@@ -13,7 +13,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgottenPasswordComponent },
-  { path: '**', component: ErrorPageComponent}
+  { path: 'page-not-found', component: ErrorPageComponent },
+  { path: '**', redirectTo: 'page-not-found', pathMatch: 'full' }
 ];
 
 @NgModule({

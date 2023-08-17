@@ -59,7 +59,6 @@ export class HomeComponent implements OnInit{
   }
 
   getHomePagePicture(): void {
-    debugger
     this.userProfileService.getUserHomePagePicture().subscribe(
       (response) => {
         if (response) {
@@ -77,7 +76,6 @@ export class HomeComponent implements OnInit{
 
   getUser(): void {
     const userId = this.getUserId();
-    debugger
     this.accountsService.getUserById(userId).subscribe(
       (response) => {
         this.userResonse = response;

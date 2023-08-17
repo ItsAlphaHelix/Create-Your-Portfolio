@@ -1,9 +1,10 @@
-import { Component, DebugNode, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DebugNode, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { AccountsService } from './services/accounts.service';
 import { UserProfileService } from './services/user-profile.service';
-import { Observable, delay, interval, of, take } from 'rxjs';
+import { Observable, Subscription, delay, interval, of, take } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UserResponse } from './models/account-models/user-response-model';
+declare function handleClick(): void;
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,12 @@ export class AppComponent implements OnInit {
   constructor(
     private accountsService: AccountsService,
     private router: Router,
-    private userProfileService: UserProfileService) { }
+    private userProfileService: UserProfileService,
+    private renderer: Renderer2) { }
+  
+  
   ngOnInit(): void {
-    this.router.events.subscribe((event) => {
+      this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
           if (loggedIn) {
@@ -29,8 +33,23 @@ export class AppComponent implements OnInit {
       }
     });
   }
+  
+  onClickMobileNav() {
+    const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+    const body = document.getElementsByTagName('body')[0];
+    body.classList.toggle('mobile-nav-active');
 
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+        const iconElement = mobileNavToggle as HTMLElement;
+        const biList = document.querySelector('.bi-list') as HTMLElement;
+        if(biList) {
+          this.renderer.removeClass(iconElement, 'bi-list');
+          this.renderer.addClass(iconElement, 'bi-x');
+        }
+        else {      
+          this.renderer.removeClass(iconElement, 'bi-x');
+          this.renderer.addClass(iconElement, 'bi-list');
+        }
+  }
 
   openFileInput(): void {
     const fileInput = document.createElement('input');
