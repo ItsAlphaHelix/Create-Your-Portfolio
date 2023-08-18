@@ -15,11 +15,7 @@ import { ClientSideValidation } from 'src/app/services/client-side-validation';
 })
 export class RegisterComponent {
 
-  constructor(private accountsService: AccountsService,
-    private router: Router,
-    private clientSideValidation: ClientSideValidation,
-    private toastr: ToastrService
-  ) { }
+  formRequest!: RegisterRequest
 
   private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
     if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
@@ -36,6 +32,13 @@ export class RegisterComponent {
       return { passwordMismatch: true };
     }
   };
+  
+  constructor(private accountsService: AccountsService,
+    private router: Router,
+    private clientSideValidation: ClientSideValidation,
+    private toastr: ToastrService
+  ) { }
+
 
   registerForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
@@ -53,7 +56,6 @@ export class RegisterComponent {
     //acceptTACCheckbox: new FormControl(false, Validators.requiredTrue)
   }, { validators: this.passwordMatchValidator });
 
-  formRequest!: RegisterRequest
 
   onRegister(): void {
     debugger

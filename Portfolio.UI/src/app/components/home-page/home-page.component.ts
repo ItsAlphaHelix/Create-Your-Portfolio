@@ -1,61 +1,69 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild, resolveForwardRef } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnChanges, OnInit, Renderer2, ViewChild, resolveForwardRef } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { UserResponse } from 'src/app/models/account-models/user-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import Typed from 'typed.js';
+import * as AOS from 'aos';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
-export class HomeComponent implements OnInit{
-  imageURL: string | undefined;
-
-  constructor(
-    private userProfileService: UserProfileService,
-    private accountsService: AccountsService,
-    private router: Router,
-    private renderer: Renderer2) {}
-
+export default class HomeComponent implements OnInit {
   @ViewChild('typed') typedElement!: ElementRef;
-
-  ngOnInit(): void {
-    
-    this.renderer.listen('window', 'load', () => {
-      this.initTyped();
-    });
-
-    this.getHomePagePicture();
-    this.getUser();
-    // this.router.events.subscribe((event) => {
-    //   if (event instanceof NavigationEnd) {
-    //     this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
-    //       if (loggedIn) {
-    //         this.getHomePagePicture();
-    //       }
-    //     });
-    //   }
-    // });
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  
+  imageURL: string | undefined;
+  userJobTitle: string | undefined;
+  userResonse: UserResponse | undefined
+  
+  private initAos(): void {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: true,
+      mirror: false
+  });
   }
-
+  
   private initTyped(): void {
-    
-    const typedStrings = this.typedElement.nativeElement.getAttribute('data-typed-items');
-    
-    console.log(typedStrings) 
-    const typedStringsArray = typedStrings.split(',');
+  if(this.userJobTitle) {
     new Typed('.typed', {
-      strings: typedStringsArray,
-      loop: true,
+      strings: [this.userJobTitle],
       typeSpeed: 100,
       backSpeed: 50,
       backDelay: 2000
     });
   }
+  }
+  
+  private getUserId() {
+  return sessionStorage.getItem('userId') || '';
+  }
+  
+  constructor(
+    private userProfileService: UserProfileService,
+    private accountsService: AccountsService,
+    private router: Router,
+    private renderer: Renderer2) { }
+    
+    
+    ngOnInit(): void {
+      this.getHomePagePicture();
+      this.getUser();
+      
+      setTimeout(() => {
+        this.accountsService.getUserById(this.getUserId()).subscribe(response => {
+          this.userJobTitle = response.jobTitle;
+          this.initAos();
+          this.initTyped();
+        });         
+      }, 100);
+    }
 
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   openFileInput(): void {
     const fileInput = document.createElement('input');
@@ -74,7 +82,7 @@ export class HomeComponent implements OnInit{
       const file = target.files[0];
       this.userProfileService.uploadUserHomePagePicture(file).subscribe(
         (response) => {
-          if (response) {     
+          if (response) {
             this.imageURL = response.imageUrl;
           }
         }
@@ -91,12 +99,6 @@ export class HomeComponent implements OnInit{
       }
     );
   }
-
-  private getUserId() {
-    return sessionStorage.getItem('userId') || '';
-  }
-
-  userResonse: UserResponse | undefined
 
   getUser(): void {
     const userId = this.getUserId();

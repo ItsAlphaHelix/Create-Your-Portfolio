@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptor } from './services/authorization.interceptor';
-import { HomeComponent } from './components/home-page/home-page.component';
+import HomeComponent from './components/home-page/home-page.component';
 import { RegisterComponent } from './components/register-page/register-page.component';
 import { LoginComponent } from './components/login-page/login-page.component';
 import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';

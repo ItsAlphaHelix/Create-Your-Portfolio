@@ -10,15 +10,16 @@ import { UserResponse } from '../models/account-models/user-response-model';
 })
 export class UserProfileService {
 
+  private getJwtToken() {
+     return sessionStorage.getItem('accessToken') || '';
+   }
+ 
+    private getUserId() { 
+     return sessionStorage.getItem('userId') || '';
+   }
+   
   constructor(private http: HttpClient) { }
 
- private getJwtToken() {
-    return sessionStorage.getItem('accessToken') || '';
-  }
-
-  private getUserId() { 
-    return sessionStorage.getItem('userId') || '';
-  }
 
   uploadUserProfilePicture(file: File): Observable<any> {
     const jwtToken = this.getJwtToken();

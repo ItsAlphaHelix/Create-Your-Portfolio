@@ -8,7 +8,7 @@ import { LoginRequest } from 'src/app/models/account-models/login-request-model'
 import { LoginResponse } from 'src/app/models/account-models/login-response-model';
 import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { ClientSideValidation} from 'src/app/services/client-side-validation';
+import { ClientSideValidation } from 'src/app/services/client-side-validation';
 
 @Component({
   selector: 'app-login',
@@ -16,22 +16,20 @@ import { ClientSideValidation} from 'src/app/services/client-side-validation';
   styleUrls: ['./login-page.component.css']
 })
 export class LoginComponent implements OnInit {
-
-
+  formRequest!: LoginComponent
+  loginRequest!: LoginRequest
+  
   constructor(private accountsService: AccountsService,
     private router: Router,
     private toastr: ToastrService,
     private clientSideValidation: ClientSideValidation) { }
 
+
   ngOnInit() {
     if (this.accountsService.getAccessToken()) {
       this.router.navigate(['/home']);
     }
-
   }
-
-  formRequest!: LoginComponent
-
 
   loginForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
@@ -41,12 +39,7 @@ export class LoginComponent implements OnInit {
       ])
   });
 
-
-  loginRequest!: LoginRequest
-
   onLogin(): void {
-
-
     if (this.loginForm.invalid) {
       this.clientSideValidation.LoginFormValidation(this.loginForm)
       return;

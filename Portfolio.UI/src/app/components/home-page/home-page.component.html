@@ -1,7 +1,25 @@
-<section id="hero" [style.backgroundImage]="'url(' + imageURL + ')'"  class="d-flex flex-column justify-content-center align-items-center" (click)="openFileInput()">
-    <div class="hero-container"> <!-- data-aos="fade-in" -->
+<!-- <section id="hero" [style.backgroundImage]="'url(' + imageURL + ')'"  class="d-flex flex-column justify-content-center align-items-center" (click)="openFileInput()">
+    <div class="hero-container" data-aos="fade-in">
         <h1>{{userResonse?.firstName}} {{userResonse?.lastName}}</h1>
-        <p>I'm <span class="typed" data-typed-items="Designer, Developer, Freelancer, Photographer" #typed></span></p>
+        <p>I'm <span class="typed" [attr.data-typed-items]="userJobTitle" #typed></span></p>
     </div>
     <input type="file" #fileInput style="display: none;" (change)="handleFileInputChange($event)">
-</section><!-- End Hero -->
+</section> -->
+<div class="frame">
+    <div class="center">
+        <div class="title">
+            <h1>Upload your own home page.</h1>
+        </div>
+
+        <div class="dropzone">
+            <img src="http://100dayscss.com/codepen/upload.svg" class="upload-icon" />
+            <input type="file" class="upload-input" />
+        </div>
+
+        <button type="button" class="btn" name="uploadbutton">Upload file</button>
+
+    </div>
+</div>
+<!-- original pen: https://codepen.io/roydigerhund/pen/ZQdbeN  -->
+
+<!-- NO JS ADDED YET -->

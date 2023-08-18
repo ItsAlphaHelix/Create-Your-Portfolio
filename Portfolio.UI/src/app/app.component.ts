@@ -14,15 +14,19 @@ declare function handleClick(): void;
 export class AppComponent implements OnInit {
   imageURL: string = '\\assets\\img\\600x600.jpg';
 
+  private getUserId() {
+    return sessionStorage.getItem('userId') || '';
+  }
+  
   constructor(
     private accountsService: AccountsService,
     private router: Router,
     private userProfileService: UserProfileService,
     private renderer: Renderer2) { }
-  
-  
+
+
   ngOnInit(): void {
-      this.router.events.subscribe((event) => {
+    this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
           if (loggedIn) {
@@ -33,22 +37,22 @@ export class AppComponent implements OnInit {
       }
     });
   }
-  
+
   onClickMobileNav() {
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const body = document.getElementsByTagName('body')[0];
     body.classList.toggle('mobile-nav-active');
 
-        const iconElement = mobileNavToggle as HTMLElement;
-        const biList = document.querySelector('.bi-list') as HTMLElement;
-        if(biList) {
-          this.renderer.removeClass(iconElement, 'bi-list');
-          this.renderer.addClass(iconElement, 'bi-x');
-        }
-        else {      
-          this.renderer.removeClass(iconElement, 'bi-x');
-          this.renderer.addClass(iconElement, 'bi-list');
-        }
+    const iconElement = mobileNavToggle as HTMLElement;
+    const biList = document.querySelector('.bi-list') as HTMLElement;
+    if (biList) {
+      this.renderer.removeClass(iconElement, 'bi-list');
+      this.renderer.addClass(iconElement, 'bi-x');
+    }
+    else {
+      this.renderer.removeClass(iconElement, 'bi-x');
+      this.renderer.addClass(iconElement, 'bi-list');
+    }
   }
 
   openFileInput(): void {
@@ -86,9 +90,6 @@ export class AppComponent implements OnInit {
     );
   }
 
-  private getUserId() {
-    return sessionStorage.getItem('userId') || '';
-  }
 
   userResonse: UserResponse | undefined
 

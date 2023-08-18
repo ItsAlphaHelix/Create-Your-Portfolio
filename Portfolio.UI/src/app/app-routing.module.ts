@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './services/auth.guard';
-import { HomeComponent } from './components/home-page/home-page.component';
+import HomeComponent from './components/home-page/home-page.component';
 import { RegisterComponent } from './components/register-page/register-page.component';
 import { LoginComponent } from './components/login-page/login-page.component';
 import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';
