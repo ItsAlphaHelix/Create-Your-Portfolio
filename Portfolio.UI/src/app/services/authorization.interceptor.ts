@@ -8,6 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +16,12 @@ import { ToastrService } from 'ngx-toastr';
 
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private toastr: ToastrService) { }
+  constructor(private toastr: ToastrService, private router: Router) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 404) {
-          throw new Error('The content is not found!');
-        }
-        const errorMessage = this.setError(error);
+        let errorMessage = this.setError(error);
         this.toastr.error(errorMessage);
         throw new Error(errorMessage);
       })
@@ -39,6 +37,10 @@ export class AuthInterceptor implements HttpInterceptor {
     else {
       //server side error
       switch (error.status) {
+        case 404:
+          console.log(error.error)
+          errorMessage = error.error; 
+        break;
         case 401:
           errorMessage = error.error;
           break;
@@ -52,11 +54,11 @@ export class AuthInterceptor implements HttpInterceptor {
             errorMessage = error.error.errors.FirstName[0];
           } else if (error.error.errors.LastName) {
             errorMessage = error.error.errors.LastName[0];
-          } else if (error.error.errors.jobTitle) {
-            errorMessage = error.error.errors.jobTitle[0];
+          } else if (error.error.errors.JobTitle) {
+            errorMessage = error.error.errors.JobTitle[0];
           }
           break;
-       }
+        }
     }
     return errorMessage;
   }

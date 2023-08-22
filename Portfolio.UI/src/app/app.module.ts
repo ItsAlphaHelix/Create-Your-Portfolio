@@ -24,7 +24,6 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
     ErrorPageComponent
   ],
   imports: [
-    RouterModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -33,7 +32,6 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
     BrowserAnimationsModule,
     ToastrModule.forRoot({
     })
-
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

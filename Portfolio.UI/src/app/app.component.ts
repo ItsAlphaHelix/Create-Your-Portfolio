@@ -4,6 +4,7 @@ import { UserProfileService } from './services/user-profile.service';
 import { Observable, Subscription, delay, interval, of, take } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UserResponse } from './models/account-models/user-response-model';
+import { ToastrService } from 'ngx-toastr';
 declare function handleClick(): void;
 
 @Component({
@@ -12,20 +13,23 @@ declare function handleClick(): void;
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  imageURL: string = '\\assets\\img\\600x600.jpg';
-
-  private getUserId() {
-    return sessionStorage.getItem('userId') || '';
-  }
   
   constructor(
     private accountsService: AccountsService,
     private router: Router,
     private userProfileService: UserProfileService,
-    private renderer: Renderer2) { }
-
+    private renderer: Renderer2,
+    private toastr: ToastrService) { }
+    
+    imageURL: string = '\\assets\\img\\600x600.jpg';
+    userResonse: UserResponse | undefined
+  
+    private getUserId() {
+      return sessionStorage.getItem('userId') || '';
+    }
 
   ngOnInit(): void {
+    
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
@@ -74,6 +78,7 @@ export class AppComponent implements OnInit {
         (response) => {
           if (response) {
             this.imageURL = response.imageUrl;
+            this.toastr.success('You have successfully uploaded your home image.If you wish to edit it, simply click on the window again.')
           }
         }
       );
@@ -91,7 +96,6 @@ export class AppComponent implements OnInit {
   }
 
 
-  userResonse: UserResponse | undefined
 
   getUser(): void {
     const userId = this.getUserId();

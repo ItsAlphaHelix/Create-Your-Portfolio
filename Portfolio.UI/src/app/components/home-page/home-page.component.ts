@@ -1,69 +1,73 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnChanges, OnInit, Renderer2, ViewChild, resolveForwardRef } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, Component, ElementRef, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild, resolveForwardRef } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UserResponse } from 'src/app/models/account-models/user-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import Typed from 'typed.js';
 import * as AOS from 'aos';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
+
 export default class HomeComponent implements OnInit {
-  @ViewChild('typed') typedElement!: ElementRef;
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
-  
-  imageURL: string | undefined;
-  userJobTitle: string | undefined;
-  userResonse: UserResponse | undefined
-  
-  private initAos(): void {
-    AOS.init({
-      duration: 1000,
-      easing: 'ease-in-out',
-      once: true,
-      mirror: false
-  });
-  }
-  
-  private initTyped(): void {
-  if(this.userJobTitle) {
-    new Typed('.typed', {
-      strings: [this.userJobTitle],
-      typeSpeed: 100,
-      backSpeed: 50,
-      backDelay: 2000
-    });
-  }
-  }
-  
-  private getUserId() {
-  return sessionStorage.getItem('userId') || '';
-  }
   
   constructor(
     private userProfileService: UserProfileService,
     private accountsService: AccountsService,
+    private toastr: ToastrService,
     private router: Router,
-    private renderer: Renderer2) { }
+    private renderer: Renderer2,
+    private el: ElementRef,
+    private route: ActivatedRoute) { }
     
+    @ViewChild('typed') typedElement!: ElementRef;
+    @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
     
-    ngOnInit(): void {
-      this.getHomePagePicture();
-      this.getUser();
-      
-      setTimeout(() => {
-        this.accountsService.getUserById(this.getUserId()).subscribe(response => {
-          this.userJobTitle = response.jobTitle;
-          this.initAos();
-          this.initTyped();
-        });         
-      }, 100);
+    imageURL: string | undefined;
+    userJobTitle: string | undefined;
+    userResonse: UserResponse | undefined
+  
+    private initAos(): void {
+      AOS.init({
+        duration: 1000,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+      });
+    }
+  
+    private initTyped(): void {
+      if (this.userJobTitle) {
+        new Typed('.typed', {
+          strings: [this.userJobTitle],
+          typeSpeed: 100,
+          backSpeed: 50,
+          backDelay: 2000
+        });
+      }
+    }
+  
+    private getUserId() {
+      return sessionStorage.getItem('userId') || '';
     }
 
+  ngOnInit(): void {
+    this.getHomePagePicture();
+    this.getUser();
+    setTimeout(() => {
+      this.accountsService.getUserById(this.getUserId()).subscribe(response => {
+        this.userJobTitle = response.jobTitle;
+        this.initAos();
+        this.initTyped();
+      });
+    }, 100);
+    
+  }
 
   openFileInput(): void {
     const fileInput = document.createElement('input');
@@ -84,6 +88,7 @@ export default class HomeComponent implements OnInit {
         (response) => {
           if (response) {
             this.imageURL = response.imageUrl;
+            this.toastr.success('You have successfully uploaded your home image.If you wish to edit it, simply click on the window again.'); 
           }
         }
       );

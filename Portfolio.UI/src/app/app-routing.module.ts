@@ -8,8 +8,8 @@ import { ForgottenPasswordComponent } from './components/forgotten-password-page
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'home', redirectTo: '/', pathMatch: 'full' },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard]},
+  { path: 'home', redirectTo: '/', pathMatch: 'full'},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgottenPasswordComponent },

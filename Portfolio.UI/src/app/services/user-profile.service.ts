@@ -9,7 +9,6 @@ import { UserResponse } from '../models/account-models/user-response-model';
   providedIn: 'root'
 })
 export class UserProfileService {
-
   private getJwtToken() {
      return sessionStorage.getItem('accessToken') || '';
    }
@@ -17,8 +16,8 @@ export class UserProfileService {
     private getUserId() { 
      return sessionStorage.getItem('userId') || '';
    }
-   
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient) {}
 
 
   uploadUserProfilePicture(file: File): Observable<any> {
