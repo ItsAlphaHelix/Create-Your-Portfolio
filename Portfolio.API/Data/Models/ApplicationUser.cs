@@ -8,6 +8,9 @@ namespace Portfolio.API.Data.Models
         public ApplicationUser()
         {
             this.Id = Guid.NewGuid().ToString();
+
+            this.UserHomePageImage = new HashSet<UserHomePageImage>();
+            this.UserProfileImage = new HashSet<UserProfileImage>();
         }
 
         [Required]
@@ -17,6 +20,10 @@ namespace Portfolio.API.Data.Models
         [Required]
         [MaxLength(30, ErrorMessage = "The last name length shouldn't be more than 30 symbols.")]
         public string LastName { get; set; }
+
+        [Required]
+        [MaxLength(30, ErrorMessage = "The job title shouln't be more than 30 symbols.")]
+        public string JobTitle { get; set; }
 
         public string? AccessToken { get; set; }
 
@@ -32,8 +39,8 @@ namespace Portfolio.API.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public UserProfileImage UserProfileImage { get; set; }
+        public ICollection<UserProfileImage> UserProfileImage { get; set; }
 
-        public UserHomePageImage UserHomePageImage { get; set; } 
+        public ICollection<UserHomePageImage> UserHomePageImage { get; set; } 
     }
 }

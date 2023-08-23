@@ -8,12 +8,12 @@
     using Portfolio.API.Dtos.ImagesDtos;
     using Portfolio.Data.Repositories;
 
-    public class ImageService: IImageService
+    public class ImagesService: IImagesService
     {
         private readonly Cloudinary cloudinary;
         private readonly IRepository<UserProfileImage> userProfileImageRepository;
         private readonly IRepository<UserHomePageImage> userHomePageRepository;
-        public ImageService(
+        public ImagesService(
             IConfiguration configuration,
             IRepository<UserProfileImage> userProfileImageRepository,
             IRepository<UserHomePageImage> userHomePageRepository)
@@ -40,9 +40,9 @@
 
             if (user == null || string.IsNullOrEmpty(user.ImageUrl))
             {
-                throw new Exception("User or profile image not found.");
+                throw new Exception("You currently do not have a home image. To enhance your portfolio, consider uploading your own image. To upload the image, click on the window displaying your name and job title.");
             }
-
+            
             return user.ImageUrl;
         }
 
@@ -58,7 +58,7 @@
 
             if (user == null || string.IsNullOrEmpty(user.ImageUrl))
             {
-                throw new Exception("User or profile image not found.");
+                throw new Exception("You currently do not have a profile image. To enhance your portfolio, consider uploading your own image. To upload the image, click on the window displaying custom image 600X600.");
             }
 
             return user.ImageUrl;

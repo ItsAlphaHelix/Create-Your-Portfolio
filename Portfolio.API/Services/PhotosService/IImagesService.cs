@@ -5,7 +5,7 @@
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ImagesDtos;
 
-    public interface IImageService
+    public interface IImagesService
     {
         /// <summary>
         /// Every time this method is invoked, the user will be able to upload their own profile picture to the Cloudinary service.

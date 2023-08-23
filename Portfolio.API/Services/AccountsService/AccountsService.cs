@@ -73,6 +73,7 @@
                 UserName = applicationUser.UserName,
                 FirstName = applicationUser.FirstName,
                 LastName = applicationUser.LastName,
+                JobTitle = applicationUser.JobTitle,
                 Email = applicationUser.Email
             };
 
@@ -158,6 +159,7 @@
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                JobTitle = user.JobTitle
             };
 
             return resultUser;

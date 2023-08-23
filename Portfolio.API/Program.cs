@@ -12,6 +12,7 @@ using Portfolio.API.Extensions;
 using Portfolio.API.Services.AccountService;
 using Portfolio.API.Services.AccountsService;
 using Portfolio.API.Services.PhotoService;
+using Portfolio.API.Services.UsersProfileService;
 using Portfolio.Data.Repositories;
 using System.Net;
 using System.Text;
@@ -62,7 +63,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IImagesService, ImagesService>();
+builder.Services.AddScoped<IUsersProfileService, UsersProfileService>();
 
 var app = builder.Build();
 

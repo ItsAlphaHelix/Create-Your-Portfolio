@@ -3,19 +3,23 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
+    using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services.PhotoService;
+    using Portfolio.API.Services.UsersProfileService;
     using System.Security.Claims;
 
-    [Route("api/user-profile")]
+    [Route("api/users-profile")]
     [ApiController]
     [Authorize]
-    public class UserController: ControllerBase
+    public class UsersController: ControllerBase
     {
-        private readonly IImageService imageService;
+        private readonly IImagesService imageService;
+        private readonly IUsersProfileService usersProfileService;
 
-        public UserController(IImageService imageService)
+        public UsersController(IImagesService imageService, IUsersProfileService usersProfileService)
         {
             this.imageService = imageService;
+            this.usersProfileService = usersProfileService;
         }
 
         [Route("upload-profile-image")]
@@ -96,6 +100,15 @@
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        [HttpPost("personalize-about")]
+        public async Task<IActionResult> PersonalizeAboutUser([FromBody] AboutUserDto model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var aboutUser = await this.usersProfileService.PersonalizeAboutUserAsync(model, userId);
+
+            return Ok(aboutUser);
         }
     }
 }

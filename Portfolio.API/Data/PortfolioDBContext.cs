@@ -20,6 +20,8 @@
 
         public DbSet<UserHomePageImage> UserHomePageImages { get; set; }
 
+        public DbSet<AboutUser> AboutUsers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

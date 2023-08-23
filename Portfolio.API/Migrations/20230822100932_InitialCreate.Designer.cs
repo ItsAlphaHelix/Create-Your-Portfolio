@@ -12,8 +12,8 @@ using Portfolio.API.Data;
 namespace Portfolio.API.Migrations
 {
     [DbContext(typeof(PortfolioDBContext))]
-    [Migration("20230804085412_UserImagesTableIsAdded")]
-    partial class UserImagesTableIsAdded
+    [Migration("20230822100932_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -193,6 +193,11 @@ namespace Portfolio.API.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -253,7 +258,30 @@ namespace Portfolio.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Portfolio.API.Data.Models.UserImage", b =>
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserHomePageImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("HomePageImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserHomePageImages");
+                });
+
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserProfileImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -273,7 +301,7 @@ namespace Portfolio.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserImages");
+                    b.ToTable("UserProfileImages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -327,10 +355,21 @@ namespace Portfolio.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Portfolio.API.Data.Models.UserImage", b =>
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserHomePageImage", b =>
                 {
                     b.HasOne("Portfolio.API.Data.Models.ApplicationUser", "User")
-                        .WithMany("UserImages")
+                        .WithMany("UserHomePageImage")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserProfileImage", b =>
+                {
+                    b.HasOne("Portfolio.API.Data.Models.ApplicationUser", "User")
+                        .WithMany("UserProfileImage")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -340,7 +379,9 @@ namespace Portfolio.API.Migrations
 
             modelBuilder.Entity("Portfolio.API.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("UserImages");
+                    b.Navigation("UserHomePageImage");
+
+                    b.Navigation("UserProfileImage");
                 });
 #pragma warning restore 612, 618
         }
