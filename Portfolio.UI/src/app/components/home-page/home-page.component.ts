@@ -88,7 +88,7 @@ export default class HomeComponent implements OnInit {
         (response) => {
           if (response) {
             this.imageURL = response.imageUrl;
-            this.toastr.success('You have successfully uploaded your home image.If you wish to edit it, simply click on the window again.'); 
+            this.toastr.success('You have successfully uploaded your home image.If you wish to add new one, simply click on the window again.'); 
           }
         }
       );
