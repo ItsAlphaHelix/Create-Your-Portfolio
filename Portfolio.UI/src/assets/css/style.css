@@ -12,7 +12,7 @@
 
 body {
   font-family: "Open Sans", sans-serif;
-  background: #040b14;
+  background-color: #040b14;
 }
 
 a {
@@ -326,7 +326,8 @@ section {
   margin-bottom: 20px;
   padding-bottom: 20px;
   position: relative;
-  color: #173b6c;
+  color: #4033fa;
+  /* color: #173b6c; */
 }
 
 .section-title h2::after {
@@ -335,22 +336,28 @@ section {
   display: block;
   width: 50px;
   height: 3px;
-  background: #149ddd;
+  background: #4236f3;
   bottom: 0;
   left: 0;
 }
 
 .section-title p {
   margin-bottom: 0;
+  color: #fff;
 }
 
 /*--------------------------------------------------------------
 # About
 --------------------------------------------------------------*/
+.about {
+  width: 100%;
+  height: 100vh;
+}
+
 .about .content h3 {
   font-weight: 700;
   font-size: 26px;
-  color: #173b6c;
+  color: #4033fa;
 }
 
 .about .content ul {
@@ -371,12 +378,24 @@ section {
 .about .content ul i {
   font-size: 16px;
   margin-right: 5px;
-  color: #149ddd;
+  color: #4236f3;
   line-height: 0;
 }
 
 .about .content p:last-child {
   margin-bottom: 0;
+}
+
+.content p {
+  color: #fff;
+}
+
+ul strong{
+  color: #fff;
+}
+
+ul span {
+  color: #fff;
 }
 
 /*--------------------------------------------------------------

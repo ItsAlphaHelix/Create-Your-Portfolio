@@ -13,6 +13,8 @@ import { RegisterComponent } from './components/register-page/register-page.comp
 import { LoginComponent } from './components/login-page/login-page.component';
 import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { AboutComponent } from './components/about-page/about-page.component';
+import { PersonalizeAboutComponent } from './components/about-page/personalize-about-page/personalize-about-page.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
     RegisterComponent,
     LoginComponent,
     ForgottenPasswordComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    AboutComponent,
+    PersonalizeAboutComponent
   ],
   imports: [
     BrowserModule,

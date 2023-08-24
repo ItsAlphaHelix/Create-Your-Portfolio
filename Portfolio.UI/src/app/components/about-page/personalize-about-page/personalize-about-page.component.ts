@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './personalize-about-page.component.html',
   styleUrls: ['./personalize-about-page.component.css']
 })
-export class PersonalizeAboutPageComponent {
-
+export class PersonalizeAboutComponent {
+  
 }

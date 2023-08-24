@@ -4,9 +4,9 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, filter, first, throwError } from 'rxjs';
-import { LoginRequest } from 'src/app/models/account-models/login-request-model';
-import { LoginResponse } from 'src/app/models/account-models/login-response-model';
-import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
+import { LoginRequest } from 'src/app/models/login-request-model';
+import { LoginResponse } from 'src/app/models/login-response-model';
+import { RegisterRequest } from 'src/app/models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
 
@@ -18,7 +18,7 @@ import { ClientSideValidation } from 'src/app/services/client-side-validation';
 export class LoginComponent implements OnInit {
   formRequest!: LoginComponent
   loginRequest!: LoginRequest
-  
+
   constructor(private accountsService: AccountsService,
     private router: Router,
     private toastr: ToastrService,

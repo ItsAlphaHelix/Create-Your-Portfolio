@@ -4,12 +4,12 @@ import { catchError, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import * as routes from 'src/app/shared/routes.contants';
 import { Observable, of, throwError } from 'rxjs';
-import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
-import { LoginRequest } from '../models/account-models/login-request-model';
-import { LoginResponse } from 'src/app/models/account-models/login-response-model';
+import { RegisterRequest } from 'src/app/models/register-request-model';
+import { LoginRequest } from '../models/login-request-model';
+import { LoginResponse } from 'src/app/models/login-response-model';
 import { Router } from '@angular/router';
 import { __param } from 'tslib';
-import { UserResponse } from '../models/account-models/user-response-model';
+import { UserResponse } from '../models/user-response-model';
 
 @Injectable({
   providedIn: 'root'

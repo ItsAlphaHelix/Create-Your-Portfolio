@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RegisterRequest } from '../models/account-models/register-request-model';
+import { RegisterRequest } from '../models/register-request-model';
 import { FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { timeout } from 'rxjs';
@@ -27,7 +27,7 @@ export class ClientSideValidation {
         this.toastr.error('Invalid email address!');
         return;
       }
-      
+
       if (registerForm.controls['password'].hasError('pattern') && !(registerForm.controls['password'].hasError('required') && registerForm.controls['firstName'].hasError('required') && registerForm.controls['lastName'].hasError('required') && registerForm.controls['jobTitle'].hasError('required') && registerForm.controls['username'].hasError('required') && registerForm.controls['email'].hasError('required') && registerForm.controls['confirmPassword'].hasError('required'))) {
 
         this.toastr.error('Invalid password. Password should be at least 8 characters long and also should contain at least one lower case, one upper case, one digit and one special symbol.');

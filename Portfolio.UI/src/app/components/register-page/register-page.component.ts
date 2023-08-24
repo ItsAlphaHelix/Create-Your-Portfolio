@@ -4,7 +4,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, filter, first, throwError } from 'rxjs';
-import { RegisterRequest } from 'src/app/models/account-models/register-request-model';
+import { RegisterRequest } from 'src/app/models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
 
@@ -32,7 +32,7 @@ export class RegisterComponent {
       return { passwordMismatch: true };
     }
   };
-  
+
   constructor(private accountsService: AccountsService,
     private router: Router,
     private clientSideValidation: ClientSideValidation,
