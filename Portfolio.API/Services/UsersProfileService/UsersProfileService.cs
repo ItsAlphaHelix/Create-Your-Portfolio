@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Portfolio.API.Data.Models;
 using Portfolio.API.Dtos.UsersProfileDtos;
-using Portfolio.API.Services.Dtos;
 using Portfolio.Data.Repositories;
 
 namespace Portfolio.API.Services.UsersProfileService
@@ -21,9 +21,8 @@ namespace Portfolio.API.Services.UsersProfileService
             this.usersAboutRepository = usersAboutRepository;
 
         }
-        public async Task<AboutUser> PersonalizeAboutUserAsync(AboutUserDto model, string userId)
+        public async Task PersonalizeAboutAsync(AboutUserDto model, string userId)
         {
-
             var userAbout = new AboutUser()
             {
                 About = model.About,
@@ -37,8 +36,39 @@ namespace Portfolio.API.Services.UsersProfileService
 
             await usersAboutRepository.AddAsync(userAbout);
             await usersAboutRepository.SaveChangesAsync();
+        }
 
-            return userAbout;
+        public async Task<AboutUserResponseDto> GetAboutAsync(string userId)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new ArgumentNullException("The user shouln't be null");
+            }
+
+            var aboutResponse = await this.usersAboutRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == user.Id)
+                .Select(x => new AboutUserResponseDto()
+            {
+                JobTitle = user.JobTitle,
+                About = x.About,
+                Age = x.Age,
+                City = x.City,
+                Country = x.Country,
+                Education = x.Education,
+                Email = user.Email,
+                PhoneNumber = x.PhoneNumber
+            })
+                .FirstOrDefaultAsync();
+
+            if (aboutResponse == null)
+            {
+                throw new ArgumentNullException("The response shouln't be null");
+            }
+
+            return aboutResponse;
         }
     }
 }

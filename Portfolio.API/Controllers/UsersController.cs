@@ -103,12 +103,23 @@
         }
 
         [HttpPost("personalize-about")]
-        public async Task<IActionResult> PersonalizeAboutUser([FromBody] AboutUserDto model)
+        public async Task<IActionResult> PersonalizeAbout([FromBody] AboutUserDto model, [FromQuery] string userId)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var aboutUser = await this.usersProfileService.PersonalizeAboutUserAsync(model, userId);
+           // var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            return Ok(aboutUser);
+            await this.usersProfileService.PersonalizeAboutAsync(model, userId);
+
+            return Ok();
+        }
+
+        [HttpGet("get-about")]
+        public async Task<IActionResult> GetAbout([FromQuery] string userId)
+        {
+           // var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var response = await this.usersProfileService.GetAboutAsync(userId);
+
+            return Ok(response);
         }
     }
 }
