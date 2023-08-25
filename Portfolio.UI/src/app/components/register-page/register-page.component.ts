@@ -60,7 +60,7 @@ export class RegisterComponent {
   onRegister(): void {
     debugger
     if (this.registerForm.invalid) {
-      this.clientSideValidation.RegisterFormValidation(this.registerForm);
+      this.clientSideValidation.registerFormValidation(this.registerForm);
       return;
     }
 
@@ -79,6 +79,30 @@ export class RegisterComponent {
 
         this.toastr.success('You are successfully registered!');
         this.router.navigate(['/login']);
+      },
+      error: (error) => {   
+        let errorMessage = 'Unknown error occured';   
+        switch (error.status) {
+        case 409:
+          errorMessage = error.error;
+          break;
+          case 400:
+          if (error.error[0]?.code === 'DuplicateUserName') {
+            errorMessage = error.error[0]?.description;
+          } else if (error.error.errors.FirstName) {
+            errorMessage = error.error.errors.FirstName[0];
+          } else if (error.error.errors.LastName) {
+            errorMessage = error.error.errors.LastName[0];
+          } else if (error.error.errors.JobTitle) {
+            errorMessage = error.error.errors.JobTitle[0];
+          }
+          break;
+          default: 
+            this.toastr.error(errorMessage);
+          break;
+        } 
+
+        this.toastr.error(errorMessage);
       }
     }
     );

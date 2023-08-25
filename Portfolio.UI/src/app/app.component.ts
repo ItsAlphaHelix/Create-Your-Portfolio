@@ -91,6 +91,19 @@ export class AppComponent implements OnInit {
         if (response) {
           this.imageURL = response.imageUrl;
         }
+      },
+      (error) => {
+        let errorMessage = 'Unknown error occured'
+        switch (error.status) {
+          case 404:
+            errorMessage = error.error;
+            break;
+          default:
+            this.toastr.error(errorMessage);
+            break;
+        }
+
+        this.toastr.error(errorMessage);
       }
     );
   }

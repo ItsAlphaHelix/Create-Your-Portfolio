@@ -1,5 +1,5 @@
 import { AfterContentChecked, AfterViewChecked, AfterViewInit, Component, ElementRef, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild, resolveForwardRef } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, defaultUrlMatcher } from '@angular/router';
 import { UserResponse } from 'src/app/models/user-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { UserProfileService } from 'src/app/services/user-profile.service';
@@ -101,6 +101,19 @@ export default class HomeComponent implements OnInit {
         if (response) {
           this.imageURL = response.imageUrl;
         }
+      },
+      (error) => {
+        let errorMessage = 'Unknown error occured'
+         switch(error.status) {
+          case 404:
+            errorMessage = error.error;
+          break;
+          default:
+            this.toastr.error(errorMessage); 
+          break;
+         }
+
+         this.toastr.error(errorMessage);
       }
     );
   }

@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     if (this.loginForm.invalid) {
-      this.clientSideValidation.LoginFormValidation(this.loginForm)
+      this.clientSideValidation.loginFormValidation(this.loginForm)
       return;
     }
 
@@ -52,7 +52,6 @@ export class LoginComponent implements OnInit {
 
     this.accountsService.loginUser(this.loginRequest)
       .subscribe({
-
         next: (response: LoginResponse) => {
           sessionStorage.setItem("userId", response.id);
           sessionStorage.setItem("email", response.email);
@@ -60,6 +59,18 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem("refreshToken", response.refreshToken);
           this.toastr.success('You are successfully logged in!');
           this.router.navigate(['/']);
+        },
+        error: (error) => {
+          let errorMessage = 'Unknown error occured';
+          switch (error.status) {
+            case 401:
+              errorMessage = error.error;
+              break;
+            default:
+              this.toastr.error(errorMessage);
+              break;
+          }
+          this.toastr.error(errorMessage);
         }
       });
   }

@@ -12,7 +12,7 @@ export class ClientSideValidation {
 
   constructor(private toastr: ToastrService) { }
 
-  RegisterFormValidation(registerForm?: FormGroup) {
+  registerFormValidation(registerForm?: FormGroup) {
 
     if (registerForm !== undefined) {
 
@@ -42,7 +42,7 @@ export class ClientSideValidation {
     }
   }
 
-  LoginFormValidation(loginForm: FormGroup) {
+  loginFormValidation(loginForm: FormGroup) {
 
     if (loginForm !== undefined) {
 
@@ -57,6 +57,15 @@ export class ClientSideValidation {
         this.toastr.error('Invalid email address!');
         return;
       }
+    }
+  }
+
+  aboutUserFormValidation(aboutForm: FormGroup) {
+    if (aboutForm.controls['phoneNumber'].hasError('required') || aboutForm.controls['city'].hasError('required') || aboutForm.controls['country'].hasError('required') || aboutForm.controls['age'].hasError('required') || aboutForm.controls['education'].hasError('required') || aboutForm.controls['aboutDescription'].hasError('required')) {
+
+      this.toastr.error('All fields are required!');
+      return;
+
     }
   }
 }

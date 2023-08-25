@@ -3,6 +3,6 @@ export interface PersonalizeAboutUserRequest {
     education: string,
     country: string,
     city: string,
-    about: string, 
+    aboutDescription: string, 
     phoneNumber: string
 }

@@ -7,14 +7,13 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
-import { AuthInterceptor } from './services/authorization.interceptor';
 import HomeComponent from './components/home-page/home-page.component';
 import { RegisterComponent } from './components/register-page/register-page.component';
 import { LoginComponent } from './components/login-page/login-page.component';
 import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { AboutComponent } from './components/about-page/about-page.component';
-import { PersonalizeAboutComponent } from './components/about-page/personalize-about-page/personalize-about-page.component';
+import { PersonalizeAboutComponent } from './components/personalize-about-page/personalize-about-page.component';
 
 @NgModule({
   declarations: [
@@ -37,11 +36,7 @@ import { PersonalizeAboutComponent } from './components/about-page/personalize-a
     ToastrModule.forRoot({
     })
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
-  }],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -70,7 +70,7 @@ export class UserProfileService {
     return this.http.get<{ imageUrl: string }>(api, { headers });
   }
 
-  personalizeAboutUser(): Observable<PersonalizeAboutUserRequest> {
+  personalizeAboutUser(request: PersonalizeAboutUserRequest): Observable<AboutUserResponse> {
     const jwtToken = this.getJwtToken();
     const userId = this.getUserId();
 
@@ -78,7 +78,7 @@ export class UserProfileService {
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${jwtToken}`)
 
-    return this.http.post<PersonalizeAboutUserRequest>(routes.PERSONALIZE_ABOUT_USER_ENDPOINT, { headers, params });
+    return this.http.post<AboutUserResponse>(routes.PERSONALIZE_ABOUT_USER_ENDPOINT, request, { headers, params });
   }
 
   getAboutUser(): Observable<AboutUserResponse> {

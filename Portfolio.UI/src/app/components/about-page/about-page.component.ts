@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AboutUserResponse } from 'src/app/models/about-user-response-model';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import { OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-about-page',
@@ -10,9 +11,7 @@ import { OnInit } from '@angular/core';
 })
 export class AboutComponent implements OnInit {
 
-  constructor(private userProfileService: UserProfileService) {
-
-  }
+  constructor(private userProfileService: UserProfileService, private router: Router) {}
 
   ngOnInit(): void {
     this.getAboutUser();
@@ -23,11 +22,14 @@ export class AboutComponent implements OnInit {
   getAboutUser(): void {
     this.userProfileService.getAboutUser().subscribe(
       (response) => {
-        debugger;
         if (response) {
           this.aboutResponse = response;
         }
+      },
+      (error) => {
+        this.router.navigate(['/personalize-about']);
       }
     );
   }
+
 }

@@ -7,11 +7,11 @@ import { LoginComponent } from './components/login-page/login-page.component';
 import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { AboutComponent } from './components/about-page/about-page.component';
-import { PersonalizeAboutComponent } from './components/about-page/personalize-about-page/personalize-about-page.component';
+import { PersonalizeAboutComponent } from './components/personalize-about-page/personalize-about-page.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard]},
-  { path: 'home', redirectTo: '/', pathMatch: 'full'},
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', redirectTo: '/', pathMatch: 'full' },
   { path: 'about', component: AboutComponent },
   { path: 'personalize-about', component: PersonalizeAboutComponent },
   { path: 'login', component: LoginComponent },
