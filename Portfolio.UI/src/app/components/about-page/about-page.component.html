@@ -1,4 +1,4 @@
-<section id="about" class="about">
+<section id="about" class="about" *ngIf="(aboutResponse)">
     <div class="container">
 
         <div class="section-title">
@@ -33,14 +33,14 @@
                     </div>
                     <div class="col-lg-9">
                         <br>
-                        <p>{{aboutResponse.aboutDescription}}</p>
+                        <p>{{aboutResponse.aboutMessage}}</p>
                     </div>
                 </div>
             </div>
         </div>
         <br>
         <a routerLink="/personalize-about" class="btn">
-            Personalize About
+            Edit About
         </a>
     </div>
 </section>

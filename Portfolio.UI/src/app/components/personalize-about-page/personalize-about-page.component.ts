@@ -20,11 +20,11 @@ export class PersonalizeAboutComponent {
     private clientSideValidation: ClientSideValidation) {}
 
   aboutForm = new FormGroup({
-    age: new FormControl("", Validators.required),
+    age: new FormControl("", [Validators.required, Validators.pattern(/[\d]+$/)]),
     education: new FormControl("", Validators.required),
     country: new FormControl("", Validators.required),
     city: new FormControl("", Validators.required),
-    aboutDescription: new FormControl("", Validators.required),
+    aboutMessage: new FormControl("", Validators.required),
     phoneNumber: new FormControl("", [Validators.required, Validators.pattern('^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')]),
   });
 
@@ -33,6 +33,7 @@ export class PersonalizeAboutComponent {
   onPersonalize(): void {
 
     if (this.aboutForm.invalid) {
+      debugger;
       this.clientSideValidation.aboutUserFormValidation(this.aboutForm);
       return;
     }
@@ -43,14 +44,35 @@ export class PersonalizeAboutComponent {
       education: this.aboutForm.value.education!,
       country: this.aboutForm.value.country!,
       city: this.aboutForm.value.city!,
-      aboutDescription: this.aboutForm.value.aboutDescription!
+      aboutMessage: this.aboutForm.value.aboutMessage!
     }
-    debugger
-    this.userProfileService.personalizeAboutUser(this.aboutFormRequest).subscribe(
-      () => {
+    
+    this.userProfileService.personalizeAboutUser(this.aboutFormRequest).subscribe({
+      next: () => {
         this.toastr.success('You have successfully completed the about form.')
         this.router.navigate(['/about']);
-      }
-    );
+      },
+      error: (error) => {
+        let errorMessage = 'Unknown error occured';
+        switch(error.status) {
+            case 400:
+             if (error.error.errors.Education) {
+               errorMessage = error.error.errors.Education[0]
+             } else if (error.error.errors.Country) {
+               errorMessage = error.error.errors.Country[0]
+             } else if (error.error.errors.City) {
+               errorMessage = error.error.errors.City[0]
+             } else if (error.error.errors.AboutMessage) {
+               errorMessage = error.error.errors.AboutMessage[0]
+             }
+            break;
+            default:
+            this.toastr.error(errorMessage);
+            break;
+        }
+
+        this.toastr.error(errorMessage);
+      } 
+  });
   }
 }

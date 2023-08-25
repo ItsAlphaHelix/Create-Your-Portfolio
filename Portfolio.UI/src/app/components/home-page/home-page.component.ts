@@ -96,26 +96,26 @@ export default class HomeComponent implements OnInit {
   }
 
   getHomePagePicture(): void {
-    this.userProfileService.getUserHomePagePicture().subscribe(
-      (response) => {
+    this.userProfileService.getUserHomePagePicture().subscribe({
+      next: (response) => {
         if (response) {
           this.imageURL = response.imageUrl;
         }
       },
-      (error) => {
+      error: (error) => {
         let errorMessage = 'Unknown error occured'
-         switch(error.status) {
+        switch (error.status) {
           case 404:
             errorMessage = error.error;
-          break;
+            break;
           default:
-            this.toastr.error(errorMessage); 
-          break;
-         }
+            this.toastr.error(errorMessage);
+            break;
+        }
 
-         this.toastr.error(errorMessage);
+        this.toastr.error(errorMessage);
       }
-    );
+    });
   }
 
   getUser(): void {

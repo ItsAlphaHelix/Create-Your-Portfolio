@@ -3,6 +3,7 @@ import { AboutUserResponse } from 'src/app/models/about-user-response-model';
 import { UserProfileService } from 'src/app/services/user-profile.service';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-about-page',
@@ -11,8 +12,8 @@ import { Router } from '@angular/router';
 })
 export class AboutComponent implements OnInit {
 
-  constructor(private userProfileService: UserProfileService, private router: Router) {}
-
+  constructor(private userProfileService: UserProfileService, private router: Router) { }
+  
   ngOnInit(): void {
     this.getAboutUser();
   }
@@ -20,16 +21,15 @@ export class AboutComponent implements OnInit {
   aboutResponse!: AboutUserResponse
 
   getAboutUser(): void {
-    this.userProfileService.getAboutUser().subscribe(
-      (response) => {
+    this.userProfileService.getAboutUser().subscribe({
+      next: (response) => {
         if (response) {
           this.aboutResponse = response;
         }
       },
-      (error) => {
+      error: () => {
         this.router.navigate(['/personalize-about']);
       }
-    );
+    });
   }
-
 }
