@@ -1,9 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RegisterRequest } from '../models/register-request-model';
 import { FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { timeout } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +9,7 @@ export class ClientSideValidation {
 
   constructor(private toastr: ToastrService) { }
 
-  registerFormValidation(registerForm?: FormGroup) {
+  registerFormValidation(registerForm: FormGroup) {
 
     if (registerForm !== undefined) {
 

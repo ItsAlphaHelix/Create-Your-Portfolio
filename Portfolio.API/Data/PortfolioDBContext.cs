@@ -16,9 +16,8 @@
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
-        public DbSet<UserProfileImage> UserProfileImages { get; set; }
+        public DbSet<UserImage> UserImages { get; set; }
 
-        public DbSet<UserHomePageImage> UserHomePageImages { get; set; }
 
         public DbSet<AboutUser> AboutUsers { get; set; }
 

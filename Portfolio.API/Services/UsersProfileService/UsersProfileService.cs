@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Portfolio.API.Data.Models;
 using Portfolio.API.Dtos.UsersProfileDtos;
@@ -23,9 +24,9 @@ namespace Portfolio.API.Services.UsersProfileService
         }
         public async Task PersonalizeAboutAsync(AboutUserDto model, string userId)
         {
-            var userAbout = new AboutUser()
+            var aboutUser = new AboutUser()
             {
-                About = model.About,
+                AboutMessage = model.AboutMessage,
                 Age = model.Age,
                 City = model.City,
                 Country = model.Country,
@@ -34,7 +35,7 @@ namespace Portfolio.API.Services.UsersProfileService
                 UserId = userId
             };
 
-            await usersAboutRepository.AddAsync(userAbout);
+            await usersAboutRepository.AddAsync(aboutUser);
             await usersAboutRepository.SaveChangesAsync();
         }
 
@@ -53,7 +54,7 @@ namespace Portfolio.API.Services.UsersProfileService
                 .Select(x => new AboutUserResponseDto()
             {
                 JobTitle = user.JobTitle,
-                About = x.About,
+                AboutMessage = x.AboutMessage,
                 Age = x.Age,
                 City = x.City,
                 Country = x.Country,
@@ -65,7 +66,7 @@ namespace Portfolio.API.Services.UsersProfileService
 
             if (aboutResponse == null)
             {
-                throw new ArgumentNullException("The response shouln't be null");
+                throw new ArgumentNullException();
             }
 
             return aboutResponse;

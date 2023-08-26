@@ -12,22 +12,28 @@
         </fieldset>
         <fieldset>
             <strong>Education</strong>
-            <input placeholder="Education" type="text"  formControlName="education">
+            <input placeholder="Education" type="text" formControlName="education">
         </fieldset>
         <fieldset>
             <strong>Country</strong>
-            <input placeholder="Country" type="text"  formControlName="country"> 
+            <input placeholder="Country" type="text" formControlName="country">
         </fieldset>
         <fieldset>
             <strong>City</strong>
-            <input placeholder="City" type="text"  formControlName="city">
+            <input placeholder="City" type="text" formControlName="city">
         </fieldset>
         <fieldset>
             <strong>About</strong>
             <textarea placeholder="Tell more about for you..." formControlName="aboutMessage"></textarea>
         </fieldset>
         <fieldset>
+            <div class="custom-file-input">
+                <input type="file" class="file-input">
+                <label for="upload_file" class="file-label">Choose an image</label>
+            </div>
+        </fieldset>
+        <fieldset>
             <button name="submit" type="submit" id="contact-submit" (click)="onPersonalize()">Submit</button>
         </fieldset>
-    </form>  
+    </form>
 </div>

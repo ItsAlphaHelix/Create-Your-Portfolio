@@ -11,12 +11,10 @@
     public class ImagesService: IImagesService
     {
         private readonly Cloudinary cloudinary;
-        private readonly IRepository<UserProfileImage> userProfileImageRepository;
-        private readonly IRepository<UserHomePageImage> userHomePageRepository;
+        private readonly IRepository<UserImage> userImagesRepository;
         public ImagesService(
             IConfiguration configuration,
-            IRepository<UserProfileImage> userProfileImageRepository,
-            IRepository<UserHomePageImage> userHomePageRepository)
+            IRepository<UserImage> userImagesRepository)
         {
             Account account = new Account(
                 configuration["CloudinarySettings:Name"],
@@ -24,14 +22,13 @@
                 configuration["CloudinarySettings:SecretKey"]);
 
             cloudinary = new Cloudinary(account);
-            this.userProfileImageRepository = userProfileImageRepository;
-            this.userHomePageRepository = userHomePageRepository;
+            this.userImagesRepository = userImagesRepository;
         }
 
         public async Task<string> GetUserHomePageImageUrlAsync(string userId)
         {
-            var user = await this.userHomePageRepository.AllAsNoTracking()
-                .Where(x => x.UserId == userId)
+            var user = await this.userImagesRepository.AllAsNoTracking()
+                .Where(x => x.UserId == userId && x.HomePageImageUrl != null)
                 .Select(x => new UploadImageDto()
                 {
                     ImageUrl = x.HomePageImageUrl
@@ -48,8 +45,8 @@
 
         public async Task<string> GetUserProfileImageUrlAsync(string userId)
         {
-            var user = await this.userProfileImageRepository.AllAsNoTracking()
-                .Where(x => x.UserId == userId)
+            var user = await this.userImagesRepository.AllAsNoTracking()
+                .Where(x => x.UserId == userId && x.ProfileImageUrl != null)
                 .Select(x => new UploadImageDto()
                 {
                     ImageUrl = x.ProfileImageUrl
@@ -64,32 +61,11 @@
             return user.ImageUrl;
         }
 
-        public async Task<UploadImageDto> SaveUserProfileImageToDatabase(string imageUrl, UserProfileImage photo)
-        {
-            await this.userProfileImageRepository.AddAsync(photo);
-            await this.userProfileImageRepository.SaveChangesAsync();
-
-            var responseDto = new UploadImageDto()
-            {
-                ImageUrl = imageUrl
-            };
-
-            return responseDto;
-        }
-
         public async Task<UploadImageDto> SaveImageUrlToDatabase(
-            string imageUrl, UserProfileImage profileImage, UserHomePageImage homePageImage)
+            string imageUrl, UserImage image)
         {
-            if (profileImage != null)
-            {
-                await this.userProfileImageRepository.AddAsync(profileImage);
-                await this.userProfileImageRepository.SaveChangesAsync();
-            }
-            else
-            {
-                await this.userHomePageRepository.AddAsync(homePageImage);
-                await this.userHomePageRepository.SaveChangesAsync();
-            }
+            await this.userImagesRepository.AddAsync(image);
+            await this.userImagesRepository.SaveChangesAsync();
 
             var responseDto = new UploadImageDto()
             {
@@ -117,6 +93,15 @@
             return uploadResult;
         }
 
+        public async Task<ImageUploadResult> UploadAboutImageAsync(IFormFile file)
+        {
+            int heigth = 600;
+            int width = 600;
+
+            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width);
+
+            return uploadResult;
+        }
         private async Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width)
         {
             var uploadResult = new ImageUploadResult();
@@ -136,20 +121,20 @@
             return uploadResult;
         }
 
-        public async Task<string> GetUserHomepageImageUrlAsync(string userId)
+        public async Task<string> GetAboutImageUrlAsync(string userId)
         {
-            var user = await this.userHomePageRepository.AllAsNoTracking()
-                .Where(x => x.UserId == userId)
+            var user = await this.userImagesRepository.AllAsNoTracking()
+                .Where(x => x.UserId == userId && x.AboutImageUrl != null)
                 .Select(x => new UploadImageDto()
                 {
-                    ImageUrl = x.HomePageImageUrl
+                    ImageUrl = x.AboutImageUrl
+                })
+                .FirstOrDefaultAsync();
 
-                }).FirstOrDefaultAsync();
-
-            if (user == null || string.IsNullOrEmpty(user.ImageUrl))
-            {
-                throw new Exception("User or home page image not found.");
-            }
+            //if (user == null || string.IsNullOrEmpty(user.ImageUrl))
+            //{
+            //    throw new Exception("You currently do not have a profile image. To enhance your portfolio, consider uploading your own image. To upload the image, click on the window displaying custom image 600X600.");
+            //}
 
             return user.ImageUrl;
         }

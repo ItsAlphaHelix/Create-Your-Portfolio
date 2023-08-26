@@ -1,5 +1,7 @@
 ﻿namespace Portfolio.API.Services.UsersProfileService
 {
+    using CloudinaryDotNet.Actions;
+    using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.UsersProfileDtos;
 
     public interface IUsersProfileService

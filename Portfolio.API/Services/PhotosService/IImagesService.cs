@@ -34,21 +34,27 @@
         /// <param name="userProfileImage"></param>
         /// <param name="userHomePageImage"></param>
         /// <returns></returns>
-        Task<UploadImageDto> SaveImageUrlToDatabase(
-            string imageUrl, UserProfileImage userProfileImage = null, UserHomePageImage userHomePageImage = null);
-
-        /// <summary>
-        /// Getting from cloudinary user's home page image url.
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<string> GetUserHomePageImageUrlAsync(string userId);
+        Task<UploadImageDto> SaveImageUrlToDatabase(string imageUrl, UserImage image);
 
         /// <summary>
         /// The method should retrieve the user's home page image from the database and return it.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<string> GetUserHomepageImageUrlAsync(string userId);
+        Task<string> GetUserHomePageImageUrlAsync(string userId);
+
+        /// <summary>
+        /// Uploading about user image to cloudinary service.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public Task<ImageUploadResult> UploadAboutImageAsync(IFormFile file);
+
+        /// <summary>
+        /// The method should retrieve the user's about image from the database and return it.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<string> GetAboutImageUrlAsync(string userId);
     }
 }

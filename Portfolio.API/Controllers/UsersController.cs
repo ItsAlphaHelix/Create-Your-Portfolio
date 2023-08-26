@@ -2,24 +2,28 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services.PhotoService;
     using Portfolio.API.Services.UsersProfileService;
+    using Portfolio.Data.Repositories;
     using System.Security.Claims;
 
     [Route("api/users-profile")]
     [ApiController]
     [Authorize]
-    public class UsersController: ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IImagesService imageService;
         private readonly IUsersProfileService usersProfileService;
+        private readonly IRepository<UserImage> userImagesRepository;
 
-        public UsersController(IImagesService imageService, IUsersProfileService usersProfileService)
+        public UsersController(IImagesService imageService, IUsersProfileService usersProfileService, IRepository<UserImage> userImagesRepository)
         {
             this.imageService = imageService;
             this.usersProfileService = usersProfileService;
+            this.userImagesRepository = userImagesRepository;
         }
 
         [Route("upload-profile-image")]
@@ -35,7 +39,7 @@
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var userProfileImage = new UserProfileImage()
+            var userProfileImage = new UserImage()
             {
                 ProfileImageUrl = result.SecureUrl.AbsoluteUri,
                 UserId = userId
@@ -61,15 +65,15 @@
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var userHomePageImage = new UserHomePageImage()
+            var userHomePageImage = new UserImage()
             {
                 HomePageImageUrl = result.SecureUrl.AbsoluteUri,
                 UserId = userId
             };
 
-            string profilePictureUrl = result.Url.AbsoluteUri;
+            string profileHomeUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imageService.SaveImageUrlToDatabase(profilePictureUrl, null, userHomePageImage);
+            var responseDto = await this.imageService.SaveImageUrlToDatabase(profileHomeUrl, userHomePageImage);
 
             return Ok(responseDto);
         }
@@ -105,21 +109,65 @@
         [HttpPost("personalize-about")]
         public async Task<IActionResult> PersonalizeAbout([FromBody] AboutUserDto model, [FromQuery] string userId)
         {
-           // var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-
             await this.usersProfileService.PersonalizeAboutAsync(model, userId);
 
             return Ok();
         }
 
+
+        [HttpPost("upload-about-image")]
+        public async Task<IActionResult> UploadAboutImage(IFormFile file, [FromQuery] string userId)
+        {
+            var result = await this.imageService.UploadAboutImageAsync(file);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var userAboutImage = new UserImage()
+            {
+                AboutImageUrl = result.SecureUrl.AbsoluteUri,
+                UserId = userId
+            };
+
+            string aboutImageUrl = result.Url.AbsoluteUri;
+
+            var responseDto = await this.imageService.SaveImageUrlToDatabase(aboutImageUrl, userAboutImage);
+
+            return Ok(responseDto);
+        }
+
         [HttpGet("get-about")]
         public async Task<IActionResult> GetAbout([FromQuery] string userId)
         {
-           // var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            try
+            {
+                var response = await this.usersProfileService.GetAboutAsync(userId);
 
-            var response = await this.usersProfileService.GetAboutAsync(userId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
-            return Ok(response);
+        [HttpGet("get-about-image/{userId}")]
+        public async Task<IActionResult> GetAboutImage(string userId)
+        {
+            try
+            {
+                string imageUrl = await this.imageService.GetAboutImageUrlAsync(userId);
+
+                return Ok(new { imageUrl });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

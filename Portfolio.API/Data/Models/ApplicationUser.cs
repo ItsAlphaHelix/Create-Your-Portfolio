@@ -1,7 +1,7 @@
-﻿
-namespace Portfolio.API.Data.Models
+﻿namespace Portfolio.API.Data.Models
 {
     using Microsoft.AspNetCore.Identity;
+    using Portfolio.API.Dtos.UsersProfileDtos;
     using System.ComponentModel.DataAnnotations;
     public class ApplicationUser : IdentityUser
     {
@@ -9,8 +9,7 @@ namespace Portfolio.API.Data.Models
         {
             this.Id = Guid.NewGuid().ToString();
 
-            this.UserHomePageImage = new HashSet<UserHomePageImage>();
-            this.UserProfileImage = new HashSet<UserProfileImage>();
+            this.UserImages = new HashSet<UserImage>();
         }
 
         [Required]
@@ -39,8 +38,6 @@ namespace Portfolio.API.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public ICollection<UserProfileImage> UserProfileImage { get; set; }
-
-        public ICollection<UserHomePageImage> UserHomePageImage { get; set; } 
+        public ICollection<UserImage> UserImages { get; set; }
     }
 }

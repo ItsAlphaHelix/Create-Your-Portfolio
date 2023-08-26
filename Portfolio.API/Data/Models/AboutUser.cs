@@ -22,16 +22,14 @@
         public string City { get; set; }
 
         [Required]
-        [MaxLength(200, ErrorMessage = "The text you entered must not contain more than 200 characters.")]
-        public string About { get; set; }
+        public string AboutMessage { get; set; }
 
         [Required]
-        [Phone]
+        [RegularExpression("^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$")]
         public string PhoneNumber { get; set; }
 
         [Required]
         public string UserId { get; set; }
-
 
         public ApplicationUser User { get; set; }
     }
