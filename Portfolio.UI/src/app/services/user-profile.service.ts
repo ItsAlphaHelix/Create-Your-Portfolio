@@ -91,4 +91,29 @@ export class UserProfileService {
 
     return this.http.get<AboutUserResponse>(routes.GET_ABOUT_USER_ENDPOINT, { headers, params });
   }
+
+  uploadAboutImage(file: File): Observable<any> {
+    const jwtToken = this.getJwtToken();
+    const userId = this.getUserId();
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`);
+    const params = { userId }
+
+    debugger
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(routes.UPLOAD_ABOUT_IMAGE_ENDPOINT, formData, { headers, params });
+  }
+
+  getAboutUserImage(): Observable<any> {
+    const jwtToken = this.getJwtToken();
+    const userId = this.getUserId();
+    const api = `${environment.baseUrlApi}/api/users-profile/get-about-image/${userId}`
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`)
+    return this.http.get<{ imageUrl: string }>(routes.GET_ABOUT_IMAGE_ENDPOINT + `${userId}`, { headers });
+  }
 }

@@ -28,7 +28,7 @@
         </fieldset>
         <fieldset>
             <div class="custom-file-input">
-                <input type="file" class="file-input">
+                <input type="file" class="file-input" (change)="handleFileInputChange($event)">
                 <label for="upload_file" class="file-label">Choose an image</label>
             </div>
         </fieldset>

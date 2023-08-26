@@ -75,4 +75,19 @@ export class PersonalizeAboutComponent {
       } 
   });
   }
+
+  handleFileInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.userProfileService.uploadAboutImage(file).subscribe(
+        (response) => {
+          if (response) {
+            this.toastr.success('You have successfully uploaded your about image');
+            return response.imageUrl;
+          }
+        }
+      );
+    }
+  }
 }
