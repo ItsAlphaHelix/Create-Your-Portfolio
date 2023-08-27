@@ -13,3 +13,7 @@ export const PERSONALIZE_ABOUT_USER_ENDPOINT = `${environment.baseUrlApi}/api/us
 export const GET_ABOUT_USER_ENDPOINT = `${environment.baseUrlApi}/api/users-profile/get-about`;
 export const UPLOAD_ABOUT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/users-profile/upload-about-image`;
 export const GET_ABOUT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/users-profile/get-about-image/`;
+export const GET_HOME_PAGE_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/users-profile/get-home-page-image/`;
+export const GET_USER_PROFILE_IMAGE = `${environment.baseUrlApi}/api/users-profile/get-profile-image/`;
+export const GET_EDIT_ABOUT_ENDPOINT = `${environment.baseUrlApi}/api/users-profile/get-edit-about/`;
+export const EDIT_ABOUT_ENDPOINT = `${environment.baseUrlApi}/api/users-profile/edit-about`;

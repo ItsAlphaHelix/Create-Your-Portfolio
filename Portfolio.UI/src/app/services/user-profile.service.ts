@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { UserResponse } from '../models/user-response-model';
 import { PersonalizeAboutUserRequest } from '../models/personalize-about-user-request';
 import { AboutUserResponse } from '../models/about-user-response-model';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -52,22 +53,18 @@ export class UserProfileService {
     const jwtToken = this.getJwtToken();
     const userId = this.getUserId();
 
-    const api = `${environment.baseUrlApi}/api/users-profile/get-profile-image/${userId}`
-
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${jwtToken}`)
-    return this.http.get<{ imageUrl: string }>(api, { headers });
+    return this.http.get<{ imageUrl: string }>(routes.GET_USER_PROFILE_IMAGE + `${userId}`, { headers });
   }
 
   getUserHomePagePicture(): Observable<any> {
     const jwtToken = this.getJwtToken();
     const userId = this.getUserId();
 
-    const api = `${environment.baseUrlApi}/api/users-profile/get-home-page-image/${userId}`
-
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${jwtToken}`)
-    return this.http.get<{ imageUrl: string }>(api, { headers });
+    return this.http.get<{ imageUrl: string }>(routes.GET_HOME_PAGE_IMAGE_ENDPOINT + `${userId}`, { headers });
   }
 
   personalizeAboutUser(request: PersonalizeAboutUserRequest): Observable<AboutUserResponse> {
@@ -110,10 +107,34 @@ export class UserProfileService {
   getAboutUserImage(): Observable<any> {
     const jwtToken = this.getJwtToken();
     const userId = this.getUserId();
-    const api = `${environment.baseUrlApi}/api/users-profile/get-about-image/${userId}`
 
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${jwtToken}`)
     return this.http.get<{ imageUrl: string }>(routes.GET_ABOUT_IMAGE_ENDPOINT + `${userId}`, { headers });
+  }
+
+  getEditAbout(aboutId: number): Observable<AboutUserResponse> {
+    const userId = this.getUserId();
+    const jwtToken = this.getJwtToken();
+
+    const params = { userId }
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`)
+
+    return this.http.get<AboutUserResponse>(routes.GET_EDIT_ABOUT_ENDPOINT + `${aboutId}`);
+  }
+
+  editAbout(request: FormGroup): Observable<string> {
+    const userId = this.getUserId();
+    const jwtToken = this.getJwtToken();
+
+    //const params = { aboutId }
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`)
+
+    return this.http.put<AboutUserResponse>(routes.EDIT_ABOUT_ENDPOINT, request.value, { headers })
+    .pipe(
+      map((response) => response.id)
+    );
   }
 }

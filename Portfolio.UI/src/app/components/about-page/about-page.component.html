@@ -39,7 +39,7 @@
             </div>
         </div>
         <br>
-        <a routerLink="/personalize-about" class="btn">
+        <a [routerLink]="['/about', 'edit', aboutResponse.id]" class="btn">
             Edit About
         </a>
     </div>

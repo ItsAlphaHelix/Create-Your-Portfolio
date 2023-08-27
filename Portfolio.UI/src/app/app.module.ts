@@ -14,6 +14,7 @@ import { ForgottenPasswordComponent } from './components/forgotten-password-page
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { AboutComponent } from './components/about-page/about-page.component';
 import { PersonalizeAboutComponent } from './components/personalize-about-page/personalize-about-page.component';
+import { EditAboutPageComponent } from './components/edit-about-page/edit-about-page.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PersonalizeAboutComponent } from './components/personalize-about-page/p
     ForgottenPasswordComponent,
     ErrorPageComponent,
     AboutComponent,
-    PersonalizeAboutComponent
+    PersonalizeAboutComponent,
+    EditAboutPageComponent
   ],
   imports: [
     BrowserModule,

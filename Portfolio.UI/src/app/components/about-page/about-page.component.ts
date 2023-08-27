@@ -38,7 +38,6 @@ export class AboutComponent implements OnInit {
   }
 
   getAboutImage(): void {
-    debugger
     this.userProfileService.getAboutUserImage().subscribe({
       next: (response) => {
         if (response) {

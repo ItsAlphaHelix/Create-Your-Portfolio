@@ -1,0 +1,39 @@
+<div class="container">
+    <form id="contact" [formGroup]="editForm">
+        <h3>Personalize About</h3>
+        <br>
+        <fieldset>
+            <strong>Phone Number</strong>
+            <input placeholder="Phone Number" type="tel" formControlName="phoneNumber">
+        </fieldset>
+        <fieldset>
+            <strong>Age</strong>
+            <input placeholder="Age" type="text" formControlName="age">
+        </fieldset>
+        <fieldset>
+            <strong>Education</strong>
+            <input placeholder="Education" type="text" formControlName="education">
+        </fieldset>
+        <fieldset>
+            <strong>Country</strong>
+            <input placeholder="Country" type="text" formControlName="country">
+        </fieldset>
+        <fieldset>
+            <strong>City</strong>
+            <input placeholder="City" type="text" formControlName="city">
+        </fieldset>
+        <fieldset>
+            <strong>About</strong>
+            <textarea placeholder="Tell more about for you..." formControlName="aboutMessage"></textarea>
+        </fieldset>
+        <fieldset>
+            <div class="custom-file-input">
+                <input type="file" class="file-input">
+                <label for="upload_file" class="file-label">Edit an image</label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit" (click)="editAboutInformation()">Submit</button>
+        </fieldset>
+    </form>
+</div>
