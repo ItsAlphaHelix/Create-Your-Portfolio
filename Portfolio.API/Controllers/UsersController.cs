@@ -26,8 +26,8 @@
             this.userImagesRepository = userImagesRepository;
         }
 
-        [Route("upload-profile-image")]
         [HttpPost]
+        [Route("upload-profile-image")]
         public async Task<IActionResult> UploadProfileImage(IFormFile file)
         {
             var result = await this.imageService.UploadProfileImageAsync(file);
@@ -52,8 +52,8 @@
             return Ok(responseDto);
         }
 
-        [Route("upload-homepage-image")]
         [HttpPost]
+        [Route("upload-homepage-image")]
         public async Task<IActionResult> UploadHomePageImage(IFormFile file)
         {
             var result = await this.imageService.UploadHomePageImageAsync(file);
@@ -78,7 +78,8 @@
             return Ok(responseDto);
         }
 
-        [HttpGet("get-profile-image/{userId}")]
+        [HttpGet]
+        [Route("get-profile-image/{userId}")]
         public async Task<IActionResult> GetUserProfileImage(string userId)
         {
             try
@@ -92,7 +93,8 @@
             }
         }
 
-        [HttpGet("get-home-page-image/{userId}")]
+        [HttpGet]
+        [Route("get-home-page-image/{userId}")]
         public async Task<IActionResult> GetUserHomePageImage(string userId)
         {
             try
@@ -106,7 +108,8 @@
             }
         }
 
-        [HttpPost("personalize-about")]
+        [HttpPost]
+        [Route("personalize-about")]
         public async Task<IActionResult> PersonalizeAbout([FromBody] AboutUserDto model, [FromQuery] string userId)
         {
             await this.usersProfileService.PersonalizeAboutAsync(model, userId);
@@ -114,8 +117,8 @@
             return Ok();
         }
 
-
-        [HttpPost("upload-about-image")]
+        [HttpPost]
+        [Route("upload-about-image")]
         public async Task<IActionResult> UploadAboutImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imageService.UploadAboutImageAsync(file);
@@ -124,8 +127,6 @@
             {
                 return BadRequest(result.Error.Message);
             }
-
-            //var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var userAboutImage = new UserImage()
             {
@@ -140,7 +141,8 @@
             return Ok(responseDto);
         }
 
-        [HttpGet("get-about")]
+        [HttpGet]
+        [Route("get-about")]
         public async Task<IActionResult> GetAbout([FromQuery] string userId)
         {
             try
@@ -155,7 +157,8 @@
             }
         }
 
-        [HttpGet("get-about-image/{userId}")]
+        [HttpGet]
+        [Route("get-about-image/{userId}")]
         public async Task<IActionResult> GetAboutImage(string userId)
         {
             try
@@ -168,6 +171,25 @@
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("get-edit-about/{aboutId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetEditAboutInformation(int aboutId)
+        {  
+            var result = await this.usersProfileService.GetEditAboutInformation(aboutId);
+            
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("edit-about")]
+        public async Task<IActionResult> EditAboutInformation([FromBody] AboutUserDto model)
+        {
+            await this.usersProfileService.EditAboutInformationAsync(model);
+
+            return Ok(new {id = model.Id});
         }
     }
 }

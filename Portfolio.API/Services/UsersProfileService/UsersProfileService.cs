@@ -1,9 +1,11 @@
 ﻿using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Portfolio.API.Data.Models;
 using Portfolio.API.Dtos.UsersProfileDtos;
 using Portfolio.Data.Repositories;
+using SendGrid.Helpers.Errors.Model;
 
 namespace Portfolio.API.Services.UsersProfileService
 {
@@ -52,16 +54,17 @@ namespace Portfolio.API.Services.UsersProfileService
                 .AllAsNoTracking()
                 .Where(x => x.UserId == user.Id)
                 .Select(x => new AboutUserResponseDto()
-            {
-                JobTitle = user.JobTitle,
-                AboutMessage = x.AboutMessage,
-                Age = x.Age,
-                City = x.City,
-                Country = x.Country,
-                Education = x.Education,
-                Email = user.Email,
-                PhoneNumber = x.PhoneNumber
-            })
+                {
+                    Id = x.Id,
+                    JobTitle = user.JobTitle,
+                    AboutMessage = x.AboutMessage,
+                    Age = x.Age,
+                    City = x.City,
+                    Country = x.Country,
+                    Education = x.Education,
+                    Email = user.Email,
+                    PhoneNumber = x.PhoneNumber
+                })
                 .FirstOrDefaultAsync();
 
             if (aboutResponse == null)
@@ -70,6 +73,47 @@ namespace Portfolio.API.Services.UsersProfileService
             }
 
             return aboutResponse;
+        }
+
+        public async Task<AboutUserDto> GetEditAboutInformation(int aboutId)
+        {
+            var result = await this.usersAboutRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == aboutId)
+                .Select(x => new AboutUserDto()
+                {
+                    Id = x.Id,
+                    AboutMessage = x.AboutMessage,
+                    Age = x.Age,
+                    City = x.City,
+                    Country = x.Country,
+                    Education = x.Education,
+                    PhoneNumber = x.PhoneNumber
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        public async Task EditAboutInformationAsync(AboutUserDto model)
+        {
+            var editAbout = await usersAboutRepository
+                .All()
+                .Where(x => x.Id == model.Id)
+                .FirstOrDefaultAsync();
+
+            if (editAbout == null)
+            {
+                throw new NotFoundException("About information not found.");
+            }
+
+            editAbout.AboutMessage = model.AboutMessage;
+            editAbout.Age = model.Age;
+            editAbout.City = model.City;
+            editAbout.Country = model.Country;
+            editAbout.Education = model.Education;
+            editAbout.PhoneNumber = model.PhoneNumber;
+
+            await usersAboutRepository.SaveChangesAsync();
         }
     }
 }

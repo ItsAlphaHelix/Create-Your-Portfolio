@@ -20,5 +20,9 @@
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<AboutUserResponseDto> GetAboutAsync(string userId);
+
+        Task<AboutUserDto> GetEditAboutInformation(int aboutId);
+
+        Task EditAboutInformationAsync(AboutUserDto model);
     }
 }
