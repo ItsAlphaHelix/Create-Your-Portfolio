@@ -1,4 +1,4 @@
-﻿namespace Portfolio.API.Services.AccountsService
+﻿namespace Portfolio.API.Services.Contracts
 {
     using Microsoft.AspNetCore.Identity;
     using Portfolio.API.Data.Models;

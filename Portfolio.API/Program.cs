@@ -9,10 +9,8 @@ using Portfolio.API.Data;
 using Portfolio.API.Data.Models;
 using Portfolio.API.ExceptionMiddlewares;
 using Portfolio.API.Extensions;
-using Portfolio.API.Services.AccountService;
-using Portfolio.API.Services.AccountsService;
-using Portfolio.API.Services.PhotoService;
-using Portfolio.API.Services.UsersProfileService;
+using Portfolio.API.Services;
+using Portfolio.API.Services.Contracts;
 using Portfolio.Data.Repositories;
 using System.Net;
 using System.Text;
@@ -64,7 +62,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped<IImagesService, ImagesService>();
-builder.Services.AddScoped<IUsersProfileService, UsersProfileService>();
+builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 
 var app = builder.Build();
 

@@ -1,20 +1,18 @@
-﻿using CloudinaryDotNet.Actions;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Portfolio.API.Data.Models;
-using Portfolio.API.Dtos.UsersProfileDtos;
-using Portfolio.Data.Repositories;
-using SendGrid.Helpers.Errors.Model;
-
-namespace Portfolio.API.Services.UsersProfileService
+﻿namespace Portfolio.API.Services
 {
-    public class UsersProfileService : IUsersProfileService
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
+    using Portfolio.API.Data.Models;
+    using Portfolio.API.Dtos.UsersProfileDtos;
+    using Portfolio.API.Services.Contracts;
+    using Portfolio.Data.Repositories;
+    using SendGrid.Helpers.Errors.Model;
+    public class AboutMeService : IAboutMeService
     {
         private readonly IRepository<ApplicationUser> usersRepository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository<AboutUser> usersAboutRepository;
-        public UsersProfileService(
+        public AboutMeService(
             IRepository<ApplicationUser> usersRepository,
             UserManager<ApplicationUser> userManager,
             IRepository<AboutUser> usersAboutRepository)
@@ -24,7 +22,7 @@ namespace Portfolio.API.Services.UsersProfileService
             this.usersAboutRepository = usersAboutRepository;
 
         }
-        public async Task PersonalizeAboutAsync(AboutUserDto model, string userId)
+        public async Task AddAboutUsersInformationAsync(AboutUserDto model, string userId)
         {
             var aboutUser = new AboutUser()
             {
@@ -41,7 +39,7 @@ namespace Portfolio.API.Services.UsersProfileService
             await usersAboutRepository.SaveChangesAsync();
         }
 
-        public async Task<AboutUserResponseDto> GetAboutAsync(string userId)
+        public async Task<AboutUserResponseDto> GetAboutUsersInformationAsync(string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
 
@@ -75,7 +73,7 @@ namespace Portfolio.API.Services.UsersProfileService
             return aboutResponse;
         }
 
-        public async Task<AboutUserDto> GetEditAboutInformation(int aboutId)
+        public async Task<AboutUserDto> GetEditUsersAboutInformationAsync(int aboutId)
         {
             var result = await this.usersAboutRepository
                 .AllAsNoTracking()
@@ -94,7 +92,7 @@ namespace Portfolio.API.Services.UsersProfileService
 
             return result;
         }
-        public async Task EditAboutInformationAsync(AboutUserDto model)
+        public async Task EditAboutUsersInformationAsync(AboutUserDto model)
         {
             var editAbout = await usersAboutRepository
                 .All()

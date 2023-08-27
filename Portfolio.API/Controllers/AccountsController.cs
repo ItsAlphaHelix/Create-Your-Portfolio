@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Errors;
-    using Portfolio.API.Services.AccountsService;
+    using Portfolio.API.Services.Contracts;
     using Portfolio.API.Services.Dtos;
     using Portfolio.API.Services.Dtos.AccountsDtos;
     using Portfolio.API.Services.Models;

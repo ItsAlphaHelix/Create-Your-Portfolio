@@ -1,4 +1,4 @@
-﻿namespace Portfolio.API.Services.PhotoService
+﻿namespace Portfolio.API.Services
 {
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
@@ -6,9 +6,10 @@
     using Microsoft.EntityFrameworkCore;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ImagesDtos;
+    using Portfolio.API.Services.Contracts;
     using Portfolio.Data.Repositories;
 
-    public class ImagesService: IImagesService
+    public class ImagesService : IImagesService
     {
         private readonly Cloudinary cloudinary;
         private readonly IRepository<UserImage> userImagesRepository;
@@ -27,7 +28,7 @@
 
         public async Task<string> GetUserHomePageImageUrlAsync(string userId)
         {
-            var user = await this.userImagesRepository.AllAsNoTracking()
+            var user = await userImagesRepository.AllAsNoTracking()
                 .Where(x => x.UserId == userId && x.HomePageImageUrl != null)
                 .Select(x => new UploadImageDto()
                 {
@@ -39,13 +40,13 @@
             {
                 throw new Exception("You currently do not have a home image. To enhance your portfolio, consider uploading your own image. To upload the image, click on the window displaying your name and job title.");
             }
-            
+
             return user.ImageUrl;
         }
 
         public async Task<string> GetUserProfileImageUrlAsync(string userId)
         {
-            var user = await this.userImagesRepository.AllAsNoTracking()
+            var user = await userImagesRepository.AllAsNoTracking()
                 .Where(x => x.UserId == userId && x.ProfileImageUrl != null)
                 .Select(x => new UploadImageDto()
                 {
@@ -64,8 +65,8 @@
         public async Task<UploadImageDto> SaveImageUrlToDatabase(
             string imageUrl, UserImage image)
         {
-            await this.userImagesRepository.AddAsync(image);
-            await this.userImagesRepository.SaveChangesAsync();
+            await userImagesRepository.AddAsync(image);
+            await userImagesRepository.SaveChangesAsync();
 
             var responseDto = new UploadImageDto()
             {
@@ -123,7 +124,7 @@
 
         public async Task<string> GetAboutImageUrlAsync(string userId)
         {
-            var user = await this.userImagesRepository.AllAsNoTracking()
+            var user = await userImagesRepository.AllAsNoTracking()
                 .Where(x => x.UserId == userId && x.AboutImageUrl != null)
                 .Select(x => new UploadImageDto()
                 {

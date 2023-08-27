@@ -1,10 +1,10 @@
-﻿namespace Portfolio.API.Services.AccountService
+﻿namespace Portfolio.API.Services
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.IdentityModel.Tokens;
     using Portfolio.API.Data.Models;
-    using Portfolio.API.Services.AccountsService;
+    using Portfolio.API.Services.Contracts;
     using Portfolio.API.Services.Dtos;
     using Portfolio.API.Services.Dtos.AccountsDtos;
     using Portfolio.API.Services.Models;
@@ -47,10 +47,10 @@
 
             var isAuthenticated = await userManager.CheckPasswordAsync(findUser, user.Password);
 
-                if (!isAuthenticated)
-                {
-                    throw new MemberAccessException("Invalid email or password!");
-                }
+            if (!isAuthenticated)
+            {
+                throw new MemberAccessException("Invalid email or password!");
+            }
 
             await GenerateTokens(findUser);
 
@@ -105,7 +105,7 @@
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(this.configuration["JWTKey"]);
+            var key = Encoding.ASCII.GetBytes(configuration["JWTKey"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),

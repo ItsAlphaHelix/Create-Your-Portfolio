@@ -1,4 +1,4 @@
-﻿namespace Portfolio.API.Services.PhotoService
+﻿namespace Portfolio.API.Services.Contracts
 {
     using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Http;
