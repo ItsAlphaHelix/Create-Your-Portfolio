@@ -1,9 +1,7 @@
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, filter, first, throwError } from 'rxjs';
 import { RegisterRequest } from 'src/app/models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
@@ -14,31 +12,30 @@ import { ClientSideValidation } from 'src/app/services/client-side-validation';
   styleUrls: ['./register-page.component.css']
 })
 export class RegisterComponent {
-
-  formRequest!: RegisterRequest
-
-  private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
-    if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
-
-      return null;
-
-    } else if (formGroup.get('confirmPassword')?.value === '') {
-
-      return { required: true };
-
-    } else {
-
-      this.registerForm.controls['confirmPassword'].setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-  };
-
-  constructor(private accountsService: AccountsService,
+  constructor(
+    private accountsService: AccountsService,
     private router: Router,
     private clientSideValidation: ClientSideValidation,
     private toastr: ToastrService
-  ) { }
-
+    ) { }
+    
+    formRequest!: RegisterRequest
+  
+    private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
+      if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
+  
+        return null;
+  
+      } else if (formGroup.get('confirmPassword')?.value === '') {
+  
+        return { required: true };
+  
+      } else {
+  
+        this.registerForm.controls['confirmPassword'].setErrors({ passwordMismatch: true });
+        return { passwordMismatch: true };
+      }
+    };
 
   registerForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),

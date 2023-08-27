@@ -1,12 +1,9 @@
-import { HttpErrorResponse, HttpHeaders, HttpStatusCode } from '@angular/common/http';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, filter, first, throwError } from 'rxjs';
 import { LoginRequest } from 'src/app/models/login-request-model';
 import { LoginResponse } from 'src/app/models/login-response-model';
-import { RegisterRequest } from 'src/app/models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
 
@@ -16,14 +13,15 @@ import { ClientSideValidation } from 'src/app/services/client-side-validation';
   styleUrls: ['./login-page.component.css']
 })
 export class LoginComponent implements OnInit {
-  formRequest!: LoginComponent
-  loginRequest!: LoginRequest
-
-  constructor(private accountsService: AccountsService,
+  
+  constructor(
+    private accountsService: AccountsService,
     private router: Router,
     private toastr: ToastrService,
     private clientSideValidation: ClientSideValidation) { }
-
+    
+    formRequest!: LoginComponent
+    loginRequest!: LoginRequest
 
   ngOnInit() {
     if (this.accountsService.getAccessToken()) {

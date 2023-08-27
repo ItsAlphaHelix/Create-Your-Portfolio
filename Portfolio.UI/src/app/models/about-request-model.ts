@@ -1,4 +1,4 @@
-export interface PersonalizeAboutUserRequest {
+export interface AboutInformationRequest {
     age: number,
     education: string,
     country: string,

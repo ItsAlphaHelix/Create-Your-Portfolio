@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AboutUserResponse } from 'src/app/models/about-user-response-model';
-import { PersonalizeAboutUserRequest } from 'src/app/models/personalize-about-user-request';
+import { AboutInformationRequest } from 'src/app/models/about-request-model';
+import { AboutMeService } from 'src/app/services/about-me.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
-import { UserProfileService } from 'src/app/services/user-profile.service';
 
 @Component({
   selector: 'app-edit-about-page',
@@ -13,17 +12,18 @@ import { UserProfileService } from 'src/app/services/user-profile.service';
   styleUrls: ['./edit-about-page.component.css']
 })
 export class EditAboutPageComponent implements OnInit {
-  constructor(private userProfileService: UserProfileService,
-     private route: ActivatedRoute, 
-     private router: Router,
-     private clientSideValidation: ClientSideValidation,
-     private toastr: ToastrService) {}
+  constructor(
+    private aboutMeService: AboutMeService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private clientSideValidation: ClientSideValidation,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.getEditAboutInformation();
   }
 
-  editFormRequest!: PersonalizeAboutUserRequest
+  editFormRequest!: AboutInformationRequest
 
   editForm = new FormGroup({
     id: new FormControl(""),
@@ -38,7 +38,7 @@ export class EditAboutPageComponent implements OnInit {
   getEditAboutInformation(): void {
 
     const aboutId = this.route.snapshot.paramMap.get('aboutId');
-    this.userProfileService.getEditAbout(Number(aboutId)).subscribe({
+    this.aboutMeService.getEditUsersAboutInformationAsync(Number(aboutId)).subscribe({
       next: (response) => {
         if (response) {
           this.editForm.setValue({
@@ -63,17 +63,9 @@ export class EditAboutPageComponent implements OnInit {
       this.clientSideValidation.aboutUserFormValidation(this.editForm);
       return;
     }
-    const aboutId = this.route.snapshot.paramMap.get('aboutId');
-    // this.aboutFormRequest = {
-    //   phoneNumber: this.aboutForm.value.phoneNumber!,
-    //   age: Number(this.aboutForm.value.age),
-    //   education: this.aboutForm.value.education!,
-    //   country: this.aboutForm.value.country!,
-    //   city: this.aboutFsageorm.value.city!,
-    //   aboutMessage: this.aboutForm.value.aboutMes!
-    // }
-    debugger
-    this.userProfileService.editAbout(this.editForm).subscribe({
+
+
+    this.aboutMeService.editAboutUsersInformationAsync(this.editForm).subscribe({
       next: (response) => {
         if (response) {
           this.toastr.success('You have been successfully edit your information.')

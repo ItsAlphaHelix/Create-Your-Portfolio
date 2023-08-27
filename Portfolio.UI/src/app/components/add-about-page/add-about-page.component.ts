@@ -2,22 +2,24 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AboutUserResponse } from 'src/app/models/about-user-response-model';
-import { PersonalizeAboutUserRequest } from 'src/app/models/personalize-about-user-request';
+import { AboutInformationRequest } from 'src/app/models/about-request-model';
+import { AboutMeService } from 'src/app/services/about-me.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
-import { UserProfileService } from 'src/app/services/user-profile.service';
+import { ImagesService } from 'src/app/services/images.service';
 
 @Component({
-  selector: 'app-personalize-about-page',
-  templateUrl: './personalize-about-page.component.html',
-  styleUrls: ['./personalize-about-page.component.css']
+  selector: 'app-add-about-page',
+  templateUrl: './add-about-page.component.html',
+  styleUrls: ['./add-about-page.component.css']
 })
-export class PersonalizeAboutComponent {
+
+export class AddAboutInformationComponent {
   constructor(
-     private userProfileService: UserProfileService,
-     private toastr: ToastrService,
-     private router: Router,
-    private clientSideValidation: ClientSideValidation) {}
+    private aboutMeService: AboutMeService,
+    private imagesService: ImagesService,
+    private toastr: ToastrService,
+    private router: Router,
+    private clientSideValidation: ClientSideValidation) { }
 
   aboutForm = new FormGroup({
     age: new FormControl("", [Validators.required, Validators.pattern(/[\d]+$/)]),
@@ -28,7 +30,7 @@ export class PersonalizeAboutComponent {
     phoneNumber: new FormControl("", [Validators.required, Validators.pattern('^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')]),
   });
 
-  aboutFormRequest!: PersonalizeAboutUserRequest
+  aboutFormRequest!: AboutInformationRequest
 
   onPersonalize(): void {
 
@@ -46,41 +48,41 @@ export class PersonalizeAboutComponent {
       city: this.aboutForm.value.city!,
       aboutMessage: this.aboutForm.value.aboutMessage!
     }
-    
-    this.userProfileService.personalizeAboutUser(this.aboutFormRequest).subscribe({
+
+    this.aboutMeService.addAboutUsersInformation(this.aboutFormRequest).subscribe({
       next: () => {
         this.toastr.success('You have successfully completed the about form.')
         this.router.navigate(['/about']);
       },
       error: (error) => {
         let errorMessage = 'Unknown error occured';
-        switch(error.status) {
-            case 400:
-             if (error.error.errors.Education) {
-               errorMessage = error.error.errors.Education[0]
-             } else if (error.error.errors.Country) {
-               errorMessage = error.error.errors.Country[0]
-             } else if (error.error.errors.City) {
-               errorMessage = error.error.errors.City[0]
-             } else if (error.error.errors.AboutMessage) {
-               errorMessage = error.error.errors.AboutMessage[0]
-             }
+        switch (error.status) {
+          case 400:
+            if (error.error.errors.Education) {
+              errorMessage = error.error.errors.Education[0]
+            } else if (error.error.errors.Country) {
+              errorMessage = error.error.errors.Country[0]
+            } else if (error.error.errors.City) {
+              errorMessage = error.error.errors.City[0]
+            } else if (error.error.errors.AboutMessage) {
+              errorMessage = error.error.errors.AboutMessage[0]
+            }
             break;
-            default:
+          default:
             this.toastr.error(errorMessage);
             break;
         }
 
         this.toastr.error(errorMessage);
-      } 
-  });
+      }
+    });
   }
 
   handleFileInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
-      this.userProfileService.uploadAboutImage(file).subscribe(
+      this.imagesService.uploadAboutImage(file).subscribe(
         (response) => {
           if (response) {
             this.toastr.success('You have successfully uploaded your about image');

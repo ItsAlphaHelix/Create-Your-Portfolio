@@ -1,12 +1,11 @@
-import { AfterContentChecked, AfterViewChecked, AfterViewInit, Component, ElementRef, OnChanges, OnDestroy, OnInit, Renderer2, ViewChild, resolveForwardRef } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, defaultUrlMatcher } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UserResponse } from 'src/app/models/user-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import { UserProfileService } from 'src/app/services/user-profile.service';
 import Typed from 'typed.js';
 import * as AOS from 'aos';
 import { Observable, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { ImagesService } from 'src/app/services/images.service';
 
 @Component({
   selector: 'app-home',
@@ -17,13 +16,9 @@ import { ToastrService } from 'ngx-toastr';
 export default class HomeComponent implements OnInit {
 
   constructor(
-    private userProfileService: UserProfileService,
+    private imagesService: ImagesService,
     private accountsService: AccountsService,
-    private toastr: ToastrService,
-    private router: Router,
-    private renderer: Renderer2,
-    private el: ElementRef,
-    private route: ActivatedRoute) { }
+    private toastr: ToastrService) { }
 
   @ViewChild('typed') typedElement!: ElementRef;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -84,7 +79,7 @@ export default class HomeComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
-      this.userProfileService.uploadUserHomePagePicture(file).subscribe(
+      this.imagesService.uploadHomePageImage(file).subscribe(
         (response) => {
           if (response) {
             this.imageURL = response.imageUrl;
@@ -96,7 +91,7 @@ export default class HomeComponent implements OnInit {
   }
 
   getHomePagePicture(): void {
-    this.userProfileService.getUserHomePagePicture().subscribe({
+    this.imagesService.getUserHomePageImage().subscribe({
       next: (response) => {
         if (response) {
           this.imageURL = response.imageUrl;

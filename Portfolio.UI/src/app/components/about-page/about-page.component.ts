@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { AboutUserResponse } from 'src/app/models/about-user-response-model';
-import { UserProfileService } from 'src/app/services/user-profile.service';
+import { ImagesService } from 'src/app/services/images.service';
+import { AboutMeService } from 'src/app/services/about-me.service';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
+import { AboutInformationResponse } from 'src/app/models/about-response-model';
 
 @Component({
   selector: 'app-about-page',
@@ -13,40 +12,41 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AboutComponent implements OnInit {
 
-  constructor(private userProfileService: UserProfileService, private router: Router) { }
-  
+  constructor(
+    private imagesService: ImagesService,
+    private aboutMeService: AboutMeService,
+    private router: Router) { }
+
   ngOnInit(): void {
     console.log(this.imageURL);
     this.getAboutImage();
     this.getAboutUser();
   }
 
-  aboutResponse!: AboutUserResponse
+  aboutResponse!: AboutInformationResponse
   imageURL!: string | undefined
 
   getAboutUser(): void {
-    this.userProfileService.getAboutUser().subscribe({
+    this.aboutMeService.getAboutUsersInformationAsync().subscribe({
       next: (response) => {
         if (response) {
           this.aboutResponse = response;
         }
       },
       error: () => {
-        this.router.navigate(['/personalize-about']);
+        this.router.navigate(['/add-about-information']);
       }
     });
   }
 
   getAboutImage(): void {
-    this.userProfileService.getAboutUserImage().subscribe({
+    this.imagesService.getAboutUserImage().subscribe({
       next: (response) => {
         if (response) {
           this.imageURL = response.imageUrl;
-          console.log(this.imageURL)
         }
       },
       error: (error) => {
-        console.log(error.status)
       }
     });
   }

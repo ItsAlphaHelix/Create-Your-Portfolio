@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, DebugNode, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AccountsService } from './services/accounts.service';
-import { UserProfileService } from './services/user-profile.service';
-import { Observable, Subscription, delay, interval, of, take } from 'rxjs';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { UserResponse } from './models/user-response-model';
 import { ToastrService } from 'ngx-toastr';
+import { ImagesService } from './services/images.service';
 declare function handleClick(): void;
 
 @Component({
@@ -17,7 +16,7 @@ export class AppComponent implements OnInit {
   constructor(
     private accountsService: AccountsService,
     private router: Router,
-    private userProfileService: UserProfileService,
+    private imagesService: ImagesService,
     private renderer: Renderer2,
     private toastr: ToastrService) { }
 
@@ -74,7 +73,7 @@ export class AppComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
-      this.userProfileService.uploadUserProfilePicture(file).subscribe(
+      this.imagesService.uploadProfileImage(file).subscribe(
         (response) => {
           if (response) {
             this.imageURL = response.imageUrl;
@@ -86,7 +85,7 @@ export class AppComponent implements OnInit {
   }
 
   getProfilePicture(): void {
-    this.userProfileService.getUserProfilePicture().subscribe(
+    this.imagesService.getUserProfileImage().subscribe(
       (response) => {
         if (response) {
           this.imageURL = response.imageUrl;
