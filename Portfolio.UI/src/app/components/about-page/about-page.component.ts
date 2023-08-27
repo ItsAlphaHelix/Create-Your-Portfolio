@@ -4,6 +4,7 @@ import { AboutMeService } from 'src/app/services/about-me.service';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AboutInformationResponse } from 'src/app/models/about-response-model';
+import * as AOS from 'aos';
 
 @Component({
   selector: 'app-about-page',
@@ -17,8 +18,17 @@ export class AboutComponent implements OnInit {
     private aboutMeService: AboutMeService,
     private router: Router) { }
 
+  private initAos(): void {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      once: true,
+      mirror: false
+    });
+  }
+
   ngOnInit(): void {
-    console.log(this.imageURL);
+    this.initAos();
     this.getAboutImage();
     this.getAboutUser();
   }
