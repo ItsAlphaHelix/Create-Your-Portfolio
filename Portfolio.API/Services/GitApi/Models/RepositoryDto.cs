@@ -1,0 +1,14 @@
+﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
+namespace Portfolio.API.Controllers
+{
+    public class RepositoryDto
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("languages_url")]
+        public string LanguagesUrl { get; set; }
+    }
+}

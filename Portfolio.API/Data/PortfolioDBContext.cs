@@ -21,6 +21,8 @@
 
         public DbSet<AboutUser> AboutUsers { get; set; }
 
+        public DbSet<UserProgramLanguage> UserProgramLanguages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
