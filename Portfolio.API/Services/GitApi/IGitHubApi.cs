@@ -2,6 +2,6 @@
 {
     public interface IGitHubApi
     {
-        Task<HttpResponseMessage> GetTotalUsesProgrammingLanguagesInGitHub();
+        Task GetUserProgrammingLanguages();
     }
 }

@@ -17,31 +17,10 @@ namespace Portfolio.API.Services.GitApi
             this.userProgramLanguagesRepository = userProgramLanguagesRepository;
         }
 
-        public async Task<HttpResponseMessage> GetUserProgrammingLanguages()
+        public async Task GetUserProgrammingLanguages()
         {
-            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
-            this.client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("product", "1"));
-
-            using HttpResponseMessage reposResponse = await this.client.GetAsync($"{BaseUrl}/users/ItsAlphaHelix/repos");
-
-            if (!reposResponse.IsSuccessStatusCode)
-            {
-                //return StatusCode((int)reposResponse.StatusCode);
-            }
-
-            using HttpContent content = reposResponse.Content;
-
-            var repos = await content.ReadFromJsonAsync<RepositoryDto[]>();
-
-            return repos;
-
             var repos = await GetUserRepositories();
-            return await NewMethod(repos);
 
-        }
-
-        private async Task<HttpResponseMessage> NewMethod(RepositoryDto[]? repos)
-        {
             var languageUsage = new Dictionary<string, int>();
 
             foreach (var repo in repos)
@@ -69,8 +48,6 @@ namespace Portfolio.API.Services.GitApi
                         languageUsage[lang.Key] = lang.Value;
                     }
                 }
-
-                return languagesResponse;
             }
             await SaveToDatabasePercentageOfUsesProgrammingLanguages(languageUsage);
         }
@@ -78,7 +55,7 @@ namespace Portfolio.API.Services.GitApi
         private async Task<RepositoryDto[]> GetUserRepositories()
         {
             this.client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
-            this.client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("product", "1"));
+            this.client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("github", "1.1"));
 
             using HttpResponseMessage reposResponse = await this.client.GetAsync($"{BaseUrl}/users/ItsAlphaHelix/repos");
 
