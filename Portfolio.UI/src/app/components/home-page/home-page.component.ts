@@ -20,8 +20,8 @@ export default class HomeComponent implements OnInit {
     private accountsService: AccountsService,
     private toastr: ToastrService) { }
 
-  @ViewChild('typed') typedElement!: ElementRef;
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  //@ViewChild('typed') typedElement!: ElementRef;
+  //@ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   imageURL: string | undefined;
   userJobTitle: string | undefined;
@@ -69,13 +69,13 @@ export default class HomeComponent implements OnInit {
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
-    fileInput.addEventListener('change', (event) => this.handleFileInputChange(event));
+    fileInput.addEventListener('change', (event) => this.uploadHomeImage(event));
     document.body.appendChild(fileInput);
     fileInput.click();
     document.body.removeChild(fileInput);
   }
 
-  handleFileInputChange(event: Event): void {
+  uploadHomeImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
@@ -107,8 +107,7 @@ export default class HomeComponent implements OnInit {
             this.toastr.error(errorMessage);
             break;
         }
-
-        this.toastr.error(errorMessage);
+          this.toastr.error(errorMessage);
       }
     });
   }

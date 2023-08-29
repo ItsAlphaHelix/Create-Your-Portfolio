@@ -20,3 +20,4 @@ export const UPLOAD_ABOUT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/about-
 export const GET_ABOUT_ENDPOINT = `${environment.baseUrlApi}/api/about-me/get-about`;
 export const GET_ABOUT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/about-me/get-about-image/`;
 export const GET_EDIT_ABOUT_ENDPOINT = `${environment.baseUrlApi}/api/about-me/get-edit-about/`;
+export const GET_LANGUAGE_PERCENTAGES = `${environment.baseUrlApi}/api/about-me/get-language-percentages`;

@@ -5,6 +5,7 @@ import { Observable, map } from "rxjs";
 import { AboutInformationResponse } from "../models/about-response-model";
 import * as routes from 'src/app/shared/routes.contants';
 import { FormGroup } from "@angular/forms";
+import { LanguagePercentage } from "../models/language-percentages-model";
 
 @Injectable({
     providedIn: 'root'
@@ -67,5 +68,12 @@ export class AboutMeService {
             .pipe(
                 map((response) => response.id)
             );
+    }
+    
+    getLanguagesPercentageOfUse(): Observable<LanguagePercentage[]> {
+        const userId = this.getUserId();
+        const params = { userId };
+
+        return this.http.get<LanguagePercentage[]>(routes.GET_LANGUAGE_PERCENTAGES, { params })
     }
 }

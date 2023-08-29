@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AccountsService } from './services/accounts.service';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationError, Router } from '@angular/router';
 import { UserResponse } from './models/user-response-model';
 import { ToastrService } from 'ngx-toastr';
 import { ImagesService } from './services/images.service';
@@ -28,7 +28,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
@@ -63,13 +62,13 @@ export class AppComponent implements OnInit {
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
     fileInput.style.display = 'none';
-    fileInput.addEventListener('change', (event) => this.handleFileInputChange(event));
+    fileInput.addEventListener('change', (event) => this.uploadProfileImage(event));
     document.body.appendChild(fileInput);
     fileInput.click();
     document.body.removeChild(fileInput);
   }
 
-  handleFileInputChange(event: Event): void {
+  uploadProfileImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
@@ -101,8 +100,7 @@ export class AppComponent implements OnInit {
             this.toastr.error(errorMessage);
             break;
         }
-
-        this.toastr.error(errorMessage);
+          this.toastr.error(errorMessage);
       }
     );
   }

@@ -1,7 +1,7 @@
 <section id="hero" [style.backgroundImage]="'url(' + imageURL + ')'"  class="d-flex flex-column justify-content-center align-items-center" (click)="openFileInput()">
     <div class="hero-container" data-aos="fade-in">
-        <h1>{{userResonse?.firstName}} {{userResonse?.lastName}}</h1>
-        <p>I'm <span class="typed" [attr.data-typed-items]="userJobTitle" #typed></span></p>
+        <h1>{{userResonse?.firstName}} {{userResonse?.lastName}}</h1> 
+        <p>I'm <span class="typed" [attr.data-typed-items]="userJobTitle"></span></p>
     </div>
-    <input type="file" #fileInput style="display: none;" (change)="handleFileInputChange($event)">
+    <input type="file" #fileInput style="display: none;" (change)="uploadHomeImage($event)">
 </section>

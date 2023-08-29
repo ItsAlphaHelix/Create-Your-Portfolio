@@ -32,7 +32,7 @@ export class AddAboutInformationComponent {
 
   aboutFormRequest!: AboutInformationRequest
 
-  onPersonalize(): void {
+  addAboutInformation(): void {
 
     if (this.aboutForm.invalid) {
       debugger;
@@ -78,7 +78,7 @@ export class AddAboutInformationComponent {
     });
   }
 
-  handleFileInputChange(event: Event): void {
+  uploadAboutImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];

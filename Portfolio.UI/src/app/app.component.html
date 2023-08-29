@@ -21,6 +21,7 @@
             <ul>
                 <li><a routerLink="/" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Home</span></a>
                 <li><a routerLink="/about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>About</span></a></li>
+                <li><a routerLink="/skills" class="nav-link scrollto"><i class="bx bx-user"></i> <span>Skills</span></a></li>
                 <li><a href="" class="nav-link scrollto"><i class="bx bx-file-blank"></i> <span>Resume</span></a>
                 </li>
                 <li><a href="" class="nav-link scrollto"><i class="bx bx-book-content"></i>
@@ -34,7 +35,7 @@
             </ul>
         </nav>
     </div>
-    <input type="file" #fileInput style="display: none;" (change)="handleFileInputChange($event)">
+    <input type="file" #fileInput style="display: none;" (change)="uploadProfileImage($event)">
 </header>
 </ng-container>
 <router-outlet></router-outlet>

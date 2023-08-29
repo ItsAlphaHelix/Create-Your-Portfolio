@@ -28,12 +28,12 @@
         </fieldset>
         <fieldset>
             <div class="custom-file-input">
-                <input type="file" class="file-input" (change)="handleFileInputChange($event)">
+                <input type="file" class="file-input" (change)="uploadAboutImage($event)">
                 <label for="upload_file" class="file-label">Choose an image</label>
             </div>
         </fieldset>
         <fieldset>
-            <button name="submit" type="submit" id="contact-submit" (click)="onPersonalize()">Submit</button>
+            <button name="submit" type="submit" id="contact-submit" (click)="addAboutInformation()">Submit</button>
         </fieldset>
     </form>
 </div>

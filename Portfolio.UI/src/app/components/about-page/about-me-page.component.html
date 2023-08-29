@@ -2,7 +2,7 @@
     <div class="container">
 
         <div class="section-title">
-            <h2>About</h2>
+            <h2>About me</h2>
         </div>
 
         <div class="row">
@@ -42,5 +42,28 @@
         <a [routerLink]="['/about', 'edit', aboutResponse.id]" class="btn" data-aos="fade-right">
             Edit About
         </a>
+    </div>
+</section>
+
+<section id="skills" class="skills section-bg" *ngIf="languagePercentages">
+    <div class="container">
+
+        <div class="section-title">
+            <h2>Programming skills</h2>
+            <p>These are my programming skills which come from GitHub.</p>
+        </div>
+
+        <div class="row skills-content">
+            <div class="col-lg-6" *ngFor="let language of languagePercentages">
+                <div class="progress">
+                    <span class="skill">{{ language.languageName }} <i class="val">{{ language.percentageOfUseLanguage.toFixed(2)
+                            }}%</i></span>
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar" role="progressbar" [style.width.%]="language.percentageOfUseLanguage"
+                            [attr.aria-valuenow]="language.percentageOfUseLanguage" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

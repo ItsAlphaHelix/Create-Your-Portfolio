@@ -256,8 +256,8 @@ h6 {
   right: 0;
   z-index: 1;
 }
-F
-#hero .hero-container {
+
+F #hero .hero-container {
   position: relative;
   z-index: 2;
   min-width: 300px;
@@ -313,7 +313,7 @@ section {
 }
 
 .section-bg {
-  background: #f5f8fd;
+  background: #040b14;
 }
 
 .section-title {
@@ -351,7 +351,7 @@ section {
 --------------------------------------------------------------*/
 .about {
   width: 100%;
-  height: 100vh;
+  height: 80vh;
 }
 
 .about .content h3 {
@@ -390,7 +390,7 @@ section {
   color: #fff;
 }
 
-ul strong{
+ul strong {
   color: #fff;
 }
 
@@ -450,8 +450,15 @@ ul span {
 }
 
 /*--------------------------------------------------------------
-# Akills
+# Skills
 --------------------------------------------------------------*/
+
+
+.section-bg {
+  width: 100%;
+  height: 50vh;
+}
+
 .skills .progress {
   height: 60px;
   display: block;
@@ -466,7 +473,7 @@ ul span {
   display: block;
   font-weight: 600;
   font-family: "Poppins", sans-serif;
-  color: #050d18;
+  color: #4033fa;
 }
 
 .skills .progress .skill .val {

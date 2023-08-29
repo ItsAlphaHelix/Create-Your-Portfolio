@@ -11,7 +11,7 @@ import { RegisterComponent } from './components/register-page/register-page.comp
 import { LoginComponent } from './components/login-page/login-page.component';
 import { ForgottenPasswordComponent } from './components/forgotten-password-page/forgotten-password-page.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
-import { AboutComponent } from './components/about-page/about-page.component';
+import { AboutComponent } from './components/about-page/about-me-page.component';
 import { EditAboutPageComponent } from './components/edit-about-page/edit-about-page.component';
 import { AddAboutInformationComponent } from './components/add-about-page/add-about-page.component';
 import { AppComponent } from './app.component';
