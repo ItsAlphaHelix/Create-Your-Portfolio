@@ -1,20 +1,38 @@
-﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Portfolio.API.Data.Models;
-using Portfolio.API.Services.GitApi.Models;
+using Portfolio.API.Dtos.GitHubApiDtos;
+using Portfolio.API.Services.Contracts;
 using Portfolio.Data.Repositories;
 using System.Net.Http.Headers;
 
-namespace Portfolio.API.Services.GitApi
+namespace Portfolio.API.Services
 {
-    public class GitHubApi : IGitHubApi
+    public class GitHubApiService : IGitHubApiService
     {
         private const string BaseUrl = "https://api.github.com";
         private readonly HttpClient client = new HttpClient();
         private readonly IRepository<UserProgramLanguage> userProgramLanguagesRepository;
-        public GitHubApi(IRepository<UserProgramLanguage> userProgramLanguagesRepository)
+        public GitHubApiService(IRepository<UserProgramLanguage> userProgramLanguagesRepository)
         {
             this.userProgramLanguagesRepository = userProgramLanguagesRepository;
+        }
+
+        public async Task<IEnumerable<LanguagePercentage>> GetPercentageOfUseOnAllLanguages(string userId)
+        {
+            var result = await this.userProgramLanguagesRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new LanguagePercentage()
+                {
+                    LanguageName = x.LanguageName,
+                    PercentageOfUseLanguage = x.PercentageOfUseLanguage
+                })
+                .OrderByDescending(x => x.PercentageOfUseLanguage)
+                .ToListAsync();
+
+            return result;
         }
 
         public async Task GetUserProgrammingLanguages()
@@ -25,7 +43,8 @@ namespace Portfolio.API.Services.GitApi
 
             foreach (var repo in repos)
             {
-                var languagesResponse = await client.GetAsync(repo.LanguagesUrl);
+                using HttpResponseMessage languagesResponse = await client.GetAsync(repo.LanguagesUrl);
+
                 if (!languagesResponse.IsSuccessStatusCode)
                 {
                     //return StatusCode((int)languagesResponse.StatusCode);
@@ -37,15 +56,15 @@ namespace Portfolio.API.Services.GitApi
 
                 var languages = await languageContent.ReadFromJsonAsync<Dictionary<string, int>>();
 
-                foreach (var lang in languages)
+                foreach (var language in languages)
                 {
-                    if (languageUsage.ContainsKey(lang.Key))
+                    if (languageUsage.ContainsKey(language.Key))
                     {
-                        languageUsage[lang.Key] += lang.Value;
+                        languageUsage[language.Key] += language.Value;
                     }
                     else
                     {
-                        languageUsage[lang.Key] = lang.Value;
+                        languageUsage[language.Key] = language.Value;
                     }
                 }
             }
@@ -54,10 +73,10 @@ namespace Portfolio.API.Services.GitApi
 
         private async Task<RepositoryDto[]> GetUserRepositories()
         {
-            this.client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
-            this.client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("github", "1.1"));
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
+            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("github", "1.1"));
 
-            using HttpResponseMessage reposResponse = await this.client.GetAsync($"{BaseUrl}/users/ItsAlphaHelix/repos");
+            using HttpResponseMessage reposResponse = await client.GetAsync($"{BaseUrl}/users/ItsAlphaHelix/repos");
 
             if (!reposResponse.IsSuccessStatusCode)
             {
@@ -78,11 +97,13 @@ namespace Portfolio.API.Services.GitApi
             {
                 totalBytes += languageUsage[language];
             }
+
             double percentage = 0;
+
             foreach (var language in languageUsage.Keys)
             {
                 int byteCount = languageUsage[language];
-                percentage = ((double)byteCount / totalBytes) * 100;
+                percentage = (double)byteCount / totalBytes * 100;
 
                 var userProgrammingLanguages = new UserProgramLanguage()
                 {
@@ -91,10 +112,10 @@ namespace Portfolio.API.Services.GitApi
                     UserId = "aa35aabd-27b1-4041-a831-333931d205e4"
                 };
 
-                await this.userProgramLanguagesRepository.AddAsync(userProgrammingLanguages);
+                await userProgramLanguagesRepository.AddAsync(userProgrammingLanguages);
             }
 
-            await this.userProgramLanguagesRepository.SaveChangesAsync();
+            await userProgramLanguagesRepository.SaveChangesAsync();
         }
     }
 }

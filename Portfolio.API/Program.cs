@@ -11,7 +11,6 @@ using Portfolio.API.ExceptionMiddlewares;
 using Portfolio.API.Extensions;
 using Portfolio.API.Services;
 using Portfolio.API.Services.Contracts;
-using Portfolio.API.Services.GitApi;
 using Portfolio.Data.Repositories;
 using System.Net;
 using System.Net.Http;
@@ -65,7 +64,7 @@ builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped<IImagesService, ImagesService>();
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
-builder.Services.AddScoped<IGitHubApi, GitHubApi>();
+builder.Services.AddScoped<IGitHubApiService, GitHubApiService>();
 
 var app = builder.Build();
 

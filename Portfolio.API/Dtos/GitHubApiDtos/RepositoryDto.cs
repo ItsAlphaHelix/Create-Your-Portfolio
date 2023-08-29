@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
-namespace Portfolio.API.Services.GitApi.Models
+namespace Portfolio.API.Dtos.GitHubApiDtos
 {
     public class RepositoryDto
     {

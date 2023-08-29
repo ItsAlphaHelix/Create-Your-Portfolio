@@ -3,19 +3,10 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore.Metadata.Internal;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services.Contracts;
-    using Portfolio.API.Services.GitApi;
-    using Portfolio.API.Services.GitApi.Models;
-    using Portfolio.Data.Repositories;
-    using SendGrid;
     using System;
-    using System.Globalization;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text.Json;
 
     [Route("api/about-me")]
     [ApiController]
@@ -23,19 +14,15 @@
     {
         private readonly IAboutMeService aboutMeService;
         private readonly IImagesService imagesService;
-        private readonly IGitHubApi gitHubApiService;
-        private readonly HttpClient client = new HttpClient();
-        private readonly IRepository<UserProgramLanguage> userProgramLanguagesRepository;
+        private readonly IGitHubApiService gitHubApiService;
         public AboutMeController(
             IAboutMeService usersProfileService,
             IImagesService imagesService,
-            IGitHubApi gitHubApiService,
-            IRepository<UserProgramLanguage> userProgramLanguagesRepository)
+            IGitHubApiService gitHubApiService)
         {
             this.aboutMeService = usersProfileService;
             this.imagesService = imagesService;
             this.gitHubApiService = gitHubApiService;
-            this.userProgramLanguagesRepository = userProgramLanguagesRepository;
         }
 
         [HttpPost]
@@ -123,11 +110,22 @@
         }
 
         [HttpGet]
-        [Route("getUserRepo")]
-        public async Task<IActionResult> getUserRepo()
+        [Route("get-github-repo-languages")]
+        public async Task<IActionResult> getGitHubRepLanguages()
         {
-            
-            return Ok(percentage.ToString("F1"));
+             await this.gitHubApiService.GetUserProgrammingLanguages();
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("get-language-percentages")]
+        [AllowAnonymous]
+        public async Task<IActionResult> getPercentagesOfLanguages([FromQuery] string userId)
+        {
+            var result = await this.gitHubApiService.GetPercentageOfUseOnAllLanguages(userId);
+
+            return Ok(result);
         }
     }
 }
