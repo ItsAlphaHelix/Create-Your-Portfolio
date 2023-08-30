@@ -18,6 +18,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -65,6 +66,8 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped<IImagesService, ImagesService>();
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IGitHubApiService, GitHubApiService>();
+builder.Services.AddSignalR();
+
 
 var app = builder.Build();
 
@@ -80,11 +83,20 @@ app.UseCors(option => option.WithOrigins(angularAppUrl)
 .AllowAnyHeader()
 .AllowAnyMethod());
 
+app.UseRouting();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 //app.UseMiddleware<ExceptionMiddleware>();
 
-app.MapControllers();
+
+
+//app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<RateLimitHub>("/rateLimitHub");
+    endpoints.MapControllers();
+});
 
 app.Run();

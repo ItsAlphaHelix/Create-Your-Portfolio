@@ -3,10 +3,12 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.SignalR.Client;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services.Contracts;
     using System;
+    using System.Security.Claims;
 
     [Route("api/about-me")]
     [ApiController]
@@ -111,9 +113,17 @@
 
         [HttpGet]
         [Route("get-github-repo-languages")]
-        public async Task<IActionResult> getGitHubRepLanguages()
+        [AllowAnonymous]
+        public async Task<IActionResult> getGitHubRepositoryLanguages([FromQuery] string userId)
         {
-             await this.gitHubApiService.GetUserProgrammingLanguages();
+            var canInvoke = await CheckRateLimit(userId);
+
+            if (!canInvoke)
+            {
+                return Forbid();
+            }
+
+            await this.gitHubApiService.GetUserProgrammingLanguages(userId);
 
             return Ok();
         }
@@ -121,11 +131,29 @@
         [HttpGet]
         [Route("get-language-percentages")]
         [AllowAnonymous]
-        public async Task<IActionResult> getPercentagesOfLanguages([FromQuery] string userId)
+        public async Task<IActionResult> GetPercentagesOfLanguages([FromQuery] string userId)
         {
             var result = await this.gitHubApiService.GetPercentageOfUseOnAllLanguages(userId);
 
             return Ok(result);
+        }
+
+        private async Task<bool> CheckRateLimit(string userId)
+        {
+            var hubConnection = new HubConnectionBuilder()
+                .WithUrl("https://localhost:7126/rateLimitHub")
+                .Build();
+
+            await hubConnection.StartAsync();
+            try
+            {
+                var canInvoke = await hubConnection.InvokeAsync<bool>("CanInvokeMethod", userId);
+                return canInvoke;
+            }
+            finally
+            {
+                await hubConnection.DisposeAsync();
+            }
         }
     }
 }

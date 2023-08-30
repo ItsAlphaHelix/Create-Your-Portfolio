@@ -10,6 +10,8 @@
             this.Id = Guid.NewGuid().ToString();
 
             this.UserImages = new HashSet<UserImage>();
+
+            this.UserProgramLanguages = new HashSet<UserProgramLanguage>();
         }
 
         [Required]
@@ -39,5 +41,7 @@
         public DateTime? DeletedOn { get; set; }
 
         public ICollection<UserImage> UserImages { get; set; }
+
+        public ICollection<UserProgramLanguage> UserProgramLanguages { get; set; }
     }
 }

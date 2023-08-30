@@ -1,7 +1,6 @@
-﻿using Portfolio.API.Dtos.UsersProfileDtos;
-
-namespace Portfolio.API.Services.Contracts
+﻿namespace Portfolio.API.Services.Contracts
 {
+    using Portfolio.API.Dtos.UsersProfileDtos;
     public interface IAboutMeService
     {
         /// <summary>
