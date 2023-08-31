@@ -66,6 +66,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
 builder.Services.AddScoped<IImagesService, ImagesService>();
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IGitHubApiService, GitHubApiService>();
+builder.Services.AddScoped<RateLimitCheckerService>();
 builder.Services.AddSignalR();
 
 

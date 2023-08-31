@@ -6,10 +6,19 @@
     using Portfolio.API.Dtos.GitHubApiDtos;
     using Portfolio.API.Services.Contracts;
     using Portfolio.Data.Repositories;
+    using System.Collections.Generic;
     using System.Net.Http.Headers;
     using System.Security.Claims;
 
-    public class GitHubApiService : IGitHubApiService
+    //{"C#", 250000},
+    //            { "T-Sql", 100000 },
+    //            { "Html", 50000 },
+    //            { "Css", 20000},
+    //            { "Typescript", 2000000 },
+    //            { "Python", 100000 },
+    //            { "Java", 5900},
+    //            { "Vau.js", 90000}
+public class GitHubApiService : IGitHubApiService
     {
         private const string BaseUrl = "https://api.github.com";
         private readonly HttpClient client = new HttpClient();
@@ -47,62 +56,77 @@
                 throw new ArgumentNullException("The user can not be null.");
             }
 
-            var repos = await GetUserRepositories(user.UserName);
+            //var repos = await GetUserRepositories(user.UserName);
 
-            var languageUsage = new Dictionary<string, int>();
-
-            foreach (var repo in repos)
+            var languageUsage = new Dictionary<string, int>()
             {
-                using HttpResponseMessage languagesResponse = await client.GetAsync(repo.LanguagesUrl);
+                {"C#", 250000},
+                { "T-Sql", 100000 },
+                { "Html", 50000 },
+                { "Css", 20000},
+                { "Typescript", 2000000 },
+                { "Python", 100000 },
+                { "Java", 5900},
+                { "Vau.js", 90000}
+            };
 
-                if (!languagesResponse.IsSuccessStatusCode)
-                {
-                    //return StatusCode((int)languagesResponse.StatusCode);
-                }
+            //foreach (var repo in repos)
+            //{
+            //    using HttpResponseMessage languagesResponse = await client.GetAsync(repo.LanguagesUrl);
 
-                using HttpContent languageContent = languagesResponse.Content;
+            //    if (!languagesResponse.IsSuccessStatusCode)
+            //    {
+            //        //return StatusCode((int)languagesResponse.StatusCode);
+            //    }
 
-                var languagesStream = await languagesResponse.Content.ReadAsStreamAsync();
+            //    using HttpContent languageContent = languagesResponse.Content;
 
-                var languages = await languageContent.ReadFromJsonAsync<Dictionary<string, int>>();
+            //    var languagesStream = await languagesResponse.Content.ReadAsStreamAsync();
 
-                foreach (var language in languages)
-                {
+            //    var languages = await languageContent.ReadFromJsonAsync<Dictionary<string, int>>();
 
-                    if (languageUsage.ContainsKey(language.Key))
-                    {
-                        languageUsage[language.Key] += language.Value;
-                    }
-                    else
-                    {
-                        languageUsage[language.Key] = language.Value;
-                    }
-                }
-            }
+            //    foreach (var language in languages)
+            //    {
 
-            var sortedDictionary = languageUsage
+            //        if (languageUsage.ContainsKey(language.Key))
+            //        {
+            //            languageUsage[language.Key] += language.Value;
+            //        }
+            //        else
+            //        {
+            //            languageUsage[language.Key] = language.Value;
+            //        }
+            //    }
+            //}
+
+            var sortedLanguagesDictionary = languageUsage
                 .OrderByDescending(pair => pair.Value)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             int countOfElementsForRemove = 0;
 
-            if (sortedDictionary.Count() > 6)
+            if (sortedLanguagesDictionary.Count() > 6)
             {
-                countOfElementsForRemove = sortedDictionary.Count() - 6;
+                countOfElementsForRemove = sortedLanguagesDictionary.Count() - 6;
             }
 
             for (int i = 0; i < countOfElementsForRemove; i++)
             {
-                var lastElement = sortedDictionary.Last();
-                sortedDictionary.Remove(lastElement.Key);
+                var lastElement = sortedLanguagesDictionary.Last();
+                sortedLanguagesDictionary.Remove(lastElement.Key);
             }
 
-            await SaveToDatabasePercentageOfUsesProgrammingLanguages(sortedDictionary, userId);
+            await CalcPercentageOfUseProgrammingLanguage(sortedLanguagesDictionary, userId);
         }
 
+        /// <summary>
+        /// This method initiates an API call to GitHub, fetching all repositories associated with the user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         private async Task<RepositoryDto[]> GetUserRepositories(string username)
         {
-           // client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
+            // client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
             client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("product", "1"));
 
             using HttpResponseMessage reposResponse = await client.GetAsync($"{BaseUrl}/users/{username}/repos");
@@ -115,7 +139,7 @@
             using HttpContent content = reposResponse.Content;
 
             var repos = await content.ReadFromJsonAsync<RepositoryDto[]>();
-
+            
             //if (repos.Length == 0)
             //{
             //    throw new HttpRequestException("The user does not have repos.");
@@ -124,10 +148,23 @@
             return repos;
         }
 
-        private async Task SaveToDatabasePercentageOfUsesProgrammingLanguages(
+        /// <summary>
+        /// This method calculates the usage percentage of programming languages and then stores the resulting data in the database.
+        /// </summary>
+        /// <param name="languageUsage"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        private async Task CalcPercentageOfUseProgrammingLanguage(
             Dictionary<string,
             int> languageUsage, string userId)
         {
+            var programmingLanguages = await this.userProgramLanguagesRepository
+                .All()
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+
+            var editDict = new Dictionary<string, double>();
+
             int totalBytes = 0;
             foreach (var language in languageUsage.Keys)
             {
@@ -136,6 +173,7 @@
 
             double percentage = 0;
             int count = 0;
+
             foreach (var language in languageUsage.Keys)
             {
                 //count++;
@@ -148,17 +186,44 @@
                 int byteCount = languageUsage[language];
                 percentage = (double)byteCount / totalBytes * 100;
 
-                var userProgrammingLanguages = new UserProgramLanguage()
+                if (programmingLanguages.Count() == 0)
                 {
-                    LanguageName = language,
-                    PercentageOfUseLanguage = percentage,
-                    UserId = userId
-                };
+                    var userProgrammingLanguages = new UserProgramLanguage()
+                    {
+                        LanguageName = language,
+                        PercentageOfUseLanguage = percentage,
+                        UserId = userId
+                    };
 
-                await userProgramLanguagesRepository.AddAsync(userProgrammingLanguages);
+                    await userProgramLanguagesRepository.AddAsync(userProgrammingLanguages);
+                    continue;
+                }
+
+                editDict.Add(language, percentage);
             }
 
+            UpdateProgramLanguages(programmingLanguages, editDict);
+
             await userProgramLanguagesRepository.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// This method is executed only when there is existing data in the database. It serves the purpose of updating older records with new information.
+        /// </summary>
+        /// <param name="programmingLanguages"></param>
+        /// <param name="editDict"></param>
+        private void UpdateProgramLanguages(List<UserProgramLanguage> programmingLanguages, Dictionary<string, double> editDict)
+        {
+            if (editDict.Count() != 0)
+            {
+                int index = -1;
+                foreach (var programmingLanguage in programmingLanguages)
+                {
+                    index++;
+                    programmingLanguage.LanguageName = editDict.ElementAt(index).Key;
+                    programmingLanguage.PercentageOfUseLanguage = editDict.ElementAt(index).Value;
+                }
+            }
         }
     }
 }

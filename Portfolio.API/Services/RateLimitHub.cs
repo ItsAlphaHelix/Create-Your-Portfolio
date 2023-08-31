@@ -6,6 +6,11 @@
     {
         private static readonly ConcurrentDictionary<string, DateTime> LastInvokeTimes = new ConcurrentDictionary<string, DateTime>();
 
+        /// <summary>
+        /// This method establishes a rate limit based on the user's userID for API calls. The API will be invoked solely once and subsequently reactivated after a 30-day interval.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> CanInvokeMethod(string userId)
         {
             if (LastInvokeTimes.TryGetValue(userId, out var lastInvokeTime)

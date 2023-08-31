@@ -6,7 +6,9 @@
     using Microsoft.AspNetCore.SignalR.Client;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.UsersProfileDtos;
+    using Portfolio.API.Services;
     using Portfolio.API.Services.Contracts;
+    using SendGrid.Helpers.Errors.Model;
     using System;
     using System.Security.Claims;
 
@@ -17,14 +19,17 @@
         private readonly IAboutMeService aboutMeService;
         private readonly IImagesService imagesService;
         private readonly IGitHubApiService gitHubApiService;
+        private readonly RateLimitCheckerService rateLimitCheckerService;
         public AboutMeController(
             IAboutMeService usersProfileService,
             IImagesService imagesService,
-            IGitHubApiService gitHubApiService)
+            IGitHubApiService gitHubApiService,
+            RateLimitCheckerService rateLimitCheckerService)
         {
             this.aboutMeService = usersProfileService;
             this.imagesService = imagesService;
             this.gitHubApiService = gitHubApiService;
+            this.rateLimitCheckerService = rateLimitCheckerService;
         }
 
         [HttpPost]
@@ -116,7 +121,7 @@
         [AllowAnonymous]
         public async Task<IActionResult> getGitHubRepositoryLanguages([FromQuery] string userId)
         {
-            var canInvoke = await CheckRateLimit(userId);
+            var canInvoke = await this.rateLimitCheckerService.CheckRateLimitAsync(userId);
 
             if (!canInvoke)
             {
@@ -136,24 +141,6 @@
             var result = await this.gitHubApiService.GetPercentageOfUseOnAllLanguages(userId);
 
             return Ok(result);
-        }
-
-        private async Task<bool> CheckRateLimit(string userId)
-        {
-            var hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7126/rateLimitHub")
-                .Build();
-
-            await hubConnection.StartAsync();
-            try
-            {
-                var canInvoke = await hubConnection.InvokeAsync<bool>("CanInvokeMethod", userId);
-                return canInvoke;
-            }
-            finally
-            {
-                await hubConnection.DisposeAsync();
-            }
         }
     }
 }
