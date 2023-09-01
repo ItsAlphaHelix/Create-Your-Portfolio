@@ -4,7 +4,7 @@ import { NavigationEnd, NavigationError, Router } from '@angular/router';
 import { UserResponse } from './models/user-response-model';
 import { ToastrService } from 'ngx-toastr';
 import { ImagesService } from './services/images.service';
-declare function handleClick(): void;
+import { AboutMeService } from './services/about-me.service';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
@@ -39,7 +40,7 @@ export class AppComponent implements OnInit {
       }
     });
   }
-
+  
   onClickMobileNav() {
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const body = document.getElementsByTagName('body')[0];

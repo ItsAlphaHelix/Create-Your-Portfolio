@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AboutInformationRequest } from "../models/about-request-model";
-import { Observable, map } from "rxjs";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { AboutInformationResponse } from "../models/about-response-model";
 import * as routes from 'src/app/shared/routes.contants';
 import { FormGroup } from "@angular/forms";
-import { LanguagePercentage } from "../models/language-percentages-model";
+import { AuthHelperService } from "./auth-helper.service";
 
 @Injectable({
     providedIn: 'root'
@@ -13,67 +13,35 @@ import { LanguagePercentage } from "../models/language-percentages-model";
 
 export class AboutMeService {
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private authHelperService: AuthHelperService) { }
 
-    private getJwtToken() {
-        return sessionStorage.getItem('accessToken') || '';
-    }
 
-    private getUserId() {
-        return sessionStorage.getItem('userId') || '';
-    }
+    private jwtToken = this.authHelperService.getJwtToken();
+    private userId = this.authHelperService.getUserId();
+
+    private headers = new HttpHeaders()
+        .set('Authorization', `Bearer ${this.jwtToken}`)
+    private params = { userId: this.userId };
 
     addAboutUsersInformation(request: AboutInformationRequest): Observable<AboutInformationResponse> {
-        const jwtToken = this.getJwtToken();
-        const userId = this.getUserId();
-
-        const params = { userId };
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`)
-
-        return this.http.post<AboutInformationResponse>(routes.ADD_ABOUT_INFORMATION_ENDPOINT, request, { headers, params });
+        return this.http.post<AboutInformationResponse>(routes.ADD_ABOUT_INFORMATION_ENDPOINT, request,
+            { headers: this.headers, params: this.params });
     }
 
     getAboutUsersInformationAsync(): Observable<AboutInformationResponse> {
-        const userId = this.getUserId();
-        const jwtToken = this.getJwtToken();
-
-        const params = { userId }
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`)
-
-        return this.http.get<AboutInformationResponse>(routes.GET_ABOUT_ENDPOINT, { headers, params });
+        return this.http.get<AboutInformationResponse>(routes.GET_ABOUT_ENDPOINT, { headers: this.headers, params: this.params });
     }
 
     getEditUsersAboutInformationAsync(aboutId: number): Observable<AboutInformationResponse> {
-        const userId = this.getUserId();
-        const jwtToken = this.getJwtToken();
-
-        const params = { userId }
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`)
-
         return this.http.get<AboutInformationResponse>(routes.GET_EDIT_ABOUT_ENDPOINT + `${aboutId}`);
     }
 
     editAboutUsersInformationAsync(editForm: FormGroup): Observable<string> {
-        const userId = this.getUserId();
-        const jwtToken = this.getJwtToken();
-
-        //const params = { aboutId }
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`)
-
-        return this.http.put<AboutInformationResponse>(routes.EDIT_ABOUT_ENDPOINT, editForm.value, { headers })
+        return this.http.put<AboutInformationResponse>(routes.EDIT_ABOUT_ENDPOINT, editForm.value, { headers: this.headers })
             .pipe(
                 map((response) => response.id)
             );
-    }
-    
-    getLanguagesPercentageOfUse(): Observable<LanguagePercentage[]> {
-        const userId = this.getUserId();
-        const params = { userId };
-
-        return this.http.get<LanguagePercentage[]>(routes.GET_LANGUAGE_PERCENTAGES, { params })
     }
 }

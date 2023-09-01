@@ -1,4 +1,4 @@
-export interface LanguagePercentage {
+export interface LanguageStats {
     languageName: string,
     percentageOfUseLanguage: Number
 }

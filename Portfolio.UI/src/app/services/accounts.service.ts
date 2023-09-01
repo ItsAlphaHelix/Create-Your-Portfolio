@@ -16,9 +16,11 @@ import { UserResponse } from '../models/user-response-model';
 })
 export class AccountsService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router) { }
 
-  headers = new HttpHeaders().set('Content-Type', 'application/json');
+  //private headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   get isLoggedIn(): Observable<boolean> {
     return of(this.getAccessToken() ? true : false);

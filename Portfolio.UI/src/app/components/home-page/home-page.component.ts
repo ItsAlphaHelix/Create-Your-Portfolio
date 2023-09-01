@@ -6,6 +6,8 @@ import * as AOS from 'aos';
 import { Observable, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ImagesService } from 'src/app/services/images.service';
+import { GitHubApiService } from 'src/app/services/github-api.service';
+import { AuthHelperService } from 'src/app/services/auth-helper.service';
 
 @Component({
   selector: 'app-home',
@@ -18,14 +20,28 @@ export default class HomeComponent implements OnInit {
   constructor(
     private imagesService: ImagesService,
     private accountsService: AccountsService,
-    private toastr: ToastrService) { }
-
-  //@ViewChild('typed') typedElement!: ElementRef;
-  //@ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+    private toastr: ToastrService,
+    private authHelperService: AuthHelperService,
+    private githubApiService: GitHubApiService) { }
 
   imageURL: string | undefined;
   userJobTitle: string | undefined;
   userResonse: UserResponse | undefined
+
+  private userId = this.authHelperService.getUserId();
+
+  ngOnInit(): void {
+    this.getFromGithubRepositoryLanguages();
+    this.getHomePagePicture();
+    this.getUser();
+    setTimeout(() => {
+      this.accountsService.getUserById(this.userId).subscribe(response => {
+        this.userJobTitle = response.jobTitle;
+        this.initAos();
+        this.initTyped();
+      });
+    }, 100);
+  }
 
   private initAos(): void {
     AOS.init({
@@ -47,21 +63,8 @@ export default class HomeComponent implements OnInit {
     }
   }
 
-  private getUserId() {
-    return sessionStorage.getItem('userId') || '';
-  }
-
-  ngOnInit(): void {
-    this.getHomePagePicture();
-    this.getUser();
-    setTimeout(() => {
-      this.accountsService.getUserById(this.getUserId()).subscribe(response => {
-        this.userJobTitle = response.jobTitle;
-        this.initAos();
-        this.initTyped();
-      });
-    }, 100);
-
+  getFromGithubRepositoryLanguages() {
+    this.githubApiService.getGitHubRepositoryLanguages().subscribe();
   }
 
   openFileInput(): void {
@@ -107,14 +110,13 @@ export default class HomeComponent implements OnInit {
             this.toastr.error(errorMessage);
             break;
         }
-          this.toastr.error(errorMessage);
+        this.toastr.error(errorMessage);
       }
     });
   }
 
   getUser(): void {
-    const userId = this.getUserId();
-    this.accountsService.getUserById(userId).subscribe(
+    this.accountsService.getUserById(this.userId).subscribe(
       (response) => {
         this.userResonse = response;
       }

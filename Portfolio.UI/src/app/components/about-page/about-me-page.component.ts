@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, ElementRef, HostListener } from '@angular/core';
+import { AfterContentChecked, AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener } from '@angular/core';
 import { ImagesService } from 'src/app/services/images.service';
 import { AboutMeService } from 'src/app/services/about-me.service';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AboutInformationResponse } from 'src/app/models/about-response-model';
 import * as AOS from 'aos';
-import { LanguagePercentage } from 'src/app/models/language-percentages-model';
+import { LanguageStats } from 'src/app/models/language-stats-model';
+import { GitHubApiService } from 'src/app/services/github-api.service';
 
 declare const Waypoint: any;
 
@@ -19,14 +20,15 @@ export class AboutComponent implements OnInit {
   constructor(
     private imagesService: ImagesService,
     private aboutMeService: AboutMeService,
+    private githubApiService: GitHubApiService,
     private router: Router,
-    private elRef: ElementRef) {}
-  
+    private elRef: ElementRef) { }
+
   ngOnInit(): void {
-    
     this.initAos();
     this.getAboutImage();
     this.getAboutUser();
+
     setTimeout(() => {
       this.getLanguagePercentages();
       this.initWaypoint();
@@ -35,7 +37,7 @@ export class AboutComponent implements OnInit {
 
   aboutResponse!: AboutInformationResponse
   imageURL!: string | undefined
-  languagePercentages!: LanguagePercentage[];
+  languagePercentages!: LanguageStats[];
 
   private initWaypoint(): void {
     const skillsContent = this.elRef.nativeElement.querySelector('.skills-content');
@@ -79,17 +81,17 @@ export class AboutComponent implements OnInit {
   getAboutImage(): void {
     this.imagesService.getAboutUserImage().subscribe({
       next: (response) => {
-        if (response) {
-          this.imageURL = response.imageUrl;
-        }
-      },
-      error: (error) => {
+        this.imageURL = response.imageUrl;
       }
     });
   }
-  
+
+  getFromGithubRepositoryLanguages() {
+    this.githubApiService.getGitHubRepositoryLanguages().subscribe();
+  }
+
   getLanguagePercentages(): void {
-    this.aboutMeService.getLanguagesPercentageOfUse().subscribe({
+    this.githubApiService.getLanguagesPercentageOfUse().subscribe({
       next: (response) => {
         if (response) {
           this.languagePercentages = response;

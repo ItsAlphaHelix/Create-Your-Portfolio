@@ -15,6 +15,7 @@ import { AboutComponent } from './components/about-page/about-me-page.component'
 import { EditAboutPageComponent } from './components/edit-about-page/edit-about-page.component';
 import { AddAboutInformationComponent } from './components/add-about-page/add-about-page.component';
 import { AppComponent } from './app.component';
+import { FooterComponent } from './components/footer-page/footer-page.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AppComponent } from './app.component';
     ErrorPageComponent,
     AboutComponent,
     AddAboutInformationComponent,
-    EditAboutPageComponent
+    EditAboutPageComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

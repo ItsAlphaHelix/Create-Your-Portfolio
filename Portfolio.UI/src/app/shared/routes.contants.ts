@@ -21,3 +21,4 @@ export const GET_ABOUT_ENDPOINT = `${environment.baseUrlApi}/api/about-me/get-ab
 export const GET_ABOUT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/about-me/get-about-image/`;
 export const GET_EDIT_ABOUT_ENDPOINT = `${environment.baseUrlApi}/api/about-me/get-edit-about/`;
 export const GET_LANGUAGE_PERCENTAGES = `${environment.baseUrlApi}/api/about-me/get-language-percentages`;
+export const GET_GITHUB_REPOSITORY_LANGUAGES = `${environment.baseUrlApi}/api/about-me/get-github-repo-languages`;
