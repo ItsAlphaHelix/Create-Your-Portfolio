@@ -1,6 +1,6 @@
 ﻿namespace Portfolio.API.Dtos.GitHubApiDtos
 {
-    public class LanguagePercentage
+    public class LanguageStatsDto
     {
         public string LanguageName { get; set; }
 

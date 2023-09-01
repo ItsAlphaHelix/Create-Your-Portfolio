@@ -2,7 +2,6 @@
 {
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ImagesDtos;

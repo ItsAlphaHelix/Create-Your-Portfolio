@@ -30,14 +30,26 @@ public class GitHubApiService : IGitHubApiService
         {
             this.userProgramLanguagesRepository = userProgramLanguagesRepository;
             this.userManager = userManager;
+
+            this.client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("portfolio", "1"));
         }
 
-        public async Task<IEnumerable<LanguagePercentage>> GetPercentageOfUseOnAllLanguages(string userId)
+        public async Task HasUserAccountInGitHub(string username)
+        {
+            using HttpResponseMessage userResponse = await client.GetAsync($"{BaseUrl}/users/{username}");
+
+            if (!userResponse.IsSuccessStatusCode)
+            {
+                throw new ArgumentException("Invalid github username.");
+            }
+        }
+
+        public async Task<IEnumerable<LanguageStatsDto>> GetPercentageOfUseOnAllLanguages(string userId)
         {
             var result = await this.userProgramLanguagesRepository
                 .AllAsNoTracking()
                 .Where(x => x.UserId == userId)
-                .Select(x => new LanguagePercentage()
+                .Select(x => new LanguageStatsDto()
                 {
                     LanguageName = x.LanguageName,
                     PercentageOfUseLanguage = x.PercentageOfUseLanguage
@@ -46,7 +58,6 @@ public class GitHubApiService : IGitHubApiService
 
             return result;
         }
-
         public async Task GetUserProgrammingLanguages(string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
@@ -56,48 +67,38 @@ public class GitHubApiService : IGitHubApiService
                 throw new ArgumentNullException("The user can not be null.");
             }
 
-            //var repos = await GetUserRepositories(user.UserName);
+            var repos = await GetUserRepositories(user.UserName);
 
-            var languageUsage = new Dictionary<string, int>()
+            var languageUsage = new Dictionary<string, int>();
+
+            foreach (var repo in repos)
             {
-                {"C#", 250000},
-                { "T-Sql", 100000 },
-                { "Html", 50000 },
-                { "Css", 20000},
-                { "Typescript", 2000000 },
-                { "Python", 100000 },
-                { "Java", 5900},
-                { "Vau.js", 90000}
-            };
+                using HttpResponseMessage languagesResponse = await client.GetAsync(repo.LanguagesUrl);
 
-            //foreach (var repo in repos)
-            //{
-            //    using HttpResponseMessage languagesResponse = await client.GetAsync(repo.LanguagesUrl);
+                if (!languagesResponse.IsSuccessStatusCode)
+                {
+                    //return StatusCode((int)languagesResponse.StatusCode);
+                }
 
-            //    if (!languagesResponse.IsSuccessStatusCode)
-            //    {
-            //        //return StatusCode((int)languagesResponse.StatusCode);
-            //    }
+                using HttpContent languageContent = languagesResponse.Content;
 
-            //    using HttpContent languageContent = languagesResponse.Content;
+                var languagesStream = await languagesResponse.Content.ReadAsStreamAsync();
 
-            //    var languagesStream = await languagesResponse.Content.ReadAsStreamAsync();
+                var languages = await languageContent.ReadFromJsonAsync<Dictionary<string, int>>();
 
-            //    var languages = await languageContent.ReadFromJsonAsync<Dictionary<string, int>>();
+                foreach (var language in languages)
+                {
 
-            //    foreach (var language in languages)
-            //    {
-
-            //        if (languageUsage.ContainsKey(language.Key))
-            //        {
-            //            languageUsage[language.Key] += language.Value;
-            //        }
-            //        else
-            //        {
-            //            languageUsage[language.Key] = language.Value;
-            //        }
-            //    }
-            //}
+                    if (languageUsage.ContainsKey(language.Key))
+                    {
+                        languageUsage[language.Key] += language.Value;
+                    }
+                    else
+                    {
+                        languageUsage[language.Key] = language.Value;
+                    }
+                }
+            }
 
             var sortedLanguagesDictionary = languageUsage
                 .OrderByDescending(pair => pair.Value)
@@ -126,16 +127,13 @@ public class GitHubApiService : IGitHubApiService
         /// <returns></returns>
         private async Task<RepositoryDto[]> GetUserRepositories(string username)
         {
-            // client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
-            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("product", "1"));
-
             using HttpResponseMessage reposResponse = await client.GetAsync($"{BaseUrl}/users/{username}/repos");
 
             if (!reposResponse.IsSuccessStatusCode)
             {
                 //return StatusCode((int)reposResponse.StatusCode);
             }
-
+            
             using HttpContent content = reposResponse.Content;
 
             var repos = await content.ReadFromJsonAsync<RepositoryDto[]>();
@@ -202,7 +200,7 @@ public class GitHubApiService : IGitHubApiService
                 editDict.Add(language, percentage);
             }
 
-            UpdateProgramLanguages(programmingLanguages, editDict);
+            UpdateProgrammingLanguages(programmingLanguages, editDict);
 
             await userProgramLanguagesRepository.SaveChangesAsync();
         }
@@ -212,7 +210,7 @@ public class GitHubApiService : IGitHubApiService
         /// </summary>
         /// <param name="programmingLanguages"></param>
         /// <param name="editDict"></param>
-        private void UpdateProgramLanguages(List<UserProgramLanguage> programmingLanguages, Dictionary<string, double> editDict)
+        private void UpdateProgrammingLanguages(List<UserProgramLanguage> programmingLanguages, Dictionary<string, double> editDict)
         {
             if (editDict.Count() != 0)
             {

@@ -1,7 +1,6 @@
-﻿using Portfolio.API.Dtos.GitHubApiDtos;
-
-namespace Portfolio.API.Services.Contracts
+﻿namespace Portfolio.API.Services.Contracts
 {
+    using Portfolio.API.Dtos.GitHubApiDtos;
     public interface IGitHubApiService
     {
         /// <summary>
@@ -16,6 +15,13 @@ namespace Portfolio.API.Services.Contracts
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<LanguagePercentage>> GetPercentageOfUseOnAllLanguages(string userId);
+        Task<IEnumerable<LanguageStatsDto>> GetPercentageOfUseOnAllLanguages(string userId);
+
+        /// <summary>
+        /// Making an API call to the GitHub API to check the existence of an account by username.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        Task HasUserAccountInGitHub(string username);
     }
 }

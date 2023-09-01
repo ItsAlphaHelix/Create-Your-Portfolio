@@ -42,11 +42,14 @@
                     return BadRequest(result.Errors);
                 }
             }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception ex)
             {
                 return Conflict(ex.Message);
             }
-
             return Ok(result);
 
             //var user = await accountsService.GetUserByEmail(userRegisterModel.Email);

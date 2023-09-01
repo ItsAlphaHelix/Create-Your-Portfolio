@@ -121,11 +121,15 @@
         [AllowAnonymous]
         public async Task<IActionResult> getGitHubRepositoryLanguages([FromQuery] string userId)
         {
-            var canInvoke = await this.rateLimitCheckerService.CheckRateLimitAsync(userId);
-
-            if (!canInvoke)
+            try
             {
-                return Forbid();
+                var canInvoke = await this.rateLimitCheckerService.CheckRateLimitAsync(userId);
+            }
+            catch (ForbiddenException ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                throw;
             }
 
             await this.gitHubApiService.GetUserProgrammingLanguages(userId);

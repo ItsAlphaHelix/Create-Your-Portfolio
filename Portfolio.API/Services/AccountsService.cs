@@ -20,16 +20,19 @@
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IConfiguration configuration;
         private readonly IRepository<ApplicationUser> userRepository;
+        private readonly IGitHubApiService gitHubApiService;
 
         public AccountsService
             (
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration,
-            IRepository<ApplicationUser> userRepository)
+            IRepository<ApplicationUser> userRepository,
+            IGitHubApiService gitHubApiService)
         {
             this.userManager = userManager;
             this.configuration = configuration;
             this.userRepository = userRepository;
+            this.gitHubApiService = gitHubApiService;
         }
 
         public async Task<ApplicationUserLoginResponseDto> AuthenticateUserAsync(ApplicationUserLoginDto user)
@@ -83,6 +86,8 @@
             {
                 throw new InvalidOperationException("Email address is already taken.");
             }
+
+            await gitHubApiService.HasUserAccountInGitHub(user.UserName);
 
             var registeredUser = await userManager.CreateAsync(user, applicationUser.Password);
 
