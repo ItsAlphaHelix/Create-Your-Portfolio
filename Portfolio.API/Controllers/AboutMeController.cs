@@ -43,6 +43,7 @@
 
         [HttpPost]
         [Route("upload-about-image")]
+        [AllowAnonymous]
         public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imagesService.UploadAboutImageAsync(file);
@@ -60,7 +61,7 @@
 
             string aboutImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveImageUrlToDatabase(aboutImageUrl, userAboutImage);
+            var responseDto = await this.imagesService.SaveImageUrlToDatabase(aboutImageUrl, userAboutImage, userId);
 
             return Ok(responseDto);
         }
@@ -116,6 +117,31 @@
             return Ok(new { id = model.Id });
         }
 
+        [HttpPut]
+        [Route("edit-about-image")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
+        {
+            var result = await this.imagesService.UploadAboutImageAsync(file);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            var userAboutImage = new UserImage()
+            {
+                AboutImageUrl = result.SecureUrl.AbsoluteUri,
+                UserId = userId
+            };
+
+            string aboutImageUrl = result.Url.AbsoluteUri;
+
+            var response = await this.imagesService.EditImageInDatabase(aboutImageUrl, userAboutImage, userId);
+
+            return Ok(response);
+        }
+
         [HttpGet]
         [Route("get-github-repo-languages")]
         [AllowAnonymous]
@@ -124,15 +150,20 @@
             try
             {
                 var canInvoke = await this.rateLimitCheckerService.CheckRateLimitAsync(userId);
+
+                if (canInvoke)
+                {
+                  await this.gitHubApiService.GetUserProgrammingLanguages(userId);
+                }
+                else
+                {
+                    return Forbid();
+                }
             }
-            catch (ForbiddenException ex)
+            catch (NotFoundException ex)
             {
-                Console.WriteLine(ex.Message);
-
-                throw;
+                return NotFound(ex.Message);
             }
-
-            await this.gitHubApiService.GetUserProgrammingLanguages(userId);
 
             return Ok();
         }

@@ -34,7 +34,7 @@
         /// <param name="userProfileImage"></param>
         /// <param name="userHomePageImage"></param>
         /// <returns></returns>
-        Task<UploadImageDto> SaveImageUrlToDatabase(string imageUrl, UserImage image);
+        Task<UploadImageDto> SaveImageUrlToDatabase(string imageUrl, UserImage image, string userId);
 
         /// <summary>
         /// The method should retrieve the user's home page image from the database and return it.
@@ -56,5 +56,7 @@
         /// <param name="userId"></param>
         /// <returns></returns>
         public Task<string> GetAboutImageUrlAsync(string userId);
+
+        Task<UploadImageDto> EditImageInDatabase(string imageUrl, UserImage image, string userId);
     }
 }

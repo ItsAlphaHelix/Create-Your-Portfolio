@@ -3,6 +3,7 @@
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Conventions;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ImagesDtos;
     using Portfolio.API.Services.Contracts;
@@ -61,16 +62,64 @@
             return user.ImageUrl;
         }
 
-        public async Task<UploadImageDto> SaveImageUrlToDatabase(
-            string imageUrl, UserImage image)
+        public async Task<UploadImageDto> EditImageInDatabase(string imageUrl, UserImage image, string userId)
         {
-            await userImagesRepository.AddAsync(image);
-            await userImagesRepository.SaveChangesAsync();
+            var imageForEdit = await this.userImagesRepository
+                 .All()
+                 .FirstOrDefaultAsync(x => x.UserId == userId && x.AboutImageUrl != null);
 
             var responseDto = new UploadImageDto()
             {
                 ImageUrl = imageUrl
             };
+
+            if (imageForEdit == null)
+            {
+                await userImagesRepository.AddAsync(image);
+                await userImagesRepository.SaveChangesAsync();
+
+                return responseDto;
+            }
+
+            imageForEdit.AboutImageUrl = responseDto.ImageUrl;
+            await this.userImagesRepository.SaveChangesAsync();
+
+            return responseDto;
+        }
+        public async Task<UploadImageDto> SaveImageUrlToDatabase(
+            string imageUrl, UserImage image, string userId)
+        {
+            var userImage = await this.userImagesRepository
+                .All()
+                .FirstOrDefaultAsync(x => x.UserId == userId);
+
+            var responseDto = new UploadImageDto()
+            {
+                ImageUrl = imageUrl
+            };
+
+            if (userImage != null)
+            {
+                if (imageUrl.Contains("about"))
+                {
+                    userImage.AboutImageUrl = imageUrl;
+                }
+                else if (imageUrl.Contains("home"))
+                {
+                    userImage.HomePageImageUrl = imageUrl;
+                }
+                else if (imageUrl.Contains("profile"))
+                {
+                    userImage.ProfileImageUrl = imageUrl;
+                }
+
+                await userImagesRepository.SaveChangesAsync();
+
+                return responseDto;
+            }
+
+            await userImagesRepository.AddAsync(image);
+            await userImagesRepository.SaveChangesAsync();
 
             return responseDto;
         }
@@ -78,8 +127,9 @@
         {
             int heigth = 1280;
             int width = 1920;
+            string publicId = "home";
 
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width);
+            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
 
             return uploadResult;
         }
@@ -87,8 +137,9 @@
         {
             int heigth = 600;
             int width = 600;
+            string publicId = "profile";
 
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width);
+            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
 
             return uploadResult;
         }
@@ -97,12 +148,12 @@
         {
             int heigth = 600;
             int width = 600;
-
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width);
+            string publicId = "about";
+            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
 
             return uploadResult;
         }
-        private async Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width)
+        private async Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width, string publicId)
         {
             var uploadResult = new ImageUploadResult();
 
@@ -112,6 +163,7 @@
                 var uploadParams = new ImageUploadParams
                 {
                     File = new FileDescription(file.FileName, stream),
+                    PublicId = publicId,
                     Transformation = new Transformation()
                     .Height(heigth).Width(width)
                 };
@@ -130,11 +182,6 @@
                     ImageUrl = x.AboutImageUrl
                 })
                 .FirstOrDefaultAsync();
-
-            //if (user == null || string.IsNullOrEmpty(user.ImageUrl))
-            //{
-            //    throw new Exception("You currently do not have a profile image. To enhance your portfolio, consider uploading your own image. To upload the image, click on the window displaying custom image 600X600.");
-            //}
 
             return user.ImageUrl;
         }
