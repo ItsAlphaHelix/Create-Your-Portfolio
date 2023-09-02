@@ -3,7 +3,6 @@
     using CloudinaryDotNet;
     using CloudinaryDotNet.Actions;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Metadata.Conventions;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ImagesDtos;
     using Portfolio.API.Services.Contracts;
@@ -29,7 +28,7 @@
         public async Task<string> GetUserHomePageImageUrlAsync(string userId)
         {
             var user = await userImagesRepository.AllAsNoTracking()
-                .Where(x => x.UserId == userId && x.HomePageImageUrl != null)
+                .Where(x => x.UserId == userId)
                 .Select(x => new UploadImageDto()
                 {
                     ImageUrl = x.HomePageImageUrl
@@ -47,7 +46,7 @@
         public async Task<string> GetUserProfileImageUrlAsync(string userId)
         {
             var user = await userImagesRepository.AllAsNoTracking()
-                .Where(x => x.UserId == userId && x.ProfileImageUrl != null)
+                .Where(x => x.UserId == userId)
                 .Select(x => new UploadImageDto()
                 {
                     ImageUrl = x.ProfileImageUrl
@@ -60,68 +59,6 @@
             }
 
             return user.ImageUrl;
-        }
-
-        public async Task<UploadImageDto> EditImageInDatabase(string imageUrl, UserImage image, string userId)
-        {
-            var imageForEdit = await this.userImagesRepository
-                 .All()
-                 .FirstOrDefaultAsync(x => x.UserId == userId && x.AboutImageUrl != null);
-
-            var responseDto = new UploadImageDto()
-            {
-                ImageUrl = imageUrl
-            };
-
-            if (imageForEdit == null)
-            {
-                await userImagesRepository.AddAsync(image);
-                await userImagesRepository.SaveChangesAsync();
-
-                return responseDto;
-            }
-
-            imageForEdit.AboutImageUrl = responseDto.ImageUrl;
-            await this.userImagesRepository.SaveChangesAsync();
-
-            return responseDto;
-        }
-        public async Task<UploadImageDto> SaveImageUrlToDatabase(
-            string imageUrl, UserImage image, string userId)
-        {
-            var userImage = await this.userImagesRepository
-                .All()
-                .FirstOrDefaultAsync(x => x.UserId == userId);
-
-            var responseDto = new UploadImageDto()
-            {
-                ImageUrl = imageUrl
-            };
-
-            if (userImage != null)
-            {
-                if (imageUrl.Contains("about"))
-                {
-                    userImage.AboutImageUrl = imageUrl;
-                }
-                else if (imageUrl.Contains("home"))
-                {
-                    userImage.HomePageImageUrl = imageUrl;
-                }
-                else if (imageUrl.Contains("profile"))
-                {
-                    userImage.ProfileImageUrl = imageUrl;
-                }
-
-                await userImagesRepository.SaveChangesAsync();
-
-                return responseDto;
-            }
-
-            await userImagesRepository.AddAsync(image);
-            await userImagesRepository.SaveChangesAsync();
-
-            return responseDto;
         }
         public async Task<ImageUploadResult> UploadHomePageImageAsync(IFormFile file)
         {
@@ -153,6 +90,91 @@
 
             return uploadResult;
         }
+        public async Task<string> GetAboutImageUrlAsync(string userId)
+        {
+            var user = await userImagesRepository.AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new UploadImageDto()
+                {
+                    ImageUrl = x.AboutImageUrl
+                })
+                .FirstOrDefaultAsync();
+
+            return user.ImageUrl;
+        }
+
+        public async Task<UploadImageDto> EditImageUrlInDatabase(string imageUrl, UserImage image, string userId)
+        {
+            var imageForEdit = await this.userImagesRepository
+                 .All()
+                 .FirstOrDefaultAsync(x => x.UserId == userId);
+
+            var responseDto = new UploadImageDto()
+            {
+                ImageUrl = imageUrl
+            };
+
+            CheckNameOfImageAndEdit(imageUrl, imageForEdit);
+
+            await userImagesRepository.SaveChangesAsync();
+
+            return responseDto;
+        }
+        public async Task<UploadImageDto> SaveImageUrlToDatabase(string imageUrl, UserImage image, string userId)
+        {
+            var userImage = await this.userImagesRepository
+                .All()
+                .FirstOrDefaultAsync(x => x.UserId == userId);
+
+            var responseDto = new UploadImageDto()
+            {
+                ImageUrl = imageUrl
+            };
+
+            if (userImage != null)
+            {
+                CheckNameOfImageAndEdit(imageUrl, userImage);
+
+                await userImagesRepository.SaveChangesAsync();
+
+                return responseDto;
+            }
+
+            await userImagesRepository.AddAsync(image);
+            await userImagesRepository.SaveChangesAsync();
+
+            return responseDto;
+        }
+
+        /// <summary>
+        /// This method checks the public IDs of images and edits them.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <param name="imageForEdit"></param>
+        private static void CheckNameOfImageAndEdit(string imageUrl, UserImage? imageForEdit)
+        {
+            if (imageUrl.Contains("about"))
+            {
+                imageForEdit.AboutImageUrl = imageUrl;
+            }
+            else if (imageUrl.Contains("home"))
+            {
+                imageForEdit.HomePageImageUrl = imageUrl;
+            }
+            else if (imageUrl.Contains("profile"))
+            {
+                imageForEdit.ProfileImageUrl = imageUrl;
+            }
+        }
+
+        /// <summary>
+        /// Uploading images to cloudinary service.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="heigth"></param>
+        /// <param name="width"></param>
+        /// <param name="publicId"></param>
+        /// <returns></returns>
         private async Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width, string publicId)
         {
             var uploadResult = new ImageUploadResult();
@@ -171,19 +193,6 @@
             }
 
             return uploadResult;
-        }
-
-        public async Task<string> GetAboutImageUrlAsync(string userId)
-        {
-            var user = await userImagesRepository.AllAsNoTracking()
-                .Where(x => x.UserId == userId && x.AboutImageUrl != null)
-                .Select(x => new UploadImageDto()
-                {
-                    ImageUrl = x.AboutImageUrl
-                })
-                .FirstOrDefaultAsync();
-
-            return user.ImageUrl;
         }
     }
 }

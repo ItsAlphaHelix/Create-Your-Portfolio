@@ -12,8 +12,8 @@ using Portfolio.API.Data;
 namespace Portfolio.API.Migrations
 {
     [DbContext(typeof(PortfolioDBContext))]
-    [Migration("20230825101517_RemovedFromColumnPhoneNumberRegularExpressionInTableAboutUsers")]
-    partial class RemovedFromColumnPhoneNumberRegularExpressionInTableAboutUsers
+    [Migration("20230901103320_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -303,16 +303,21 @@ namespace Portfolio.API.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Portfolio.API.Data.Models.UserHomePageImage", b =>
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("AboutImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HomePageImageUrl")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -323,10 +328,10 @@ namespace Portfolio.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserHomePageImages");
+                    b.ToTable("UserImages");
                 });
 
-            modelBuilder.Entity("Portfolio.API.Data.Models.UserProfileImage", b =>
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserProgramLanguage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -334,9 +339,12 @@ namespace Portfolio.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ProfileImageUrl")
+                    b.Property<string>("LanguageName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("PercentageOfUseLanguage")
+                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -346,7 +354,7 @@ namespace Portfolio.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserProfileImages");
+                    b.ToTable("UserProgramLanguages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -411,10 +419,10 @@ namespace Portfolio.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Portfolio.API.Data.Models.UserHomePageImage", b =>
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserImage", b =>
                 {
                     b.HasOne("Portfolio.API.Data.Models.ApplicationUser", "User")
-                        .WithMany("UserHomePageImage")
+                        .WithMany("UserImages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -422,10 +430,10 @@ namespace Portfolio.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Portfolio.API.Data.Models.UserProfileImage", b =>
+            modelBuilder.Entity("Portfolio.API.Data.Models.UserProgramLanguage", b =>
                 {
                     b.HasOne("Portfolio.API.Data.Models.ApplicationUser", "User")
-                        .WithMany("UserProfileImage")
+                        .WithMany("UserProgramLanguages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -435,9 +443,9 @@ namespace Portfolio.API.Migrations
 
             modelBuilder.Entity("Portfolio.API.Data.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("UserHomePageImage");
+                    b.Navigation("UserImages");
 
-                    b.Navigation("UserProfileImage");
+                    b.Navigation("UserProgramLanguages");
                 });
 #pragma warning restore 612, 618
         }

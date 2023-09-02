@@ -28,15 +28,6 @@
         Task<ImageUploadResult> UploadHomePageImageAsync(IFormFile file);
 
         /// <summary>
-        /// Saving image url to the database.
-        /// </summary>
-        /// <param name="imageUrl"></param>
-        /// <param name="userProfileImage"></param>
-        /// <param name="userHomePageImage"></param>
-        /// <returns></returns>
-        Task<UploadImageDto> SaveImageUrlToDatabase(string imageUrl, UserImage image, string userId);
-
-        /// <summary>
         /// The method should retrieve the user's home page image from the database and return it.
         /// </summary>
         /// <param name="userId"></param>
@@ -57,6 +48,24 @@
         /// <returns></returns>
         public Task<string> GetAboutImageUrlAsync(string userId);
 
-        Task<UploadImageDto> EditImageInDatabase(string imageUrl, UserImage image, string userId);
+
+        /// <summary>
+        /// Save image URL to database.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <param name="image"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<UploadImageDto> SaveImageUrlToDatabase(string imageUrl, UserImage image, string userId);
+
+
+        /// <summary>
+        /// Retrieve the existing image URL by user ID and update it.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <param name="image"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<UploadImageDto> EditImageUrlInDatabase(string imageUrl, UserImage image, string userId);
     }
 }

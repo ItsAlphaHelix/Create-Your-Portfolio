@@ -80,6 +80,31 @@ namespace Portfolio.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AboutUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    Education = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    AboutMessage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AboutUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AboutUsers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
@@ -165,19 +190,21 @@ namespace Portfolio.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserHomePageImages",
+                name: "UserImages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    HomePageImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HomePageImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AboutImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserHomePageImages", x => x.Id);
+                    table.PrimaryKey("PK_UserImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserHomePageImages_AspNetUsers_UserId",
+                        name: "FK_UserImages_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -185,24 +212,30 @@ namespace Portfolio.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProfileImages",
+                name: "UserProgramLanguages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProfileImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LanguageName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PercentageOfUseLanguage = table.Column<double>(type: "float", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProfileImages", x => x.Id);
+                    table.PrimaryKey("PK_UserProgramLanguages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserProfileImages_AspNetUsers_UserId",
+                        name: "FK_UserProgramLanguages_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AboutUsers_UserId",
+                table: "AboutUsers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -244,18 +277,21 @@ namespace Portfolio.API.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserHomePageImages_UserId",
-                table: "UserHomePageImages",
+                name: "IX_UserImages_UserId",
+                table: "UserImages",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProfileImages_UserId",
-                table: "UserProfileImages",
+                name: "IX_UserProgramLanguages_UserId",
+                table: "UserProgramLanguages",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AboutUsers");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -272,10 +308,10 @@ namespace Portfolio.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "UserHomePageImages");
+                name: "UserImages");
 
             migrationBuilder.DropTable(
-                name: "UserProfileImages");
+                name: "UserProgramLanguages");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

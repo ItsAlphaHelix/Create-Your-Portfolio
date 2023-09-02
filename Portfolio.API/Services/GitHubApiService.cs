@@ -6,9 +6,9 @@
     using Portfolio.API.Dtos.GitHubApiDtos;
     using Portfolio.API.Services.Contracts;
     using Portfolio.Data.Repositories;
+    using SendGrid.Helpers.Errors.Model;
     using System.Collections.Generic;
     using System.Net.Http.Headers;
-    using System.Security.Claims;
 
     //{"C#", 250000},
     //            { "T-Sql", 100000 },
@@ -18,7 +18,7 @@
     //            { "Python", 100000 },
     //            { "Java", 5900},
     //            { "Vau.js", 90000}
-public class GitHubApiService : IGitHubApiService
+    public class GitHubApiService : IGitHubApiService
     {
         private const string BaseUrl = "https://api.github.com";
         private readonly HttpClient client = new HttpClient();
@@ -40,7 +40,10 @@ public class GitHubApiService : IGitHubApiService
 
             if (!userResponse.IsSuccessStatusCode)
             {
-                throw new ArgumentException("Invalid github username.");
+                if ((int)userResponse.StatusCode == 404)
+                {
+                    throw new NotFoundException("Invalid github username.");
+                }
             }
         }
 
@@ -77,7 +80,7 @@ public class GitHubApiService : IGitHubApiService
 
                 if (!languagesResponse.IsSuccessStatusCode)
                 {
-                    //return StatusCode((int)languagesResponse.StatusCode);
+
                 }
 
                 using HttpContent languageContent = languagesResponse.Content;
@@ -131,17 +134,14 @@ public class GitHubApiService : IGitHubApiService
 
             if (!reposResponse.IsSuccessStatusCode)
             {
-                //return StatusCode((int)reposResponse.StatusCode);
+                if ((int)reposResponse.StatusCode == 404)
+                {
+                    throw new NotFoundException("The user does not have repos.");
+                }
             }
-            
             using HttpContent content = reposResponse.Content;
 
             var repos = await content.ReadFromJsonAsync<RepositoryDto[]>();
-            
-            //if (repos.Length == 0)
-            //{
-            //    throw new HttpRequestException("The user does not have repos.");
-            //}
 
             return repos;
         }
@@ -174,13 +174,6 @@ public class GitHubApiService : IGitHubApiService
 
             foreach (var language in languageUsage.Keys)
             {
-                //count++;
-                //var programLanguage = new ProgramLanguage()
-                //{
-                //    Id = count += 1,
-                //    Name = language,
-                //};
-
                 int byteCount = languageUsage[language];
                 percentage = (double)byteCount / totalBytes * 100;
 

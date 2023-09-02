@@ -18,7 +18,6 @@
 
         public DbSet<UserImage> UserImages { get; set; }
 
-
         public DbSet<AboutUser> AboutUsers { get; set; }
 
         public DbSet<UserProgramLanguage> UserProgramLanguages { get; set; }

@@ -19,7 +19,8 @@
 
         [HttpPost]
         [Route("upload-profile-image")]
-        public async Task<IActionResult> UploadProfileImage(IFormFile file)
+        [AllowAnonymous]
+        public async Task<IActionResult> UploadProfileImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imageService.UploadProfileImageAsync(file);
 
@@ -27,8 +28,6 @@
             {
                 return BadRequest(result.Error.Message);
             }
-
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var userProfileImage = new UserImage()
             {
@@ -38,14 +37,15 @@
 
             string profilePictureUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imageService.SaveImageUrlToDatabase(profilePictureUrl, userProfileImage);
+            var responseDto = await this.imageService.SaveImageUrlToDatabase(profilePictureUrl, userProfileImage, userId);
 
             return Ok(responseDto);
         }
 
         [HttpPost]
         [Route("upload-homepage-image")]
-        public async Task<IActionResult> UploadHomePageImage(IFormFile file)
+        [AllowAnonymous]
+        public async Task<IActionResult> UploadHomePageImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imageService.UploadHomePageImageAsync(file);
 
@@ -53,8 +53,6 @@
             {
                 return BadRequest(result.Error.Message);
             }
-
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var userHomePageImage = new UserImage()
             {
@@ -64,7 +62,7 @@
 
             string profileHomeUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imageService.SaveImageUrlToDatabase(profileHomeUrl, userHomePageImage);
+            var responseDto = await this.imageService.SaveImageUrlToDatabase(profileHomeUrl, userHomePageImage, userId);
 
             return Ok(responseDto);
         }

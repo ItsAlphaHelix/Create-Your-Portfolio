@@ -3,14 +3,12 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.SignalR.Client;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services;
     using Portfolio.API.Services.Contracts;
     using SendGrid.Helpers.Errors.Model;
     using System;
-    using System.Security.Claims;
 
     [Route("api/about-me")]
     [ApiController]
@@ -137,7 +135,7 @@
 
             string aboutImageUrl = result.Url.AbsoluteUri;
 
-            var response = await this.imagesService.EditImageInDatabase(aboutImageUrl, userAboutImage, userId);
+            var response = await this.imagesService.EditImageUrlInDatabase(aboutImageUrl, userAboutImage, userId);
 
             return Ok(response);
         }

@@ -8,6 +8,7 @@
     using Portfolio.API.Services.Dtos;
     using Portfolio.API.Services.Dtos.AccountsDtos;
     using Portfolio.API.Services.Models;
+    using SendGrid.Helpers.Errors.Model;
     using System.ComponentModel.DataAnnotations;
     using System.Net;
 
@@ -42,7 +43,7 @@
                     return BadRequest(result.Errors);
                 }
             }
-            catch (ArgumentException ex)
+            catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
