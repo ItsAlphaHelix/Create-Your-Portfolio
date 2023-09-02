@@ -41,7 +41,6 @@
 
         [HttpPost]
         [Route("upload-about-image")]
-        [AllowAnonymous]
         public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imagesService.UploadAboutImageAsync(file);
@@ -98,7 +97,6 @@
 
         [HttpGet]
         [Route("get-edit-about/{aboutId}")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetEditAboutInformation(int aboutId)
         {
             var result = await this.aboutMeService.GetEditUsersAboutInformationAsync(aboutId);
@@ -117,7 +115,6 @@
 
         [HttpPut]
         [Route("edit-about-image")]
-        [AllowAnonymous]
         public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imagesService.UploadAboutImageAsync(file);
@@ -142,7 +139,6 @@
 
         [HttpGet]
         [Route("get-github-repo-languages")]
-        [AllowAnonymous]
         public async Task<IActionResult> getGitHubRepositoryLanguages([FromQuery] string userId)
         {
             try
@@ -168,12 +164,59 @@
 
         [HttpGet]
         [Route("get-language-percentages")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetPercentagesOfLanguages([FromQuery] string userId)
         {
             var result = await this.gitHubApiService.GetPercentageOfUseOnAllLanguages(userId);
 
             return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("edit-profile-image")]
+        public async Task<IActionResult> EditProfileImage(IFormFile file, [FromQuery] string userId)
+        {
+            var result = await this.imagesService.UploadProfileImageAsync(file);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            var userProfileImage = new UserImage()
+            {
+                ProfileImageUrl = result.SecureUrl.AbsoluteUri,
+                UserId = userId
+            };
+
+            string profileImageUrl = result.Url.AbsoluteUri;
+
+            var response = await this.imagesService.EditImageUrlInDatabase(profileImageUrl, userProfileImage, userId);
+
+            return Ok(response);
+        }
+
+        [HttpPut]
+        [Route("edit-home-image")]
+        public async Task<IActionResult> EditHomeImage(IFormFile file, [FromQuery] string userId)
+        {
+            var result = await this.imagesService.UploadHomePageImageAsync(file);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            var userHomeImageUrl = new UserImage()
+            {
+                HomePageImageUrl = result.SecureUrl.AbsoluteUri,
+                UserId = userId
+            };
+
+            string homeImageUrl = result.Url.AbsoluteUri;
+
+            var response = await this.imagesService.EditImageUrlInDatabase(homeImageUrl, userHomeImageUrl, userId);
+
+            return Ok(response);
         }
     }
 }

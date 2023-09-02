@@ -8,7 +8,6 @@
 
     [Route("api/home")]
     [ApiController]
-    [Authorize]
     public class HomeController : ControllerBase
     {
         private readonly IImagesService imageService;
@@ -19,7 +18,6 @@
 
         [HttpPost]
         [Route("upload-profile-image")]
-        [AllowAnonymous]
         public async Task<IActionResult> UploadProfileImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imageService.UploadProfileImageAsync(file);
@@ -44,7 +42,6 @@
 
         [HttpPost]
         [Route("upload-homepage-image")]
-        [AllowAnonymous]
         public async Task<IActionResult> UploadHomePageImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imageService.UploadHomePageImageAsync(file);
