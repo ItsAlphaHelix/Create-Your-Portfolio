@@ -23,21 +23,26 @@ export class AboutComponent implements OnInit {
     private githubApiService: GitHubApiService,
     private router: Router,
     private elRef: ElementRef) { }
+    
+    aboutResponse!: AboutInformationResponse
+    imageURL!: string | undefined
+    languageStats!: LanguageStats[];
+    isDataLoaded = false;
 
   ngOnInit(): void {
     this.initAos();
     this.getAboutImage();
     this.getAboutUser();
-
+    this.timeOut();
+  }
+  
+  private timeOut() {
     setTimeout(() => {
-      this.getLanguagePercentages();
+      this.getLanguageStats();
       this.initWaypoint();
+      this.isDataLoaded = true;
     }, 100)
   }
-
-  aboutResponse!: AboutInformationResponse
-  imageURL!: string | undefined
-  languagePercentages!: LanguageStats[];
 
   private initWaypoint(): void {
     const skillsContent = this.elRef.nativeElement.querySelector('.skills-content');
@@ -48,7 +53,7 @@ export class AboutComponent implements OnInit {
         handler: (direction: string) => {
           const progressBars = this.elRef.nativeElement.querySelectorAll('.progress .progress-bar');
           progressBars.forEach((bar: HTMLElement, index: number) => {
-            const percentage = this.languagePercentages[index]?.percentageOfUseLanguage || 0;
+            const percentage = this.languageStats[index]?.percentageOfUseLanguage || 0;
             bar.style.width = percentage + '%';
           });
         }
@@ -66,7 +71,7 @@ export class AboutComponent implements OnInit {
   }
 
   getAboutUser(): void {
-    this.aboutMeService.getAboutUsersInformationAsync().subscribe({
+    this.aboutMeService.getAboutUsersInformation().subscribe({
       next: (response) => {
         if (response) {
           this.aboutResponse = response;
@@ -86,15 +91,11 @@ export class AboutComponent implements OnInit {
     });
   }
 
-  getFromGithubRepositoryLanguages() {
-    this.githubApiService.getGitHubRepositoryLanguages().subscribe();
-  }
-
-  getLanguagePercentages(): void {
+  getLanguageStats(): void {
     this.githubApiService.getLanguagesPercentageOfUse().subscribe({
       next: (response) => {
         if (response) {
-          this.languagePercentages = response;
+          this.languageStats = response;
         }
       },
       error: (error) => {

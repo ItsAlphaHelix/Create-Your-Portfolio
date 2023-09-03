@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AboutInformationRequest } from 'src/app/models/about-request-model';
 import { AboutMeService } from 'src/app/services/about-me.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
+import { ImagesService } from 'src/app/services/images.service';
 
 @Component({
   selector: 'app-edit-about-page',
@@ -14,6 +15,7 @@ import { ClientSideValidation } from 'src/app/services/client-side-validation';
 export class EditAboutPageComponent implements OnInit {
   constructor(
     private aboutMeService: AboutMeService,
+    private imageService: ImagesService,
     private route: ActivatedRoute,
     private router: Router,
     private clientSideValidation: ClientSideValidation,
@@ -38,7 +40,7 @@ export class EditAboutPageComponent implements OnInit {
   getEditAboutInformation(): void {
 
     const aboutId = this.route.snapshot.paramMap.get('aboutId');
-    this.aboutMeService.getEditUsersAboutInformationAsync(Number(aboutId)).subscribe({
+    this.aboutMeService.getEditUsersAboutInformation(Number(aboutId)).subscribe({
       next: (response) => {
         if (response) {
           this.editForm.setValue({
@@ -65,7 +67,7 @@ export class EditAboutPageComponent implements OnInit {
     }
 
 
-    this.aboutMeService.editAboutUsersInformationAsync(this.editForm).subscribe({
+    this.aboutMeService.editAboutUsersInformation(this.editForm).subscribe({
       next: (response) => {
         if (response) {
           this.toastr.success('You have been successfully edit your information.')
@@ -94,5 +96,19 @@ export class EditAboutPageComponent implements OnInit {
         this.toastr.error(errorMessage);
       }
     });
+  }
+
+  editAboutImage(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.aboutMeService.editImage(file).subscribe(
+        (response) => {
+          if (response) {
+            return response.imageUrl;
+          }
+        }
+      );
+    }
   }
 }

@@ -30,18 +30,25 @@ export class AboutMeService {
             { headers: this.headers, params: this.params });
     }
 
-    getAboutUsersInformationAsync(): Observable<AboutInformationResponse> {
+    getAboutUsersInformation(): Observable<AboutInformationResponse> {
         return this.http.get<AboutInformationResponse>(routes.GET_ABOUT_ENDPOINT, { headers: this.headers, params: this.params });
     }
 
-    getEditUsersAboutInformationAsync(aboutId: number): Observable<AboutInformationResponse> {
+    getEditUsersAboutInformation(aboutId: number): Observable<AboutInformationResponse> {
         return this.http.get<AboutInformationResponse>(routes.GET_EDIT_ABOUT_ENDPOINT + `${aboutId}`);
     }
 
-    editAboutUsersInformationAsync(editForm: FormGroup): Observable<string> {
+    editAboutUsersInformation(editForm: FormGroup): Observable<string> {
         return this.http.put<AboutInformationResponse>(routes.EDIT_ABOUT_ENDPOINT, editForm.value, { headers: this.headers })
             .pipe(
                 map((response) => response.id)
             );
+    }
+
+    editImage(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return this.http.put(routes.UPDATE_ABOUT_IMAGE_ENDPOINT, formData, { params: this.params});
     }
 }

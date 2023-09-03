@@ -20,15 +20,9 @@ export class AppComponent implements OnInit {
     private renderer: Renderer2,
     private toastr: ToastrService) { }
 
-  imageURL: string = '\\assets\\img\\600x600.jpg';
   userResonse: UserResponse | undefined
-
-  private getUserId() {
-    return sessionStorage.getItem('userId') || '';
-  }
-
+  imageURL: string = '\\assets\\img\\600x600.jpg';
   ngOnInit(): void {
-
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.accountsService.isLoggedIn.subscribe((loggedIn: boolean) => {
@@ -39,8 +33,12 @@ export class AppComponent implements OnInit {
         });
       }
     });
+
   }
-  
+  private getUserId() {
+    return sessionStorage.getItem('userId') || '';
+  }
+
   onClickMobileNav() {
     const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
     const body = document.getElementsByTagName('body')[0];
@@ -101,7 +99,7 @@ export class AppComponent implements OnInit {
             this.toastr.error(errorMessage);
             break;
         }
-          this.toastr.error(errorMessage);
+        this.toastr.error(errorMessage);
       }
     );
   }

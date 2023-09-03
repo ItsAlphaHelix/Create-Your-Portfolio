@@ -17,25 +17,25 @@ export class RegisterComponent {
     private router: Router,
     private clientSideValidation: ClientSideValidation,
     private toastr: ToastrService
-    ) { }
-    
-    formRequest!: RegisterRequest
-  
-    private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
-      if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
-  
-        return null;
-  
-      } else if (formGroup.get('confirmPassword')?.value === '') {
-  
-        return { required: true };
-  
-      } else {
-  
-        this.registerForm.controls['confirmPassword'].setErrors({ passwordMismatch: true });
-        return { passwordMismatch: true };
-      }
-    };
+  ) { }
+
+  formRequest!: RegisterRequest
+
+  private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
+    if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value) {
+
+      return null;
+
+    } else if (formGroup.get('confirmPassword')?.value === '') {
+
+      return { required: true };
+
+    } else {
+
+      this.registerForm.controls['confirmPassword'].setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+  };
 
   registerForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
@@ -77,27 +77,30 @@ export class RegisterComponent {
         this.toastr.success('You are successfully registered!');
         this.router.navigate(['/login']);
       },
-      error: (error) => {   
-        let errorMessage = 'Unknown error occured';   
+      error: (error) => {
+        let errorMessage = 'Unknown error occured';
         switch (error.status) {
-        case 409:
-          errorMessage = error.error;
-          break;
+          case 409:
+            errorMessage = error.error;
+            break;
+          case 404:
+            errorMessage = error.error;
+            break;
           case 400:
-          if (error.error[0]?.code === 'DuplicateUserName') {
-            errorMessage = error.error[0]?.description;
-          } else if (error.error.errors.FirstName) {
-            errorMessage = error.error.errors.FirstName[0];
-          } else if (error.error.errors.LastName) {
-            errorMessage = error.error.errors.LastName[0];
-          } else if (error.error.errors.JobTitle) {
-            errorMessage = error.error.errors.JobTitle[0];
-          }
-          break;
-          default: 
+            if (error.error[0]?.code === 'DuplicateUserName') {
+              errorMessage = error.error[0]?.description;
+            } else if (error.error.errors.FirstName) {
+              errorMessage = error.error.errors.FirstName[0];
+            } else if (error.error.errors.LastName) {
+              errorMessage = error.error.errors.LastName[0];
+            } else if (error.error.errors.JobTitle) {
+              errorMessage = error.error.errors.JobTitle[0];
+            }
+            break;
+          default:
             this.toastr.error(errorMessage);
-          break;
-        } 
+            break;
+        }
 
         this.toastr.error(errorMessage);
       }

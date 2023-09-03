@@ -1,9 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserResponse } from 'src/app/models/user-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
 import Typed from 'typed.js';
 import * as AOS from 'aos';
-import { Observable, of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ImagesService } from 'src/app/services/images.service';
 import { GitHubApiService } from 'src/app/services/github-api.service';
@@ -31,7 +30,7 @@ export default class HomeComponent implements OnInit {
   private userId = this.authHelperService.getUserId();
 
   ngOnInit(): void {
-    this.getFromGithubRepositoryLanguages();
+   // this.getFromGithubRepositoryLanguages();
     this.getHomePagePicture();
     this.getUser();
     setTimeout(() => {

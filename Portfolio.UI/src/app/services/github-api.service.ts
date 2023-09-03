@@ -21,10 +21,10 @@ export class GitHubApiService {
     private params = { userId: this.userId }
 
     getGitHubRepositoryLanguages(): Observable<any> {
-        return this.http.get(routes.GET_GITHUB_REPOSITORY_LANGUAGES, { params: this.params });
+        return this.http.get(routes.GET_GITHUB_REPOSITORY_LANGUAGES_ENDPOINT, { params: this.params });
     }
 
     getLanguagesPercentageOfUse(): Observable<LanguageStats[]> {
-        return this.http.get<LanguageStats[]>(routes.GET_LANGUAGE_PERCENTAGES, { params: this.params })
+        return this.http.get<LanguageStats[]>(routes.GET_LANGUAGE_PERCENTAGES_ENDPOINT, { params: this.params })
     }
 }
