@@ -98,11 +98,11 @@ export class EditAboutPageComponent implements OnInit {
     });
   }
 
-  editAboutImage(event: Event): void {
+  updateImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
-      this.aboutMeService.editImage(file).subscribe(
+      this.imageService.updateAboutImage(file).subscribe(
         (response) => {
           if (response) {
             return response.imageUrl;

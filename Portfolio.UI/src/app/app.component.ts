@@ -22,6 +22,8 @@ export class AppComponent implements OnInit {
 
   userResonse: UserResponse | undefined
   imageURL: string = '\\assets\\img\\600x600.jpg';
+  isUserProfileImageExist = false;
+
   ngOnInit(): void {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -71,25 +73,37 @@ export class AppComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
-      this.imagesService.uploadProfileImage(file).subscribe(
-        (response) => {
-          if (response) {
-            this.imageURL = response.imageUrl;
-            this.toastr.success('You have successfully uploaded your home image.If you wish to add new one, simply click on the window again.')
+      if (this.isUserProfileImageExist == false) {
+        this.imagesService.uploadProfileImage(file).subscribe(
+          (response) => {
+            if (response) {
+              this.imageURL = response.imageUrl;
+              this.toastr.success('You have successfully uploaded your profile image.If you wish to add new one, simply click on the window again.')
+            }
           }
-        }
-      );
+        );
+      } else {
+        this.imagesService.updateProfileImage(file).subscribe(
+          (response) => {
+            if (response) {
+              this.imageURL = response.imageUrl;
+              this.toastr.success('You have successfully updated your profile image.If you wish to add new one, simply click on the window again.')
+            }
+          }
+        );
+      }
     }
   }
 
   getProfilePicture(): void {
-    this.imagesService.getUserProfileImage().subscribe(
-      (response) => {
+    this.imagesService.getUserProfileImage().subscribe({
+      next: (response) => {
         if (response) {
           this.imageURL = response.imageUrl;
+          this.isUserProfileImageExist  = true;
         }
       },
-      (error) => {
+      error: (error) => {
         let errorMessage = 'Unknown error occured'
         switch (error.status) {
           case 404:
@@ -101,7 +115,7 @@ export class AppComponent implements OnInit {
         }
         this.toastr.error(errorMessage);
       }
-    );
+  });
   }
 
 

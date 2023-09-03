@@ -25,7 +25,7 @@ export class AboutComponent implements OnInit {
     private elRef: ElementRef) { }
     
     aboutResponse!: AboutInformationResponse
-    imageURL!: string | undefined
+    imageURL: string = '../../../assets/assets/img/600x600.jpg';
     languageStats!: LanguageStats[];
     isDataLoaded = false;
 
@@ -87,6 +87,10 @@ export class AboutComponent implements OnInit {
     this.imagesService.getAboutUserImage().subscribe({
       next: (response) => {
         this.imageURL = response.imageUrl;
+        console.log(response.imageUrl);
+      },
+      error: (error) => {
+         console.log(error.error);
       }
     });
   }

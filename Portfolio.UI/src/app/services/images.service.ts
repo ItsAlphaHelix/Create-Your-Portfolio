@@ -18,6 +18,8 @@ export class ImagesService {
         return sessionStorage.getItem('userId') || '';
     }
 
+    private userId = this.getUserId();
+    private params = {userId: this.userId};
 
     uploadProfileImage(file: File): Observable<any> {
         const jwtToken = this.getJwtToken();
@@ -28,7 +30,7 @@ export class ImagesService {
         const formData = new FormData();
         formData.append('file', file);
 
-        return this.http.post(routes.UPLOAD_PROFILE_IMAGE_ENDPOINT, formData, { headers });
+        return this.http.post(routes.UPLOAD_PROFILE_IMAGE_ENDPOINT, formData, { params: this.params });
     }
 
     uploadHomePageImage(file: File): Observable<any> {
@@ -84,6 +86,20 @@ export class ImagesService {
 
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${jwtToken}`)
-        return this.http.get<{ imageUrl: string }>(routes.GET_ABOUT_IMAGE_ENDPOINT + `${userId}`, { headers });
+        return this.http.get<{ imageUrl: string }>(routes.GET_ABOUT_IMAGE_ENDPOINT + `${userId}`);
+    }
+
+    updateAboutImage(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return this.http.put(routes.UPDATE_ABOUT_IMAGE_ENDPOINT, formData, { params: this.params });
+    }
+
+    updateProfileImage(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return this.http.put(routes.UPDATE_PROFILE_IMAGE_ENDPOINT, formData, { params: this.params });
     }
 }

@@ -43,12 +43,5 @@ export class AboutMeService {
             .pipe(
                 map((response) => response.id)
             );
-    }
-
-    editImage(file: File): Observable<any> {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        return this.http.put(routes.UPDATE_ABOUT_IMAGE_ENDPOINT, formData, { params: this.params});
-    }
+    } 
 }
