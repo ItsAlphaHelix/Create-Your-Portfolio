@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AboutInformationRequest } from 'src/app/models/about-request-model';
 import { AboutMeService } from 'src/app/services/about-me.service';
@@ -19,7 +20,8 @@ export class AddAboutInformationComponent {
     private imagesService: ImagesService,
     private toastr: ToastrService,
     private router: Router,
-    private clientSideValidation: ClientSideValidation) { }
+    private clientSideValidation: ClientSideValidation,
+    private spinner: NgxSpinnerService) { }
 
   aboutForm = new FormGroup({
     age: new FormControl("", [Validators.required, Validators.pattern(/[\d]+$/)]),
@@ -82,10 +84,11 @@ export class AddAboutInformationComponent {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
+      this.spinner.show();
       this.imagesService.uploadAboutImage(file).subscribe(
         (response) => {
           if (response) {
-            this.toastr.success('You have successfully uploaded your about image');
+            this.spinner.hide();
             return response.imageUrl;
           }
         }

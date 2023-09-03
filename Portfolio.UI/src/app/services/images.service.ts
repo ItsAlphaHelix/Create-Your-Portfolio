@@ -43,7 +43,7 @@ export class ImagesService {
         const formData = new FormData();
         formData.append('file', file);
 
-        return this.http.post(routes.UPLOAD_HOME_PAGE_IMAGE_ENDPOINT, formData, { headers });
+        return this.http.post(routes.UPLOAD_HOME_PAGE_IMAGE_ENDPOINT, formData, { params: this.params });
     }
 
     getUserProfileImage(): Observable<any> {

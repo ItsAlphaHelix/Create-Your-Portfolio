@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { RegisterRequest } from 'src/app/models/register-request-model';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -16,8 +17,8 @@ export class RegisterComponent {
     private accountsService: AccountsService,
     private router: Router,
     private clientSideValidation: ClientSideValidation,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService) { }
 
   formRequest!: RegisterRequest
 
@@ -55,7 +56,6 @@ export class RegisterComponent {
 
 
   onRegister(): void {
-    debugger
     if (this.registerForm.invalid) {
       this.clientSideValidation.registerFormValidation(this.registerForm);
       return;
@@ -70,14 +70,19 @@ export class RegisterComponent {
       password: this.registerForm.value.password!,
       confirmPassword: this.registerForm.value.confirmPassword!
     }
+
+    this.spinner.show();
+
     this.accountsService.registerUser(this.formRequest).subscribe({
 
       next: () => {
 
         this.toastr.success('You are successfully registered!');
+        this.spinner.hide();
         this.router.navigate(['/login']);
       },
       error: (error) => {
+        this.spinner.hide();
         let errorMessage = 'Unknown error occured';
         switch (error.status) {
           case 409:

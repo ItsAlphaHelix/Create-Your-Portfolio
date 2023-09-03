@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { LoginRequest } from 'src/app/models/login-request-model';
 import { LoginResponse } from 'src/app/models/login-response-model';
@@ -18,7 +19,8 @@ export class LoginComponent implements OnInit {
     private accountsService: AccountsService,
     private router: Router,
     private toastr: ToastrService,
-    private clientSideValidation: ClientSideValidation) { }
+    private clientSideValidation: ClientSideValidation,
+    private spinner: NgxSpinnerService) { }
     
     formRequest!: LoginComponent
     loginRequest!: LoginRequest
@@ -47,7 +49,7 @@ export class LoginComponent implements OnInit {
       email: this.loginForm.value.email!,
       password: this.loginForm.value.password!
     }
-
+    this.spinner.show();
     this.accountsService.loginUser(this.loginRequest)
       .subscribe({
         next: (response: LoginResponse) => {
@@ -56,10 +58,12 @@ export class LoginComponent implements OnInit {
           sessionStorage.setItem("accessToken", response.accessToken);
           sessionStorage.setItem("refreshToken", response.refreshToken);
           this.toastr.success('You are successfully logged in!');
+          this.spinner.hide();
           this.router.navigate(['/']);
         },
         error: (error) => {
           let errorMessage = 'Unknown error occured';
+          this.spinner.hide();
           switch (error.status) {
             case 401:
               errorMessage = error.error;

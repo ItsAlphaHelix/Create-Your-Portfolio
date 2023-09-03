@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { AboutInformationRequest } from 'src/app/models/about-request-model';
 import { AboutMeService } from 'src/app/services/about-me.service';
@@ -19,7 +20,8 @@ export class EditAboutPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private clientSideValidation: ClientSideValidation,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.getEditAboutInformation();
@@ -65,13 +67,12 @@ export class EditAboutPageComponent implements OnInit {
       this.clientSideValidation.aboutUserFormValidation(this.editForm);
       return;
     }
-
-
+      
     this.aboutMeService.editAboutUsersInformation(this.editForm).subscribe({
       next: (response) => {
         if (response) {
           this.toastr.success('You have been successfully edit your information.')
-          this.router.navigate(['/about'])
+         this.router.navigate(['/about'])
         }
       },
       error: (error) => {
@@ -102,9 +103,11 @@ export class EditAboutPageComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
+      this.spinner.show();
       this.imageService.updateAboutImage(file).subscribe(
         (response) => {
           if (response) {
+            this.spinner.hide();
             return response.imageUrl;
           }
         }

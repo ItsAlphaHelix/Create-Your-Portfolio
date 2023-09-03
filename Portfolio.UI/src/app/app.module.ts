@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -16,6 +15,7 @@ import { EditAboutPageComponent } from './components/edit-about-page/edit-about-
 import { AddAboutInformationComponent } from './components/add-about-page/add-about-page.component';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer-page/footer-page.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,7 @@ import { FooterComponent } from './components/footer-page/footer-page.component'
     AboutComponent,
     AddAboutInformationComponent,
     EditAboutPageComponent,
-    FooterComponent
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,6 +37,7 @@ import { FooterComponent } from './components/footer-page/footer-page.component'
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    NgxSpinnerModule,
     ToastrModule.forRoot({
     })
   ],

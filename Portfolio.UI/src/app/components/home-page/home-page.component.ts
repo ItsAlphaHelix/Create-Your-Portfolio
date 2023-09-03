@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ImagesService } from 'src/app/services/images.service';
 import { GitHubApiService } from 'src/app/services/github-api.service';
 import { AuthHelperService } from 'src/app/services/auth-helper.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,8 @@ export default class HomeComponent implements OnInit {
     private accountsService: AccountsService,
     private toastr: ToastrService,
     private authHelperService: AuthHelperService,
-    private githubApiService: GitHubApiService) { }
+    private githubApiService: GitHubApiService,
+    private spinner: NgxSpinnerService) { }
 
   imageURL: string | undefined;
   userJobTitle: string | undefined;
@@ -31,7 +33,7 @@ export default class HomeComponent implements OnInit {
   private userId = this.authHelperService.getUserId();
 
   ngOnInit(): void {
-   // this.getFromGithubRepositoryLanguages();
+    //this.getFromGithubRepositoryLanguages();
     this.getHomePagePicture();
     this.getUser();
     setTimeout(() => {
@@ -81,6 +83,7 @@ export default class HomeComponent implements OnInit {
   uploadHomeImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
+      this.spinner.show();
       const file = target.files[0];
       if (this.isHomeImageExist == false) {
         this.imagesService.uploadHomePageImage(file).subscribe(
@@ -88,6 +91,7 @@ export default class HomeComponent implements OnInit {
             if (response) {
               this.imageURL = response.imageUrl;
               this.toastr.success('You have successfully uploaded your home image.If you wish to add new one, simply click on the window again.');
+              this.spinner.hide();
             }
           }
         );
@@ -97,6 +101,7 @@ export default class HomeComponent implements OnInit {
             if (response) {
               this.imageURL = response.imageUrl;
               this.toastr.success('You have successfully updated your home image.If you wish to add new one, simply click on the window again.');
+              this.spinner.hide();
             }
           }
         );

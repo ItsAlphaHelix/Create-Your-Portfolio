@@ -5,6 +5,7 @@ import { UserResponse } from './models/user-response-model';
 import { ToastrService } from 'ngx-toastr';
 import { ImagesService } from './services/images.service';
 import { AboutMeService } from './services/about-me.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private imagesService: ImagesService,
     private renderer: Renderer2,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService) { }
 
   userResonse: UserResponse | undefined
   imageURL: string = '\\assets\\img\\600x600.jpg';
@@ -35,7 +37,6 @@ export class AppComponent implements OnInit {
         });
       }
     });
-
   }
   private getUserId() {
     return sessionStorage.getItem('userId') || '';
@@ -72,13 +73,15 @@ export class AppComponent implements OnInit {
   uploadProfileImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
+      this.spinner.show();
       const file = target.files[0];
       if (this.isUserProfileImageExist == false) {
         this.imagesService.uploadProfileImage(file).subscribe(
           (response) => {
             if (response) {
               this.imageURL = response.imageUrl;
-              this.toastr.success('You have successfully uploaded your profile image.If you wish to add new one, simply click on the window again.')
+              this.toastr.success('You have successfully uploaded your profile image.If you wish to add new one, simply click on the window again.')            
+              this.spinner.hide();
             }
           }
         );
@@ -88,6 +91,7 @@ export class AppComponent implements OnInit {
             if (response) {
               this.imageURL = response.imageUrl;
               this.toastr.success('You have successfully updated your profile image.If you wish to add new one, simply click on the window again.')
+              this.spinner.hide();
             }
           }
         );

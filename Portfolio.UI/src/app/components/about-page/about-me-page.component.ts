@@ -7,6 +7,7 @@ import { AboutInformationResponse } from 'src/app/models/about-response-model';
 import * as AOS from 'aos';
 import { LanguageStats } from 'src/app/models/language-stats-model';
 import { GitHubApiService } from 'src/app/services/github-api.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 declare const Waypoint: any;
 
