@@ -13,6 +13,7 @@ export const GET_PROFILE_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/home/ge
 export const GET_HOME_PAGE_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/home/get-home-page-image/`;
 
 export const UPDATE_PROFILE_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/home/edit-profile-image`;
+export const UPDATE_HOME_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/home/edit-home-image`;
 
 //About users information api end-points
 export const ADD_ABOUT_INFORMATION_ENDPOINT = `${environment.baseUrlApi}/api/about-me/add-about`;

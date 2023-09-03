@@ -102,4 +102,11 @@ export class ImagesService {
 
         return this.http.put(routes.UPDATE_PROFILE_IMAGE_ENDPOINT, formData, { params: this.params });
     }
+
+    updateHomeImage(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return this.http.put(routes.UPDATE_HOME_IMAGE_ENDPOINT, formData, { params: this.params });
+    }
 }

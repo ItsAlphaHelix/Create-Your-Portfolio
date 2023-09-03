@@ -26,6 +26,7 @@ export default class HomeComponent implements OnInit {
   imageURL: string | undefined;
   userJobTitle: string | undefined;
   userResonse: UserResponse | undefined
+  isHomeImageExist = false;  
 
   private userId = this.authHelperService.getUserId();
 
@@ -81,14 +82,25 @@ export default class HomeComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
-      this.imagesService.uploadHomePageImage(file).subscribe(
-        (response) => {
-          if (response) {
-            this.imageURL = response.imageUrl;
-            this.toastr.success('You have successfully uploaded your home image.If you wish to add new one, simply click on the window again.');
+      if (this.isHomeImageExist == false) {
+        this.imagesService.uploadHomePageImage(file).subscribe(
+          (response) => {
+            if (response) {
+              this.imageURL = response.imageUrl;
+              this.toastr.success('You have successfully uploaded your home image.If you wish to add new one, simply click on the window again.');
+            }
           }
-        }
-      );
+        );
+      } else {
+        this.imagesService.updateHomeImage(file).subscribe(
+          (response) => {
+            if (response) {
+              this.imageURL = response.imageUrl;
+              this.toastr.success('You have successfully updated your home image.If you wish to add new one, simply click on the window again.');
+            }
+          }
+        );
+      }
     }
   }
 
@@ -97,6 +109,7 @@ export default class HomeComponent implements OnInit {
       next: (response) => {
         if (response) {
           this.imageURL = response.imageUrl;
+          this.isHomeImageExist = true;
         }
       },
       error: (error) => {
