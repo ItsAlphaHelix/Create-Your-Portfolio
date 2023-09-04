@@ -17,21 +17,15 @@ export class AboutMeService {
         private http: HttpClient,
         private authHelperService: AuthHelperService) { }
 
-
-    private jwtToken = this.authHelperService.getJwtToken();
-    private userId = this.authHelperService.getUserId();
-
-    private headers = new HttpHeaders()
-        .set('Authorization', `Bearer ${this.jwtToken}`)
-    private params = { userId: this.userId };
-
     addAboutUsersInformation(request: AboutInformationRequest): Observable<AboutInformationResponse> {
         return this.http.post<AboutInformationResponse>(routes.ADD_ABOUT_INFORMATION_ENDPOINT, request,
-            { headers: this.headers, params: this.params });
+            { headers: this.authHelperService.getHeaders(), params: this.authHelperService.getParams() });
     }
 
     getAboutUsersInformation(): Observable<AboutInformationResponse> {
-        return this.http.get<AboutInformationResponse>(routes.GET_ABOUT_ENDPOINT, { headers: this.headers, params: this.params });
+
+        return this.http.get<AboutInformationResponse>
+        (routes.GET_ABOUT_ENDPOINT, { headers: this.authHelperService.getHeaders(), params: this.authHelperService.getParams() });
     }
 
     getEditUsersAboutInformation(aboutId: number): Observable<AboutInformationResponse> {
@@ -39,7 +33,8 @@ export class AboutMeService {
     }
 
     editAboutUsersInformation(editForm: FormGroup): Observable<string> {
-        return this.http.put<AboutInformationResponse>(routes.EDIT_ABOUT_ENDPOINT, editForm.value, { headers: this.headers })
+        return this.http.put<AboutInformationResponse>
+        (routes.EDIT_ABOUT_ENDPOINT, editForm.value, { headers: this.authHelperService.getHeaders() })
             .pipe(
                 map((response) => response.id)
             );

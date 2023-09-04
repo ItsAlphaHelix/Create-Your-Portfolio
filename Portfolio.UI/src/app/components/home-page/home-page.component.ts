@@ -21,7 +21,6 @@ export default class HomeComponent implements OnInit {
     private imagesService: ImagesService,
     private accountsService: AccountsService,
     private toastr: ToastrService,
-    private authHelperService: AuthHelperService,
     private githubApiService: GitHubApiService,
     private spinner: NgxSpinnerService) { }
 
@@ -29,15 +28,13 @@ export default class HomeComponent implements OnInit {
   userJobTitle: string | undefined;
   userResonse: UserResponse | undefined
   isHomeImageExist = false;  
-
-  private userId = this.authHelperService.getUserId();
-
+  
   ngOnInit(): void {
     //this.getFromGithubRepositoryLanguages();
     this.getHomePagePicture();
     this.getUser();
     setTimeout(() => {
-      this.accountsService.getUserById(this.userId).subscribe(response => {
+      this.accountsService.getUserById().subscribe(response => {
         this.userJobTitle = response.jobTitle;
         this.initAos();
         this.initTyped();
@@ -133,7 +130,7 @@ export default class HomeComponent implements OnInit {
   }
 
   getUser(): void {
-    this.accountsService.getUserById(this.userId).subscribe(
+    this.accountsService.getUserById().subscribe(
       (response) => {
         this.userResonse = response;
       }

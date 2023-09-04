@@ -10,6 +10,7 @@ import { LoginResponse } from 'src/app/models/login-response-model';
 import { Router } from '@angular/router';
 import { __param } from 'tslib';
 import { UserResponse } from '../models/user-response-model';
+import { AuthHelperService } from './auth-helper.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class AccountsService {
 
   constructor(
     private http: HttpClient,
-    private router: Router) { }
+    private router: Router,
+    private authHelperService: AuthHelperService) { }
 
   //private headers = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -39,9 +41,9 @@ export class AccountsService {
     return this.http.post<LoginResponse>(routes.LOGIN_ENDPOINT, request);
   }
 
-  getUserById(userId: string): Observable<UserResponse> {
-    const params = { userId };
-    return this.http.get<UserResponse>(routes.GET_USER_ENDPOINT, { params });
+  getUserById(): Observable<UserResponse> {
+
+    return this.http.get<UserResponse>(routes.GET_USER_ENDPOINT, { params: this.authHelperService.getParams() });
   }
 
   logout() {
