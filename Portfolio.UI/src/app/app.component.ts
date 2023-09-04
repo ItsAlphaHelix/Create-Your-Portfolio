@@ -74,6 +74,7 @@ export class AppComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       this.spinner.show();
+      debugger;
       const file = target.files[0];
       if (this.isUserProfileImageExist == false) {
         this.imagesService.uploadProfileImage(file).subscribe(

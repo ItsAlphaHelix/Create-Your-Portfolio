@@ -30,8 +30,8 @@ export default class HomeComponent implements OnInit {
   userResonse: UserResponse | undefined
   isHomeImageExist = false;  
 
-  private userId = this.authHelperService.getUserId();
-
+  private userId = this.authHelperService.getParams().userId;
+  
   ngOnInit(): void {
     //this.getFromGithubRepositoryLanguages();
     this.getHomePagePicture();

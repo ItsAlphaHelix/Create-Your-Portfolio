@@ -2,111 +2,69 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import * as routes from 'src/app/shared/routes.contants';
+import { AuthHelperService } from "./auth-helper.service";
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class ImagesService {
-    constructor(private http: HttpClient) { }
-
-    private getJwtToken() {
-        return sessionStorage.getItem('accessToken') || '';
-    }
-
-    private getUserId() {
-        return sessionStorage.getItem('userId') || '';
-    }
-
-    private userId = this.getUserId();
-    private params = {userId: this.userId};
+    constructor(
+        private http: HttpClient,
+        private authHelperService: AuthHelperService) { }
 
     uploadProfileImage(file: File): Observable<any> {
-        const jwtToken = this.getJwtToken();
-        // Add the token to the request headers
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`);
-
         const formData = new FormData();
         formData.append('file', file);
-
-        return this.http.post(routes.UPLOAD_PROFILE_IMAGE_ENDPOINT, formData, { params: this.params });
+        return this.http.post(routes.UPLOAD_PROFILE_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
     }
 
     uploadHomePageImage(file: File): Observable<any> {
-        const jwtToken = this.getJwtToken();
-        // Add the token to the request headers
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`);
-
-        debugger
         const formData = new FormData();
         formData.append('file', file);
 
-        return this.http.post(routes.UPLOAD_HOME_PAGE_IMAGE_ENDPOINT, formData, { params: this.params });
+        return this.http.post(routes.UPLOAD_HOME_PAGE_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
     }
 
     getUserProfileImage(): Observable<any> {
-
-        const jwtToken = this.getJwtToken();
-        const userId = this.getUserId();
-
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`)
-        return this.http.get<{ imageUrl: string }>(routes.GET_PROFILE_IMAGE_ENDPOINT + `${userId}`, { headers });
+        return this.http.get<{ imageUrl: string }>
+        (routes.GET_PROFILE_IMAGE_ENDPOINT + `${this.authHelperService.getParams().userId}`, { headers: this.authHelperService.getHeaders() });
     }
 
     getUserHomePageImage(): Observable<any> {
-        const jwtToken = this.getJwtToken();
-        const userId = this.getUserId();
-
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`)
-        return this.http.get<{ imageUrl: string }>(routes.GET_HOME_PAGE_IMAGE_ENDPOINT + `${userId}`, { headers });
+        return this.http.get<{ imageUrl: string }>
+        (routes.GET_HOME_PAGE_IMAGE_ENDPOINT + `${this.authHelperService.getParams().userId}`, { headers: this.authHelperService.getHeaders() });
     }
 
     uploadAboutImage(file: File): Observable<any> {
-        const jwtToken = this.getJwtToken();
-        const userId = this.getUserId();
-
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`);
-        const params = { userId }
-
-        debugger
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', file);       
 
-        return this.http.post(routes.UPLOAD_ABOUT_IMAGE_ENDPOINT, formData, { headers, params });
+        return this.http.post(routes.UPLOAD_ABOUT_IMAGE_ENDPOINT, formData,
+             { headers : this.authHelperService.getHeaders(), params: this.authHelperService.getParams() });
     }
 
     getAboutUserImage(): Observable<any> {
-        const jwtToken = this.getJwtToken();
-        const userId = this.getUserId();
-
-        const headers = new HttpHeaders()
-            .set('Authorization', `Bearer ${jwtToken}`)
-        return this.http.get<{ imageUrl: string }>(routes.GET_ABOUT_IMAGE_ENDPOINT + `${userId}`);
+        return this.http.get<{ imageUrl: string }>(routes.GET_ABOUT_IMAGE_ENDPOINT + `${this.authHelperService.getParams().userId}`);
     }
 
     updateAboutImage(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
-
-        return this.http.put(routes.UPDATE_ABOUT_IMAGE_ENDPOINT, formData, { params: this.params });
+        return this.http.put(routes.UPDATE_ABOUT_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
     }
 
     updateProfileImage(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
 
-        return this.http.put(routes.UPDATE_PROFILE_IMAGE_ENDPOINT, formData, { params: this.params });
+        return this.http.put(routes.UPDATE_PROFILE_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
     }
 
     updateHomeImage(file: File): Observable<any> {
         const formData = new FormData();
         formData.append('file', file);
 
-        return this.http.put(routes.UPDATE_HOME_IMAGE_ENDPOINT, formData, { params: this.params });
+        return this.http.put(routes.UPDATE_HOME_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
     }
 }

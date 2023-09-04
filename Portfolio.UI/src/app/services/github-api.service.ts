@@ -15,16 +15,13 @@ export class GitHubApiService {
         private http: HttpClient,
         private authHelperService: AuthHelperService) { }
 
-    private userId = this.authHelperService.getUserId();
-    private jwtToken = this.authHelperService.getJwtToken();
-
-    private params = { userId: this.userId }
-
     getGitHubRepositoryLanguages(): Observable<any> {
-        return this.http.get(routes.GET_GITHUB_REPOSITORY_LANGUAGES_ENDPOINT, { params: this.params });
+
+        return this.http.get(routes.GET_GITHUB_REPOSITORY_LANGUAGES_ENDPOINT, { params: this.authHelperService.getParams() });
     }
 
     getLanguagesPercentageOfUse(): Observable<LanguageStats[]> {
-        return this.http.get<LanguageStats[]>(routes.GET_LANGUAGE_PERCENTAGES_ENDPOINT, { params: this.params })
+        
+        return this.http.get<LanguageStats[]>(routes.GET_LANGUAGE_PERCENTAGES_ENDPOINT, { params: this.authHelperService.getParams() })
     }
 }
