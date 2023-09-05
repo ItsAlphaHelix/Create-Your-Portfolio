@@ -1,0 +1,33 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Portfolio.API.Data.Models
+{
+    public class Project
+    {
+        public Project()
+        {
+            this.Images = new HashSet<ProjectImage>();
+        }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string MainImageUrl { get; set; }
+
+        public string DeploymentUrl { get; set; }
+
+        public string GitHubUrl { get; set; }
+
+        public string Environment { get; set; }
+
+        public string Category { get; set; }
+
+
+        [ForeignKey(nameof(User))]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
+
+        public virtual ICollection<ProjectImage> Images { get; set; }
+    }
+}

@@ -1,5 +1,4 @@
-﻿
-namespace Portfolio.API.Data.Models
+﻿namespace Portfolio.API.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -12,8 +11,9 @@ namespace Portfolio.API.Data.Models
 
         public double PercentageOfUseLanguage { get; set; }
 
+        [ForeignKey(nameof(User))]
         public string UserId { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

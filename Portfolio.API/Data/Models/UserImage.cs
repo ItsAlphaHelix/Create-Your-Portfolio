@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Portfolio.API.Data.Models
+﻿namespace Portfolio.API.Data.Models
 {
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
     public class UserImage
     {
         [Key]
@@ -13,8 +13,9 @@ namespace Portfolio.API.Data.Models
 
         public string? AboutImageUrl { get; set; }
 
+        [ForeignKey(nameof(User))]
         public string UserId { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
     }
 }

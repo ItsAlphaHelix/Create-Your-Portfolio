@@ -9,7 +9,7 @@
         {
             this.Id = Guid.NewGuid().ToString();
 
-            this.UserImages = new HashSet<UserImage>();
+            this.Projects = new HashSet<Project>();
 
             this.UserProgramLanguages = new HashSet<UserProgramLanguage>();
         }
@@ -40,8 +40,8 @@
 
         public DateTime? DeletedOn { get; set; }
 
-        public ICollection<UserImage> UserImages { get; set; }
+        public virtual ICollection<UserProgramLanguage> UserProgramLanguages { get; set; }
 
-        public ICollection<UserProgramLanguage> UserProgramLanguages { get; set; }
+        public virtual ICollection<Project> Projects{ get; set; }
     }
 }

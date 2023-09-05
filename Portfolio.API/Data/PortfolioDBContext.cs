@@ -1,10 +1,8 @@
 ﻿namespace Portfolio.API.Data
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Portfolio.API.Data.Models;
-    using System.Reflection.Emit;
 
     public class PortfolioDBContext : IdentityDbContext<ApplicationUser>
     {
@@ -21,6 +19,14 @@
         public DbSet<AboutUser> AboutUsers { get; set; }
 
         public DbSet<UserProgramLanguage> UserProgramLanguages { get; set; }
+
+        public DbSet<Project> Projects { get; set; }
+
+        public DbSet<Category> Categories { get; set; }
+
+        public DbSet<ProjectImage> ProjectImages { get; set; }
+
+        public DbSet<Environment> Environments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

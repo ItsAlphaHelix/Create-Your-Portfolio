@@ -1,6 +1,5 @@
 ﻿namespace Portfolio.API.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
@@ -43,7 +42,7 @@
         [Route("upload-about-image")]
         public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string userId)
         {
-            var result = await this.imagesService.UploadAboutImageAsync(file);
+            var result = await this.imagesService.UploadAboutImageAsync(file, userId);
 
             if (result.Error != null)
             {
@@ -58,7 +57,7 @@
 
             string aboutImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveImageUrlToDatabase(aboutImageUrl, userAboutImage, userId);
+            var responseDto = await this.imagesService.SaveImageUrlToDatabaseAsync(aboutImageUrl, userAboutImage, userId);
 
             return Ok(responseDto);
         }
@@ -104,39 +103,6 @@
             return Ok(result);
         }
 
-        [HttpPut]
-        [Route("edit")]
-        public async Task<IActionResult> EditAboutInformation([FromBody] AboutUserDto model)
-        {
-            await this.aboutMeService.EditAboutUsersInformationAsync(model);
-
-            return Ok(new { id = model.Id });
-        }
-
-        [HttpPut]
-        [Route("edit-about-image")]
-        public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
-        {
-            var result = await this.imagesService.UploadAboutImageAsync(file);
-
-            if (result.Error != null)
-            {
-                return BadRequest(result.Error.Message);
-            }
-
-            var userAboutImage = new UserImage()
-            {
-                AboutImageUrl = result.SecureUrl.AbsoluteUri,
-                UserId = userId
-            };
-
-            string aboutImageUrl = result.Url.AbsoluteUri;
-
-            var response = await this.imagesService.EditImageUrlInDatabase(aboutImageUrl, userAboutImage, userId);
-
-            return Ok(response);
-        }
-
         [HttpGet]
         [Route("get-github-repo-languages")]
         public async Task<IActionResult> getGitHubRepositoryLanguages([FromQuery] string userId)
@@ -147,7 +113,7 @@
 
                 if (canInvoke)
                 {
-                  await this.gitHubApiService.GetUserProgrammingLanguages(userId);
+                    await this.gitHubApiService.GetUserProgrammingLanguages(userId);
                 }
                 else
                 {
@@ -172,51 +138,37 @@
         }
 
         [HttpPut]
-        [Route("edit-profile-image")]
-        public async Task<IActionResult> EditProfileImage(IFormFile file, [FromQuery] string userId)
+        [Route("edit-about-image")]
+        public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
         {
-            var result = await this.imagesService.UploadProfileImageAsync(file);
+            var result = await this.imagesService.UploadAboutImageAsync(file, userId);
 
             if (result.Error != null)
             {
                 return BadRequest(result.Error.Message);
             }
 
-            var userProfileImage = new UserImage()
+            var userAboutImage = new UserImage()
             {
-                ProfileImageUrl = result.SecureUrl.AbsoluteUri,
+                AboutImageUrl = result.SecureUrl.AbsoluteUri,
                 UserId = userId
             };
 
-            string profileImageUrl = result.Url.AbsoluteUri;
+            string aboutImageUrl = result.Url.AbsoluteUri;
 
-            var response = await this.imagesService.EditImageUrlInDatabase(profileImageUrl, userProfileImage, userId);
+            var response = await this.imagesService.EditImageUrlInDatabaseAsync(aboutImageUrl, userAboutImage, userId);
 
             return Ok(response);
         }
 
+
         [HttpPut]
-        [Route("edit-home-image")]
-        public async Task<IActionResult> EditHomeImage(IFormFile file, [FromQuery] string userId)
+        [Route("edit")]
+        public async Task<IActionResult> EditAboutInformation([FromBody] AboutUserDto model)
         {
-            var result = await this.imagesService.UploadHomePageImageAsync(file);
+            await this.aboutMeService.EditAboutUsersInformationAsync(model);
 
-            if (result.Error != null)
-            {
-                return BadRequest(result.Error.Message);
-            }
-
-            var userHomeImageUrl = new UserImage()
-            {
-                HomePageImageUrl = result.SecureUrl.AbsoluteUri,
-                UserId = userId
-            };
-
-            string homeImageUrl = result.Url.AbsoluteUri;
-
-            var response = await this.imagesService.EditImageUrlInDatabase(homeImageUrl, userHomeImageUrl, userId);
-
-            return Ok(response);
+            return Ok(new { id = model.Id });
         }
     }
 }
