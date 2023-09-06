@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     private spinner: NgxSpinnerService) { }
 
   userResonse: UserResponse | undefined
-  imageURL: string = '\\assets\\img\\600x600.jpg';
+  imageURL: string = '\\assets\\img\\profile-upload-image.png';
   isUserProfileImageExist = false;
 
   ngOnInit(): void {

@@ -23,10 +23,19 @@
              
             <div class="col-lg-4 col-md-6 portfolio-item filter-app" (click)="openFileInput()">
                 <div class="portfolio-wrap">
-                    <img src="assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
+                    <img src="assets/img/upload-image.png" class="img-fluid" alt="">
                     <div class="portfolio-links">
-                        <a href="assets/img/portfolio/portfolio-1.jpg" data-gallery="portfolioGallery"
-                            class="portfolio-lightbox" title="App 1"><i class="bx bx-plus"></i></a>
+                        <a class="portfolio-lightbox" title="Upload Project Image"><i class="bx bx-upload"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item filter-app" *ngFor="let response of responseProjectImages">
+                <div class="portfolio-wrap">
+                    <img [src]="response.projectMainImageUrl" class="img-fluid" alt="">
+                    <div class="portfolio-links">
+                        <a [href]="response.projectMainImageUrl" data-gallery="portfolioGallery" class="portfolio-lightbox"
+                            title="Zoom"><i class="bx bx-plus"></i></a>
                         <a href="" title="More Details"><i class="bx bx-link"></i></a>
                     </div>
                 </div>

@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ProjectImageResoponse } from 'src/app/models/project-images-response-model';
 import { ImagesService } from 'src/app/services/images.service';
 
 @Component({
@@ -7,13 +9,20 @@ import { ImagesService } from 'src/app/services/images.service';
   templateUrl: './project-page.component.html',
   styleUrls: ['./project-page.component.css']
 })
-export class ProjectComponent {
+export class ProjectComponent implements OnInit{
 
   constructor(
     private imagesService: ImagesService,
+    private spinner: NgxSpinnerService,
     private elRef: ElementRef,
     private renderer: Renderer2,
     private router: Router) { }
+
+  responseProjectImages!: ProjectImageResoponse[];
+
+  ngOnInit(): void {
+    this.getProjectImages();
+  }
 
   openFileInput(): void {
     const fileInput = document.createElement('input');
@@ -45,7 +54,7 @@ export class ProjectComponent {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
-    
+      this.spinner.show();
       this.imagesService.uploadMainProjectImage(file).subscribe(
         (response) => {
           if (response) {
@@ -54,6 +63,15 @@ export class ProjectComponent {
         }
       );
     }
+  }
+
+  getProjectImages() {
+    this.imagesService.getAllProjectImages().subscribe(
+      (response) => {
+        this.responseProjectImages = response;
+        console.log(this.responseProjectImages);
+      }
+    );
   }
 
   private createProjectDinamically(response: any) {
@@ -74,11 +92,11 @@ export class ProjectComponent {
 
     const divPortfolioLinks = this.renderer.createElement('div');
     this.renderer.addClass(divPortfolioLinks, 'portfolio-links');
-
     const anchorImage = this.renderer.createElement('a');
     this.renderer.setAttribute(anchorImage, 'href', `${response.imageUrl}`);
     this.renderer.setAttribute(anchorImage, 'data-gallery', 'portfolioGallery');
     this.renderer.addClass(anchorImage, 'portfolio-lightbox');
+    this.renderer.setAttribute(anchorImage, 'title', 'Zoom');
 
     const iBxPlusElement = this.renderer.createElement('i');
     this.renderer.addClass(iBxPlusElement, 'bx');
@@ -87,7 +105,8 @@ export class ProjectComponent {
     const anchorPortfolioDetails = this.renderer.createElement('a');
     this.renderer.addClass(anchorPortfolioDetails, 'routerlink');
     this.renderer.setAttribute(anchorPortfolioDetails, 'href', 'about');
-
+    this.renderer.setAttribute(anchorPortfolioDetails, 'title', 'More Details');
+    
     const iBxLink = this.renderer.createElement('i');
     this.renderer.addClass(iBxLink, 'bx');
     this.renderer.addClass(iBxLink, 'bx-link');
@@ -100,5 +119,6 @@ export class ProjectComponent {
     divPortfolioWrap.appendChild(divPortfolioLinks);
     divPortfolioItem.appendChild(divPortfolioWrap);
     divPortfolioContainer.appendChild(divPortfolioItem);
+    this.spinner.hide();
   }
 }

@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import * as routes from 'src/app/shared/routes.contants';
 import { AuthHelperService } from "./auth-helper.service";
+import { ProjectImageResoponse } from "../models/project-images-response-model";
 
 @Injectable({
     providedIn: 'root'
@@ -73,5 +74,10 @@ export class ImagesService {
         formData.append('file', file);  
 
         return this.http.post(routes.UPLOAD_MAIN_PROJECT_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
+    }
+
+    getAllProjectImages(): Observable<ProjectImageResoponse[]> {
+
+        return this.http.get<ProjectImageResoponse[]>(routes.GET_ALL_PROJECT_IMAGES_ENDPOINT, { params: this.authHelperService.getParams() });
     }
 }
