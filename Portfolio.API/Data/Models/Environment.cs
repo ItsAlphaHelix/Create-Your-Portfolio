@@ -1,7 +1,6 @@
 ﻿namespace Portfolio.API.Data.Models
 {
     using System.ComponentModel.DataAnnotations;
-
     public class Environment
     {
         [Key]

@@ -12,7 +12,14 @@
         /// </summary>
         /// <param name="formFile"></param>
         /// <returns></returns>
-        Task<ImageUploadResult> UploadProfileImageAsync(IFormFile formFile, string userId);
+        Task<ImageUploadResult> UploadProfileImageAsync(IFormFile file, string userId);
+
+        /// <summary>
+        /// Every time this method is invoked, the user will be able to upload their own project picture to the Cloudinary service.
+        /// </summary>
+        /// <param name="formFile"></param>
+        /// <returns></returns>
+        Task<ImageUploadResult> UploadProjectMainImageAsync(IFormFile file, string userId);
 
         /// <summary>
         /// The method should retrieve the user's profile image from the database and return it.
@@ -58,6 +65,7 @@
         /// <returns></returns>
         Task<UploadImageDto> SaveImageUrlToDatabaseAsync(string imageUrl, UserImage image, string userId);
 
+        Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image);
 
         /// <summary>
         /// Retrieve the existing image URL by user ID and update it.

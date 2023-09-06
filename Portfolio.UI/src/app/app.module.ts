@@ -16,6 +16,7 @@ import { AddAboutInformationComponent } from './components/add-about-page/add-ab
 import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer-page/footer-page.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ProjectComponent } from './components/project-page/project-page.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     AddAboutInformationComponent,
     EditAboutPageComponent,
     FooterComponent,
+    ProjectComponent,
   ],
   imports: [
     BrowserModule,

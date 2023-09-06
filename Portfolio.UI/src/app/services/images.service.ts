@@ -67,4 +67,11 @@ export class ImagesService {
 
         return this.http.put(routes.UPDATE_HOME_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
     }
+
+    uploadMainProjectImage(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);  
+
+        return this.http.post(routes.UPLOAD_MAIN_PROJECT_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
+    }
 }

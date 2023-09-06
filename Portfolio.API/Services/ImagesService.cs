@@ -12,9 +12,11 @@
     {
         private readonly Cloudinary cloudinary;
         private readonly IRepository<UserImage> userImagesRepository;
+        private readonly IRepository<Project> projectRepository;
         public ImagesService(
             IConfiguration configuration,
-            IRepository<UserImage> userImagesRepository)
+            IRepository<UserImage> userImagesRepository,
+            IRepository<Project> projectRepository)
         {
             Account account = new Account(
                 configuration["CloudinarySettings:Name"],
@@ -23,6 +25,7 @@
 
             cloudinary = new Cloudinary(account);
             this.userImagesRepository = userImagesRepository;
+            this.projectRepository = projectRepository;
         }
 
         public async Task<string> GetUserHomePageImageUrlAsync(string userId)
@@ -114,7 +117,7 @@
                 ImageUrl = imageUrl
             };
 
-            CheckNameOfImage(imageUrl, imageForEdit);
+            CheckNameOfImageAndEdit(imageUrl, imageForEdit);
 
             await userImagesRepository.SaveChangesAsync();
 
@@ -133,7 +136,7 @@
 
             if (userImage != null)
             {
-                CheckNameOfImage(imageUrl, userImage);
+                CheckNameOfImageAndEdit(imageUrl, userImage);
 
                 await userImagesRepository.SaveChangesAsync();
 
@@ -146,12 +149,35 @@
             return responseDto;
         }
 
+        public async Task<ImageUploadResult> UploadProjectMainImageAsync(IFormFile file, string userId)
+        {
+            int heigth = 600;
+            int width = 800;
+            string publicId = "project" + userId;
+            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
+
+            return uploadResult;
+        }
+
+        public async Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image)
+        {
+            var responseDto = new UploadImageDto()
+            {
+                ImageUrl = imageUrl
+            };
+
+            await this.projectRepository.AddAsync(image);
+            await this.projectRepository.SaveChangesAsync();
+
+            return responseDto;
+        }
+
         /// <summary>
-        /// This method checks the public IDs of images.
+        /// This method checks the public IDs of images and edit them.
         /// </summary>
         /// <param name="imageUrl"></param>
         /// <param name="imageForEdit"></param>
-        private static void CheckNameOfImage(string imageUrl, UserImage? imageForEdit)
+        private static void CheckNameOfImageAndEdit(string imageUrl, UserImage? imageForEdit)
         {
             if (imageUrl.Contains("about"))
             {

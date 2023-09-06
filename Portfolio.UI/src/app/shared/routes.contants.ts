@@ -27,3 +27,6 @@ export const GET_LANGUAGE_PERCENTAGES_ENDPOINT = `${environment.baseUrlApi}/api/
 export const GET_GITHUB_REPOSITORY_LANGUAGES_ENDPOINT = `${environment.baseUrlApi}/api/about-me/get-github-repo-languages`;
 
 export const UPDATE_ABOUT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/about-me/edit-about-image`;
+
+//User's project api end-points
+export const UPLOAD_MAIN_PROJECT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/projects/upload-project-image`;
