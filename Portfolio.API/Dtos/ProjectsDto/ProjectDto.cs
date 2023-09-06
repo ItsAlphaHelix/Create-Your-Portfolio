@@ -10,6 +10,8 @@
 
         public string DeploymentUrl { get; set; }
 
+        public string ProjectMainImageUrl{ get; set; }
+
         public string GitHubUrl { get; set; }
     }
 }

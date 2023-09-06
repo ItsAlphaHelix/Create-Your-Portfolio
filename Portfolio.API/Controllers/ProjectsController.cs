@@ -50,5 +50,14 @@
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("get-all-project-images")]
+        public async Task<IActionResult> GetAllProjectImages([FromQuery] string userId)
+        {
+            var result = await this.projectService.GetAllProjectImages(userId);
+
+            return Ok(result);
+        }
     }
 }

@@ -5,5 +5,7 @@
     public interface IProjectService
     {
         Task<Project> AddProjectDetails(ProjectDto model, int projectId);
+
+        Task<IEnumerable<ProjectMainImageDto>> GetAllProjectImages(string userId);
     }
 }

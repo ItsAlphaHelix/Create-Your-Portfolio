@@ -30,5 +30,19 @@
 
             return project; 
         }
+
+        public async Task<IEnumerable<ProjectMainImageDto>> GetAllProjectImages(string userId)
+        {
+            var projects = await this.projectsRepository
+                .AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new ProjectMainImageDto()
+                {
+                    ProjectMainImageUrl = x.MainImageUrl
+                })
+                .ToListAsync();
+
+            return projects;
+        }
     }
 }
