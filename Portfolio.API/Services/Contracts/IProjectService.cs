@@ -7,5 +7,7 @@
         Task<Project> AddProjectDetails(ProjectDto model, int projectId);
 
         Task<IEnumerable<ProjectMainImageDto>> GetAllProjectImages(string userId);
+
+        Task<ProjectDto> GetProjectById(int projectId);
     }
 }

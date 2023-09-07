@@ -5,6 +5,7 @@
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ProjectsDto;
     using Portfolio.API.Services.Contracts;
+    using SendGrid.Helpers.Errors.Model;
 
     [Route("api/projects")]
     [ApiController]
@@ -43,8 +44,8 @@
         }
 
         [HttpPost]
-        [Route("add-project")]
-        public async Task<IActionResult> AddProject([FromQuery] int projectId, [FromBody] ProjectDto project)
+        [Route("add-project/{projectId}")]
+        public async Task<IActionResult> AddProject([FromBody] ProjectDto project, int projectId)
         {
             var result = await this.projectService.AddProjectDetails(project, projectId);
 
@@ -58,6 +59,14 @@
             var result = await this.projectService.GetAllProjectImages(userId);
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("get-project/{id}")]
+        public async Task<IActionResult> GetProject(int id)
+        {
+             var result = await this.projectService.GetProjectById(id);          
+             return Ok(result);
         }
     }
 }
