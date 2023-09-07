@@ -33,7 +33,7 @@ export class AboutComponent implements OnInit {
   ngOnInit(): void {
     this.initAos();
     this.getAboutImage();
-    this.getAboutUser();
+    this.getAboutInformation();
     this.timeOut();
   }
   
@@ -71,7 +71,7 @@ export class AboutComponent implements OnInit {
     });
   }
 
-  getAboutUser(): void {
+  getAboutInformation(): void {
     this.aboutMeService.getAboutUsersInformation().subscribe({
       next: (response) => {
         if (response) {

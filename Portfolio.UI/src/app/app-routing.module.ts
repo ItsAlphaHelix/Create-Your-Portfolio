@@ -10,6 +10,8 @@ import { AboutComponent } from './components/about-page/about-me-page.component'
 import { EditAboutPageComponent } from './components/edit-about-page/edit-about-page.component';
 import { AddAboutInformationComponent } from './components/add-about-page/add-about-page.component';
 import { ProjectComponent } from './components/project-page/project-page.component';
+import { AddProjectComponent } from './components/add-project-page/add-project-page.component';
+import { ProjectDetailsComponent } from './components/project-details-page/project-details-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -18,6 +20,8 @@ const routes: Routes = [
   { path: 'about/edit/:aboutId', component: EditAboutPageComponent, canActivate: [AuthGuard] },
   { path: 'about/add', component: AddAboutInformationComponent, canActivate: [AuthGuard] },
   { path: 'projects', component: ProjectComponent, canActivate: [AuthGuard] },
+  { path: 'projects/add/:projectId', component: AddProjectComponent, canActivate: [AuthGuard] },
+  { path: 'project/details/:projectId', component: ProjectDetailsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgottenPasswordComponent },
@@ -26,7 +30,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)], //{ useHash: true }
+  imports: [RouterModule.forRoot(routes, { useHash: true })], //{ useHash: true }
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

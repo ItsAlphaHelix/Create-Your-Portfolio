@@ -1,0 +1,33 @@
+<div class="container">
+    <form id="contact" [formGroup]="projectForm">
+        <h3>Add Project</h3>
+        <br>
+        <fieldset>
+            <strong>Project Name</strong>
+            <input placeholder="Project Name" type="text" formControlName="name">
+        </fieldset>
+        <fieldset>
+            <strong>Project Category</strong>
+            <input placeholder="Project Category" type="text" formControlName="category">
+        </fieldset>
+        <fieldset>
+            <strong>Project Environment</strong>
+            <input placeholder="Project Environment " type="text" formControlName="environment">
+        </fieldset>
+        <fieldset>
+            <strong>Deployment Url</strong>
+            <input placeholder="Deployment Url" type="text" formControlName="deploymentUrl">
+        </fieldset>
+        <fieldset>
+            <strong>Github Url</strong>
+            <input placeholder="Github Url" type="text" formControlName="gitHubUrl">
+        </fieldset>
+        <fieldset>
+            <strong>Project Description</strong>
+            <textarea placeholder="Tell more about for your project..." formControlName="description"></textarea>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit" (click)="addProject()">Add</button>
+        </fieldset>
+    </form>
+</div>

@@ -1,0 +1,46 @@
+<section id="portfolio-details" class="portfolio-details">
+    <div class="container">
+
+        <div class="row gy-4">
+
+            <div class="col-lg-8">
+                <div class="portfolio-details-slider swiper">
+                    <div class="swiper-wrapper align-items-center">
+
+                        <div class="swiper-slide">
+                            <img src="assets/img/portfolio/portfolio-details-1.jpg" alt="">
+                        </div>
+
+                        <div class="swiper-slide">
+                            <img src="assets/img/portfolio/portfolio-details-2.jpg" alt="">
+                        </div>
+
+                        <div class="swiper-slide">
+                            <img src="assets/img/portfolio/portfolio-details-3.jpg" alt="">
+                        </div>
+
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="portfolio-info">
+                    <h3>Project information</h3>
+                    <ul>
+                        <li><strong>Category</strong>: {{projectResponse.category}}</li>
+                        <li><strong>Environment</strong>: {{projectResponse.environment}}</li>
+                        <li><strong>Deployment Url</strong>: {{projectResponse.deploymentUrl}}</li>
+                        <li><strong>Github Url</strong>: <a href="#">{{projectResponse.gitHubUrl}}</a></li>
+                    </ul>
+                </div>
+                <div class="portfolio-description">
+                    <h2>This is description of my project</h2>
+                    <p>{{projectResponse.description}}</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>

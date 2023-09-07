@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, Renderer2 } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProjectImageResoponse } from 'src/app/models/project-images-response-model';
+import { UserProject } from 'src/app/models/user-project.model';
 import { ImagesService } from 'src/app/services/images.service';
+import { ProjectsService } from 'src/app/services/projects.service';
 
 @Component({
   selector: 'app-project-page',
@@ -14,11 +16,13 @@ export class ProjectComponent implements OnInit{
   constructor(
     private imagesService: ImagesService,
     private spinner: NgxSpinnerService,
+    private projectService: ProjectsService,
+    private route: ActivatedRoute,
     private elRef: ElementRef,
     private renderer: Renderer2,
     private router: Router) { }
 
-  responseProjectImages!: ProjectImageResoponse[];
+  projectImageResponse!: ProjectImageResoponse[];
 
   ngOnInit(): void {
     this.getProjectImages();
@@ -37,7 +41,6 @@ export class ProjectComponent implements OnInit{
 
   @HostListener('document:click', ['$event'])
    handleClick(event: Event): void {
-    debugger
     if (event.target instanceof HTMLAnchorElement) {
       const element = event.target as HTMLAnchorElement;
       if (element.className === 'routerlink') {
@@ -68,8 +71,8 @@ export class ProjectComponent implements OnInit{
   getProjectImages() {
     this.imagesService.getAllProjectImages().subscribe(
       (response) => {
-        this.responseProjectImages = response;
-        console.log(this.responseProjectImages);
+        this.projectImageResponse = response;
+        console.log(this.projectImageResponse);
       }
     );
   }
