@@ -659,7 +659,9 @@ ul span {
 # Portfolio Details
 --------------------------------------------------------------*/
 .portfolio-details {
-  padding-top: 40px;
+  /* padding-top: 40px; */
+  width: 100%;
+  height: 100vh;
 }
 
 .portfolio-details .portfolio-details-slider img {
