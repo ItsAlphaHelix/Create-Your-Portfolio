@@ -2,10 +2,8 @@
     <div class="container">
 
         <div class="section-title">
-            <h2>Portfolio</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint
-                consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat
-                sit in iste officiis commodi quidem hic quas.</p>
+            <h2>All Projects</h2>
+            <p>This is my all projects. Feel free to view them.</p>
         </div>
 
         <div class="row"> <!-- data-aos="fade-up" -->
@@ -25,7 +23,7 @@
                 <div class="portfolio-wrap">
                     <img src="assets/img/upload-image.png" class="img-fluid" alt="">
                     <div class="portfolio-links">
-                        <a class="portfolio-lightbox" title="Upload Project Image"><i class="bx bx-upload"></i></a>
+                        <a class="portfolio-lightbox" title="Upload Project Image"><i class='bx bx-image-add'></i></a>
                     </div>
                 </div>
             </div>
@@ -35,8 +33,12 @@
                     <img [src]="response.projectMainImageUrl" class="img-fluid" alt="">
                     <div class="portfolio-links">
                         <a [href]="response.projectMainImageUrl" data-gallery="portfolioGallery" class="portfolio-lightbox"
-                            title="Zoom"><i class="bx bx-plus"></i></a>
-                        <a href="" title="More Details" [routerLink]="['/project', 'details', response.projectId]"><i class="bx bx-link"></i></a>
+                            title="Zoom"><i class='bx bxl-zoom'></i></a>
+                        <a *ngIf="response.name; else project" href="" title="More Details" [routerLink]="['/project', 'details', response.projectId]"><i class="bx bx-link"></i></a>
+
+                        <ng-template #project>
+                            <a href="" title="Add Project" [routerLink]="['/projects', 'add', response.projectId]"><i class="bx bx-plus"></i></a>
+                        </ng-template>
                     </div>
                 </div>
             </div>
@@ -45,3 +47,4 @@
         </div>
     </div>
 </section>
+<!-- <i class="bx bx-link"></i> -->

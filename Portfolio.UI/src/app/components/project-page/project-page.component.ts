@@ -23,9 +23,11 @@ export class ProjectComponent implements OnInit{
     private router: Router) { }
 
   projectImageResponse!: ProjectImageResoponse[];
+  projectId!: Number;
 
   ngOnInit(): void {
     this.getProjectImages();
+    this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
   }
 
   openFileInput(): void {
@@ -62,6 +64,7 @@ export class ProjectComponent implements OnInit{
         (response) => {
           if (response) {
             this.createProjectDinamically(response);
+            console.log(response);
           }
         }
       );
@@ -72,7 +75,6 @@ export class ProjectComponent implements OnInit{
     this.imagesService.getAllProjectImages().subscribe(
       (response) => {
         this.projectImageResponse = response;
-        console.log(this.projectImageResponse);
       }
     );
   }
@@ -107,7 +109,7 @@ export class ProjectComponent implements OnInit{
 
     const anchorPortfolioDetails = this.renderer.createElement('a');
     this.renderer.addClass(anchorPortfolioDetails, 'routerlink');
-    this.renderer.setAttribute(anchorPortfolioDetails, 'href', 'about');
+    this.renderer.setAttribute(anchorPortfolioDetails, 'href', `projects/add/34`);
     this.renderer.setAttribute(anchorPortfolioDetails, 'title', 'More Details');
     
     const iBxLink = this.renderer.createElement('i');

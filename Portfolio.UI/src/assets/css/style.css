@@ -689,6 +689,7 @@ ul span {
 }
 
 .portfolio-details .portfolio-info h3 {
+  color: #4033fa;
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 20px;
@@ -697,6 +698,7 @@ ul span {
 }
 
 .portfolio-details .portfolio-info ul {
+  color: #fff;
   list-style: none;
   padding: 0;
   font-size: 15px;
@@ -711,12 +713,14 @@ ul span {
 }
 
 .portfolio-details .portfolio-description h2 {
+  color: #4033fa;
   font-size: 26px;
   font-weight: 700;
   margin-bottom: 20px;
 }
 
 .portfolio-details .portfolio-description p {
+  color: #fff;
   padding: 0;
 }
 

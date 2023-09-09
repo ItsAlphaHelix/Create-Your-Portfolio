@@ -29,9 +29,6 @@ export class ProjectDetailsComponent implements OnInit{
         if (response) {
           this.projectResponse = response;
         }
-      },
-      error: () => {
-        this.router.navigate(['projects', 'add', projectId]);
       }
     }
     );
