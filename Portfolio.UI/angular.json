@@ -34,12 +34,10 @@
             "src/assets/vendor/glightbox/css/glightbox.min.css",
             "src/assets/css/style.css",
             "node_modules/ngx-toastr/toastr.css",
-            "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
-            "node_modules/swiper/swiper-bundle.min.css"
+            "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
           ],
             "scripts": [
-              "node_modules/waypoints/lib/noframework.waypoints.min.js",
-              "node_modules/swiper/swiper-bundle.min.js"
+              "node_modules/waypoints/lib/noframework.waypoints.min.js"
             ]
           },
           "configurations": {

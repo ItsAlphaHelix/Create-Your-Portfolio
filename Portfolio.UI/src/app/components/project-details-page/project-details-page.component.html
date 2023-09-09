@@ -6,20 +6,10 @@
             <div class="col-lg-8">
                 <div class="portfolio-details-slider swiper">
                     <div class="swiper-wrapper align-items-center">
-
                         <div class="swiper-slide">
                             <img src="assets/img/portfolio/portfolio-details-1.jpg" alt="">
                         </div>
-
-                        <div class="swiper-slide">
-                            <img src="assets/img/portfolio/portfolio-details-2.jpg" alt="">
-                        </div>
-
-                        <div class="swiper-slide">
-                            <img src="assets/img/portfolio/portfolio-details-3.jpg" alt="">
-                        </div>
                     </div>
-                    <div class="swiper-pagination"></div>
                 </div>
             </div>
 
@@ -27,10 +17,11 @@
                 <div class="portfolio-info">
                     <h3>Project information</h3>
                     <ul>
+                        <li><strong>Name</strong>: {{projectResponse?.name}}</li>
                         <li><strong>Category</strong>: {{projectResponse?.category}}</li>
                         <li><strong>Environment</strong>: {{projectResponse?.environment}}</li>
-                        <li><strong>Deployment Url</strong>: {{projectResponse?.deploymentUrl}}</li>
-                        <li><strong>Github Url</strong>: <a href="#">{{projectResponse?.gitHubUrl}}</a></li>
+                        <li><strong>Deployment Url</strong>: <a [href]="projectResponse?.deploymentUrl" target="_blank">{{projectResponse?.deploymentUrl}}</a></li>
+                        <li><strong>Github Url</strong>: <a [href]="projectResponse?.gitHubUrl" target="_blank">{{projectResponse?.gitHubUrl}}</a></li>
                     </ul>
                 </div>
                 <div class="portfolio-description">
@@ -38,8 +29,6 @@
                     <p>{{projectResponse?.description}}</p>
                 </div>
             </div>
-
         </div>
-
     </div>
 </section>

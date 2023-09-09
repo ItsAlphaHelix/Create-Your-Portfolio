@@ -2,7 +2,9 @@ import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, Rendere
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProjectImageResoponse } from 'src/app/models/project-images-response-model';
+import { UserProject } from 'src/app/models/user-project.model';
 import { ImagesService } from 'src/app/services/images.service';
+import { ProjectsService } from 'src/app/services/projects.service';
 
 @Component({
   selector: 'app-project-page',
