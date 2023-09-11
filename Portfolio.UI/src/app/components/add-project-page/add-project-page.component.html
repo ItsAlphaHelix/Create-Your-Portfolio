@@ -8,23 +8,33 @@
         </fieldset>
         <fieldset>
             <strong>Project Category</strong>
-            <input placeholder="Project Category" type="text" formControlName="category">
+            <input placeholder="Type one or more categories" type="text" formControlName="category">
         </fieldset>
-        <fieldset>
-            <strong>Project Environment</strong>
-            <input placeholder="Project Environment " type="text" formControlName="environment">
-        </fieldset>
+    <fieldset>
+        <strong>Project Environment</strong>
+        <select formControlName="environment">
+            <option>Production</option>
+            <option>Development</option>
+            <option>None</option>
+        </select>
+    </fieldset>
         <fieldset>
             <strong>Deployment Url</strong>
-            <input placeholder="Deployment Url" type="text" formControlName="deploymentUrl">
+            <input placeholder="If you have a host for your project, please enter the URL" type="text" formControlName="deploymentUrl">
         </fieldset>
         <fieldset>
-            <strong>Github Url</strong>
-            <input placeholder="Github Url" type="text" formControlName="gitHubUrl">
+            <strong>Repository Url</strong>
+            <input placeholder="If you have a GitHub project repo, please enter the URL" type="text" formControlName="gitHubUrl">
         </fieldset>
         <fieldset>
             <strong>Project Description</strong>
             <textarea placeholder="Tell more about for your project..." formControlName="description"></textarea>
+        </fieldset>
+        <fieldset>
+            <div class="custom-file-input">
+                <input type="file" class="file-input" (change)="uploadImage($event)">
+                <label for="upload_file" class="file-label">Choose an image</label>
+            </div>
         </fieldset>
         <fieldset>
             <button name="submit" type="submit" id="contact-submit" (click)="addProject()">Add</button>

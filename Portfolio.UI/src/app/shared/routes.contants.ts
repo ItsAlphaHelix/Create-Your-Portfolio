@@ -29,7 +29,8 @@ export const GET_GITHUB_REPOSITORY_LANGUAGES_ENDPOINT = `${environment.baseUrlAp
 export const UPDATE_ABOUT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/about-me/edit-about-image`;
 
 //User's project api end-points
-export const UPLOAD_MAIN_PROJECT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/projects/upload-project-image`;
+export const UPLOAD_MAIN_PROJECT_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/projects/upload-project-main-image`;
+export const UPLOAD_PROJECT_DETAILS_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/projects/upload-project-details-image`;
 export const GET_ALL_PROJECT_IMAGES_ENDPOINT = `${environment.baseUrlApi}/api/projects/get-all-project-images`;
 export const ADD_PROJECT_ENDPOINT = `${environment.baseUrlApi}/api/projects/add-project/`;
 export const GET_PROJECT_BY_ID_ENDPOINT = `${environment.baseUrlApi}/api/projects/get-project/`;

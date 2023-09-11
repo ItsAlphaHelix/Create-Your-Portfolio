@@ -76,6 +76,13 @@ export class ImagesService {
         return this.http.post(routes.UPLOAD_MAIN_PROJECT_IMAGE_ENDPOINT, formData, { params: this.authHelperService.getParams() });
     }
 
+    uploadProjectDetailsImage(file: File, projectId: string): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+        const params = { projectId };
+        return this.http.post(routes.UPLOAD_PROJECT_DETAILS_IMAGE_ENDPOINT, formData, { params });
+    }
+
     getAllProjectImages(): Observable<ProjectImageResoponse[]> {
 
         return this.http.get<ProjectImageResoponse[]>(routes.GET_ALL_PROJECT_IMAGES_ENDPOINT, { params: this.authHelperService.getParams() });

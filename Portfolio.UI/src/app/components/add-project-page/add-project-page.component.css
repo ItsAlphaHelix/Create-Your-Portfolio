@@ -13,7 +13,12 @@
     text-rendering: optimizeLegibility;
 }
 
-
+select {
+    width: 100%;
+    border-radius: 15px;
+    padding: 7px;
+    margin: 0 0 5px;
+}
 .container {
     max-width: 400px;
     width: 100%;
