@@ -5,6 +5,7 @@
     using Microsoft.EntityFrameworkCore;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ImagesDtos;
+    using Portfolio.API.Dtos.ProjectsDto;
     using Portfolio.API.Services.Contracts;
     using Portfolio.Data.Repositories;
 
@@ -235,7 +236,7 @@
             return uploadResult;
         }
 
-        public async Task<ImageUploadResult> UploadProjectDetailsImage(IFormFile file)
+        public async Task<ImageUploadResult> UploadProjectDetailsImageAsync(IFormFile file)
         {
             int heigth = 600;
             int width = 1288;
@@ -243,6 +244,20 @@
             ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
 
             return uploadResult;
+        }
+
+        public async Task<string> GetProjectDetailsImageUrlAsync(int projectId)
+        {
+            var projectImage = await this.projectRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == projectId)
+                .Select(x => new ProjectDetailsImageDto()
+                {
+                    ImageUrl = x.ProjectDetailsImageUrl
+                })
+                .FirstOrDefaultAsync();
+
+            return projectImage.ImageUrl;
         }
     }
 }

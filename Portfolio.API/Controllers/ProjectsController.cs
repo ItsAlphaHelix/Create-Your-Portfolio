@@ -47,7 +47,7 @@
         [Route("upload-project-details-image")]
         public async Task<IActionResult> UploadDetailsImage(IFormFile file, [FromQuery] int projectId)
         {
-            var result = await this.imagesService.UploadProjectDetailsImage(file);
+            var result = await this.imagesService.UploadProjectDetailsImageAsync(file);
 
             if (result.Error != null)
             {
@@ -90,6 +90,22 @@
         {
              var result = await this.projectService.GetProjectById(id);          
              return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("get-project-details-image")]
+        public async Task<IActionResult> GetProjectDetailsImage([FromQuery] int projectId)
+        {
+            try
+            {
+                string imageUrl = await this.imagesService.GetProjectDetailsImageUrlAsync(projectId);
+
+                return Ok(new { imageUrl });
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

@@ -21,7 +21,9 @@
         /// <returns></returns>
         Task<ImageUploadResult> UploadProjectMainImageAsync(IFormFile file, string userId);
 
-        Task<ImageUploadResult> UploadProjectDetailsImage(IFormFile file);
+        Task<ImageUploadResult> UploadProjectDetailsImageAsync(IFormFile file);
+
+        Task<string> GetProjectDetailsImageUrlAsync(int projectId);
 
         /// <summary>
         /// The method should retrieve the user's profile image from the database and return it.
