@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserProject } from 'src/app/models/user-project.model';
+import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
 
 
@@ -15,15 +16,17 @@ export class ProjectDetailsComponent implements OnInit{
      private route: ActivatedRoute,
      private router: Router,
      private projectService: ProjectsService,
-     private elRef: ElementRef) {
+     private elRef: ElementRef,
+     private imagesService: ImagesService) {
   }
-  
-  ngOnInit(): void {
-    
-    this.getProject();
-  }
-  //  fileInput.setAttribute('multiple', 'multiple');
+
   projectResponse: UserProject | undefined;
+  imageUrl!: string;
+
+  ngOnInit(): void {
+    this.getProject();
+    this.getImage();
+  }
 
   getProject() {
     const projectId = this.route.snapshot.paramMap.get('projectId');
@@ -36,5 +39,15 @@ export class ProjectDetailsComponent implements OnInit{
       }
     }
     );
+  }
+
+  getImage() {
+    debugger;
+    const projectId = this.route.snapshot.paramMap.get('projectId')!;
+    this.imagesService.getProjectDetailsImage(projectId).subscribe({
+      next: (response) => {
+        this.imageUrl = response.imageUrl;
+      }
+    });
   }
 }
