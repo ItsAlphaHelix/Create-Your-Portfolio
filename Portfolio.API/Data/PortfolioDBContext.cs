@@ -22,11 +22,7 @@
 
         public DbSet<Project> Projects { get; set; }
 
-        public DbSet<Category> Categories { get; set; }
-
         public DbSet<ProjectImage> ProjectImages { get; set; }
-
-        public DbSet<Environment> Environments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -21,6 +21,8 @@
         /// <returns></returns>
         Task<ImageUploadResult> UploadProjectMainImageAsync(IFormFile file, string userId);
 
+        Task<ImageUploadResult> UploadProjectDetailsImage(IFormFile file);
+
         /// <summary>
         /// The method should retrieve the user's profile image from the database and return it.
         /// </summary>
@@ -65,7 +67,7 @@
         /// <returns></returns>
         Task<UploadImageDto> SaveImageUrlToDatabaseAsync(string imageUrl, UserImage image, string userId);
 
-        Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image);
+        Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image, int projectId);
 
         /// <summary>
         /// Retrieve the existing image URL by user ID and update it.

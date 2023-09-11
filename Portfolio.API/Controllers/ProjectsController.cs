@@ -20,8 +20,8 @@
         }
 
         [HttpPost]
-        [Route("upload-project-image")]
-        public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string userId)
+        [Route("upload-project-main-image")]
+        public async Task<IActionResult> UploadMainImage(IFormFile file, [FromQuery] string userId)
         {
             var result = await this.imagesService.UploadProjectMainImageAsync(file, userId);
 
@@ -36,9 +36,32 @@
                 UserId = userId
             };
 
-            string aboutImageUrl = result.Url.AbsoluteUri;
+            string projectMainImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveProjectImageToDatabase(aboutImageUrl, projectImage);
+            var responseDto = await this.imagesService.SaveProjectImageToDatabase(projectMainImageUrl, projectImage, 0);
+
+            return Ok(responseDto);
+        }
+
+        [HttpPost]
+        [Route("upload-project-details-image")]
+        public async Task<IActionResult> UploadDetailsImage(IFormFile file, [FromQuery] int projectId)
+        {
+            var result = await this.imagesService.UploadProjectDetailsImage(file);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            var projectImage = new Project()
+            {
+                ProjectDetailsImageUrl = result.SecureUrl.AbsoluteUri,
+            };
+
+            string projectDetailsImageUrl = result.Url.AbsoluteUri;
+
+            var responseDto = await this.imagesService.SaveProjectImageToDatabase(projectDetailsImageUrl, projectImage, projectId);
 
             return Ok(responseDto);
         }

@@ -3,6 +3,9 @@
     public class ProjectMainImageDto
     {
         public int projectId { get; set; }
+
+        public string Name { get; set; }
+
         public string ProjectMainImageUrl { get; set; }
     }
 }

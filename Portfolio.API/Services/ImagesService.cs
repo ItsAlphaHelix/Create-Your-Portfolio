@@ -159,12 +159,26 @@
             return uploadResult;
         }
 
-        public async Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image)
+        public async Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image, int projectId)
         {
+            var projectImage = await this.projectRepository
+                .All()
+                .FirstOrDefaultAsync(x => x.Id == projectId);
+
+
             var responseDto = new UploadImageDto()
             {
                 ImageUrl = imageUrl
             };
+
+            if (projectImage != null)
+            {
+                projectImage.ProjectDetailsImageUrl = imageUrl;
+
+                await projectRepository.SaveChangesAsync();
+
+                return responseDto;
+            }
 
             await this.projectRepository.AddAsync(image);
             await this.projectRepository.SaveChangesAsync();
@@ -217,6 +231,16 @@
                 };
                 uploadResult = await cloudinary.UploadAsync(uploadParams);
             }
+
+            return uploadResult;
+        }
+
+        public async Task<ImageUploadResult> UploadProjectDetailsImage(IFormFile file)
+        {
+            int heigth = 600;
+            int width = 1288;
+            string publicId = "project-details";
+            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
 
             return uploadResult;
         }

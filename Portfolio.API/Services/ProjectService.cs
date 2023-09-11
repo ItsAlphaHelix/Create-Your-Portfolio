@@ -41,6 +41,7 @@
                 .Select(x => new ProjectMainImageDto()
                 {
                     projectId = x.Id,
+                    Name = x.Name,
                     ProjectMainImageUrl = x.MainImageUrl
                 })
                 .ToListAsync();
