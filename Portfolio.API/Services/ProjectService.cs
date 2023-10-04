@@ -10,7 +10,6 @@
     public class ProjectService : IProjectService
     {
         private readonly IRepository<Project> projectsRepository;
-
         public ProjectService(IRepository<Project> projectsRepository)
         {
             this.projectsRepository = projectsRepository;
@@ -27,7 +26,8 @@
             project.Environment = model.Environment;
             project.Category = model.Category;
             project.Description = model.Description;
-            //project.Images.Add()
+            //project.ProjectDetailsImageUrl = model.ProjectDetailsImageUrl;
+
             await this.projectsRepository.SaveChangesAsync();
 
             return project; 
@@ -58,6 +58,7 @@
                 {
                     Name = x.Name,
                     DeploymentUrl = x.DeploymentUrl,
+                   // ProjectDetailsImageUrl = x.ProjectDetailsImageUrl,
                     Category = x.Category,
                     Description = x.Description,
                     GitHubUrl = x.GitHubUrl,

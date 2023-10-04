@@ -56,7 +56,7 @@
 
             var projectImage = new Project()
             {
-                ProjectDetailsImageUrl = result.SecureUrl.AbsoluteUri,
+             //   ProjectDetailsImageUrl = result.SecureUrl.AbsoluteUri,
             };
 
             string projectDetailsImageUrl = result.Url.AbsoluteUri;

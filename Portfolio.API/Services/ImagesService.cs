@@ -174,7 +174,7 @@
 
             if (projectImage != null)
             {
-                projectImage.ProjectDetailsImageUrl = imageUrl;
+               // projectImage.ProjectDetailsImageUrl = imageUrl;
 
                 await projectRepository.SaveChangesAsync();
 
@@ -253,7 +253,7 @@
                 .Where(x => x.Id == projectId)
                 .Select(x => new ProjectDetailsImageDto()
                 {
-                    ImageUrl = x.ProjectDetailsImageUrl
+                   // ImageUrl = x.ProjectDetailsImageUrl
                 })
                 .FirstOrDefaultAsync();
 

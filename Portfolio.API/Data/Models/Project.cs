@@ -13,7 +13,7 @@
 
         public string? MainImageUrl { get; set; }
 
-        public string? ProjectDetailsImageUrl { get; set; }
+       // public string? ProjectDetailsImageUrl { get; set; }
 
         public string? DeploymentUrl { get; set; }
 

@@ -1,19 +1,13 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Portfolio.API.Data;
 using Portfolio.API.Data.Models;
-using Portfolio.API.ExceptionMiddlewares;
 using Portfolio.API.Extensions;
 using Portfolio.API.Services;
 using Portfolio.API.Services.Contracts;
 using Portfolio.Data.Repositories;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);

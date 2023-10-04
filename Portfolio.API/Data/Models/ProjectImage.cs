@@ -5,6 +5,7 @@
 
     public class ProjectImage
     {
+        //TODO: Set property for project details image
         [Key]
         public int Id { get; set; }
 
