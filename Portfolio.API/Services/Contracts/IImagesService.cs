@@ -8,20 +8,14 @@
     public interface IImagesService
     {
         /// <summary>
-        /// Every time this method is invoked, the user will be able to upload their own profile picture to the Cloudinary service.
+        /// Upload some image to cloudinary service.
         /// </summary>
-        /// <param name="formFile"></param>
+        /// <param name="file"></param>
+        /// <param name="heigth"></param>
+        /// <param name="width"></param>
+        /// <param name="publicId"></param>
         /// <returns></returns>
-        Task<ImageUploadResult> UploadProfileImageAsync(IFormFile file, string userId);
-
-        /// <summary>
-        /// Every time this method is invoked, the user will be able to upload their own project picture to the Cloudinary service.
-        /// </summary>
-        /// <param name="formFile"></param>
-        /// <returns></returns>
-        Task<ImageUploadResult> UploadProjectMainImageAsync(IFormFile file, string userId);
-
-        Task<ImageUploadResult> UploadProjectDetailsImageAsync(IFormFile file);
+        Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width, string publicId);
 
         Task<string> GetProjectDetailsImageUrlAsync(int projectId);
 
@@ -32,25 +26,12 @@
         Task<string> GetUserProfileImageUrlAsync(string userId);
 
         /// <summary>
-        /// Every time this method is invoked, the user will be able to upload their own home page picture to the Cloudinary service.
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        Task<ImageUploadResult> UploadHomePageImageAsync(IFormFile file, string userId);
-
-        /// <summary>
         /// The method should retrieve the user's home page image from the database and return it.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<string> GetUserHomePageImageUrlAsync(string userId);
 
-        /// <summary>
-        /// Uploading about user image to cloudinary service.
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        public Task<ImageUploadResult> UploadAboutImageAsync(IFormFile file, string userId);
 
         /// <summary>
         /// The method should retrieve the user's about image from the database and return it.
@@ -69,6 +50,13 @@
         /// <returns></returns>
         Task<UploadImageDto> SaveImageUrlToDatabaseAsync(string imageUrl, UserImage image, string userId);
 
+        /// <summary>
+        /// Saving project image to database.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <param name="image"></param>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image, int projectId);
 
         /// <summary>

@@ -10,10 +10,11 @@
 
         public string DeploymentUrl { get; set; }
 
-        public string ProjectDetailsImageUrl { get; set; }
+        public string? ProjectDetailsImageUrl { get; set; }
 
         public string Description { get; set; }
 
         public string GitHubUrl { get; set; }
     }
 }
+                                     

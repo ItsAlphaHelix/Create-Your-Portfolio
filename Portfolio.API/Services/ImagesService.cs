@@ -64,36 +64,7 @@
 
             return user.ImageUrl;
         }
-        public async Task<ImageUploadResult> UploadHomePageImageAsync(IFormFile file, string userId)
-        {
-            int heigth = 1280;
-            int width = 1920;
-            string publicId = "home" + userId;
 
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
-
-            return uploadResult;
-        }
-        public async Task<ImageUploadResult> UploadProfileImageAsync(IFormFile file, string userId)
-        {
-            int heigth = 600;
-            int width = 600;
-            string publicId = "profile" + userId;
-
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
-
-            return uploadResult;
-        }
-
-        public async Task<ImageUploadResult> UploadAboutImageAsync(IFormFile file, string userId)
-        {
-            int heigth = 600;
-            int width = 600;
-            string publicId = "about" + userId;
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
-
-            return uploadResult;
-        }
         public async Task<string> GetAboutImageUrlAsync(string userId)
         {
             var user = await userImagesRepository.AllAsNoTracking()
@@ -150,16 +121,6 @@
             return responseDto;
         }
 
-        public async Task<ImageUploadResult> UploadProjectMainImageAsync(IFormFile file, string userId)
-        {
-            int heigth = 600;
-            int width = 800;
-            string publicId = "project" + userId;
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
-
-            return uploadResult;
-        }
-
         public async Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image, int projectId)
         {
             var projectImage = await this.projectRepository
@@ -174,7 +135,7 @@
 
             if (projectImage != null)
             {
-               // projectImage.ProjectDetailsImageUrl = imageUrl;
+               projectImage.ProjectDetailsImageUrl = imageUrl;
 
                 await projectRepository.SaveChangesAsync();
 
@@ -208,15 +169,7 @@
             }
         }
 
-        /// <summary>
-        /// Uploading images to cloudinary service.
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="heigth"></param>
-        /// <param name="width"></param>
-        /// <param name="publicId"></param>
-        /// <returns></returns>
-        private async Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width, string publicId)
+        public async Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width, string publicId)
         {
             var uploadResult = new ImageUploadResult();
 
@@ -236,16 +189,6 @@
             return uploadResult;
         }
 
-        public async Task<ImageUploadResult> UploadProjectDetailsImageAsync(IFormFile file)
-        {
-            int heigth = 600;
-            int width = 1288;
-            string publicId = "project-details";
-            ImageUploadResult uploadResult = await UploadImageToCloudinary(file, heigth, width, publicId);
-
-            return uploadResult;
-        }
-
         public async Task<string> GetProjectDetailsImageUrlAsync(int projectId)
         {
             var projectImage = await this.projectRepository
@@ -253,7 +196,7 @@
                 .Where(x => x.Id == projectId)
                 .Select(x => new ProjectDetailsImageDto()
                 {
-                   // ImageUrl = x.ProjectDetailsImageUrl
+                    ImageUrl = x.ProjectDetailsImageUrl
                 })
                 .FirstOrDefaultAsync();
 

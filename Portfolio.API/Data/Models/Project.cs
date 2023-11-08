@@ -13,8 +13,6 @@
 
         public string? MainImageUrl { get; set; }
 
-       // public string? ProjectDetailsImageUrl { get; set; }
-
         public string? DeploymentUrl { get; set; }
 
         public string? GitHubUrl { get; set; }
@@ -23,6 +21,7 @@
 
         public string? Category { get; set; }
 
+        public string? ProjectDetailsImageUrl { get; set; }
 
         [ForeignKey(nameof(User))]
         public string UserId { get; set; }

@@ -26,7 +26,6 @@
             project.Environment = model.Environment;
             project.Category = model.Category;
             project.Description = model.Description;
-            //project.ProjectDetailsImageUrl = model.ProjectDetailsImageUrl;
 
             await this.projectsRepository.SaveChangesAsync();
 
@@ -58,7 +57,7 @@
                 {
                     Name = x.Name,
                     DeploymentUrl = x.DeploymentUrl,
-                   // ProjectDetailsImageUrl = x.ProjectDetailsImageUrl,
+                    ProjectDetailsImageUrl = x.ProjectDetailsImageUrl,
                     Category = x.Category,
                     Description = x.Description,
                     GitHubUrl = x.GitHubUrl,

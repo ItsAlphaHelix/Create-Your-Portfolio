@@ -9,7 +9,7 @@
         [Key]
         public int Id { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string ProjectDetailsImageUrl { get; set; }
 
 
         [ForeignKey(nameof(Project))]

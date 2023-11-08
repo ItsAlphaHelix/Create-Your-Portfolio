@@ -23,7 +23,13 @@
         [Route("upload-project-main-image")]
         public async Task<IActionResult> UploadMainImage(IFormFile file, [FromQuery] string userId)
         {
-            var result = await this.imagesService.UploadProjectMainImageAsync(file, userId);
+            int heigth = 600;
+            int width = 800;
+
+            string uniqueIdentifier = Guid.NewGuid().ToString();
+            string publicId = $"project_{uniqueIdentifier}";
+
+            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -47,7 +53,12 @@
         [Route("upload-project-details-image")]
         public async Task<IActionResult> UploadDetailsImage(IFormFile file, [FromQuery] int projectId)
         {
-            var result = await this.imagesService.UploadProjectDetailsImageAsync(file);
+            int heigth = 600;
+            int width = 1288;
+            string uniqueIdentifier = Guid.NewGuid().ToString();
+            string publicId = $"project_details_{uniqueIdentifier}";
+
+            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -56,7 +67,7 @@
 
             var projectImage = new Project()
             {
-             //   ProjectDetailsImageUrl = result.SecureUrl.AbsoluteUri,
+               ProjectDetailsImageUrl = result.SecureUrl.AbsoluteUri,
             };
 
             string projectDetailsImageUrl = result.Url.AbsoluteUri;

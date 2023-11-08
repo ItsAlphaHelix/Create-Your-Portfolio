@@ -18,7 +18,11 @@
         [Route("upload-profile-image")]
         public async Task<IActionResult> UploadProfileImage(IFormFile file, [FromQuery] string userId)
         {
-            var result = await this.imagesService.UploadProfileImageAsync(file, userId);
+            int heigth = 1280;
+            int width = 1920;
+            string publicId = "home" + userId;
+
+            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -42,7 +46,11 @@
         [Route("upload-homepage-image")]
         public async Task<IActionResult> UploadHomePageImage(IFormFile file, [FromQuery] string userId)
         {
-            var result = await this.imagesService.UploadHomePageImageAsync(file, userId);
+            int heigth = 1280;
+            int width = 1920;
+            string publicId = "home" + userId;
+
+            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -92,52 +100,52 @@
             }
         }
 
-        [HttpPut]
-        [Route("edit-profile-image")]
-        public async Task<IActionResult> EditProfileImage(IFormFile file, [FromQuery] string userId)
-        {
-            var result = await this.imagesService.UploadProfileImageAsync(file, userId);
+        //[HttpPut]
+        //[Route("edit-profile-image")]
+        //public async Task<IActionResult> EditProfileImage(IFormFile file, [FromQuery] string userId)
+        //{
+        //    var result = await this.imagesService.UploadProfileImageAsync(file, userId);
 
-            if (result.Error != null)
-            {
-                return BadRequest(result.Error.Message);
-            }
+        //    if (result.Error != null)
+        //    {
+        //        return BadRequest(result.Error.Message);
+        //    }
 
-            var userProfileImage = new UserImage()
-            {
-                ProfileImageUrl = result.SecureUrl.AbsoluteUri,
-                UserId = userId
-            };
+        //    var userProfileImage = new UserImage()
+        //    {
+        //        ProfileImageUrl = result.SecureUrl.AbsoluteUri,
+        //        UserId = userId
+        //    };
 
-            string profileImageUrl = result.Url.AbsoluteUri;
+        //    string profileImageUrl = result.Url.AbsoluteUri;
 
-            var response = await this.imagesService.EditImageUrlInDatabaseAsync(profileImageUrl, userProfileImage, userId);
+        //    var response = await this.imagesService.EditImageUrlInDatabaseAsync(profileImageUrl, userProfileImage, userId);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
-        [HttpPut]
-        [Route("edit-home-image")]
-        public async Task<IActionResult> EditHomeImage(IFormFile file, [FromQuery] string userId)
-        {
-            var result = await this.imagesService.UploadHomePageImageAsync(file, userId);
+        //[HttpPut]
+        //[Route("edit-home-image")]
+        //public async Task<IActionResult> EditHomeImage(IFormFile file, [FromQuery] string userId)
+        //{
+        //    var result = await this.imagesService.UploadHomePageImageAsync(file, userId);
 
-            if (result.Error != null)
-            {
-                return BadRequest(result.Error.Message);
-            }
+        //    if (result.Error != null)
+        //    {
+        //        return BadRequest(result.Error.Message);
+        //    }
 
-            var userHomeImageUrl = new UserImage()
-            {
-                HomePageImageUrl = result.SecureUrl.AbsoluteUri,
-                UserId = userId
-            };
+        //    var userHomeImageUrl = new UserImage()
+        //    {
+        //        HomePageImageUrl = result.SecureUrl.AbsoluteUri,
+        //        UserId = userId
+        //    };
 
-            string homeImageUrl = result.Url.AbsoluteUri;
+        //    string homeImageUrl = result.Url.AbsoluteUri;
 
-            var response = await this.imagesService.EditImageUrlInDatabaseAsync(homeImageUrl, userHomeImageUrl, userId);
+        //    var response = await this.imagesService.EditImageUrlInDatabaseAsync(homeImageUrl, userHomeImageUrl, userId);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
     }
 }

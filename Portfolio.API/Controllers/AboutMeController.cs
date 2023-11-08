@@ -42,7 +42,11 @@
         [Route("upload-about-image")]
         public async Task<IActionResult> UploadImage(IFormFile file, [FromQuery] string userId)
         {
-            var result = await this.imagesService.UploadAboutImageAsync(file, userId);
+            int heigth = 600;
+            int width = 600;
+            string publicId = "about" + userId;
+
+            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -137,29 +141,29 @@
             return Ok(result);
         }
 
-        [HttpPut]
-        [Route("edit-about-image")]
-        public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
-        {
-            var result = await this.imagesService.UploadAboutImageAsync(file, userId);
+        //[HttpPut]
+        //[Route("edit-about-image")]
+        //public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
+        //{
+        //    var result = await this.imagesService.UploadAboutImageAsync(file, userId);
 
-            if (result.Error != null)
-            {
-                return BadRequest(result.Error.Message);
-            }
+        //    if (result.Error != null)
+        //    {
+        //        return BadRequest(result.Error.Message);
+        //    }
 
-            var userAboutImage = new UserImage()
-            {
-                AboutImageUrl = result.SecureUrl.AbsoluteUri,
-                UserId = userId
-            };
+        //    var userAboutImage = new UserImage()
+        //    {
+        //        AboutImageUrl = result.SecureUrl.AbsoluteUri,
+        //        UserId = userId
+        //    };
 
-            string aboutImageUrl = result.Url.AbsoluteUri;
+        //    string aboutImageUrl = result.Url.AbsoluteUri;
 
-            var response = await this.imagesService.EditImageUrlInDatabaseAsync(aboutImageUrl, userAboutImage, userId);
+        //    var response = await this.imagesService.EditImageUrlInDatabaseAsync(aboutImageUrl, userAboutImage, userId);
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
 
         [HttpPut]
