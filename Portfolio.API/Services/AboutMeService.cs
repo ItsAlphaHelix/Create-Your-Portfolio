@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Portfolio.API.Data.Models;
+    using Portfolio.API.Dtos.ImagesDtos;
     using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services.Contracts;
     using Portfolio.Data.Repositories;
@@ -10,17 +11,19 @@
     public class AboutMeService : IAboutMeService
     {
         private readonly IRepository<ApplicationUser> usersRepository;
+        private readonly IRepository<UserImage> userImagesRepository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository<AboutUser> usersAboutRepository;
         public AboutMeService(
             IRepository<ApplicationUser> usersRepository,
             UserManager<ApplicationUser> userManager,
-            IRepository<AboutUser> usersAboutRepository)
+            IRepository<AboutUser> usersAboutRepository,
+            IRepository<UserImage> userImagesRepository)
         {
             this.usersRepository = usersRepository;
             this.userManager = userManager;
             this.usersAboutRepository = usersAboutRepository;
-
+            this.userImagesRepository = userImagesRepository;
         }
         public async Task AddAboutUsersInformationAsync(AboutUserDto model, string userId)
         {
@@ -112,6 +115,19 @@
             editAbout.PhoneNumber = model.PhoneNumber;
 
             await usersAboutRepository.SaveChangesAsync();
+        }
+
+        public async Task<string> GetAboutImageUrlAsync(string userId)
+        {
+            var user = await userImagesRepository.AllAsNoTracking()
+                .Where(x => x.UserId == userId)
+                .Select(x => new UploadImageDto()
+                {
+                    ImageUrl = x.AboutImageUrl
+                })
+                .FirstOrDefaultAsync();
+
+            return user.ImageUrl;
         }
     }
 }

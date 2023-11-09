@@ -9,5 +9,7 @@
         Task<IEnumerable<ProjectMainImageDto>> GetAllProjectImages(string userId);
 
         Task<ProjectDto> GetProjectById(int projectId);
+
+        Task<string> GetProjectDetailsImageUrlAsync(int projectId);
     }
 }

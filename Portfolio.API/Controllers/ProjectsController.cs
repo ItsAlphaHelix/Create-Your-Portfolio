@@ -11,12 +11,18 @@
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly IImagesService imagesService;
+        private readonly ICloudinaryService cloudinaryService;
         private readonly IProjectService projectService;
-        public ProjectsController(IImagesService imagesService, IProjectService projectService)
+        private readonly IDatabaseService databaseService;
+        public ProjectsController(
+            ICloudinaryService cloudinaryService,
+            IProjectService projectService,
+            IDatabaseService databaseService)
         {
-            this.imagesService = imagesService;
+            this.cloudinaryService = cloudinaryService;
             this.projectService = projectService;
+            this.databaseService = databaseService;
+
         }
 
         [HttpPost]
@@ -29,7 +35,7 @@
             string uniqueIdentifier = Guid.NewGuid().ToString();
             string publicId = $"project_{uniqueIdentifier}";
 
-            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -44,7 +50,7 @@
 
             string projectMainImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveProjectImageToDatabase(projectMainImageUrl, projectImage, 0);
+            var responseDto = await this.databaseService.SaveProjectImageToDatabase(projectMainImageUrl, projectImage, 0);
 
             return Ok(responseDto);
         }
@@ -58,7 +64,7 @@
             string uniqueIdentifier = Guid.NewGuid().ToString();
             string publicId = $"project_details_{uniqueIdentifier}";
 
-            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -72,7 +78,7 @@
 
             string projectDetailsImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveProjectImageToDatabase(projectDetailsImageUrl, projectImage, projectId);
+            var responseDto = await this.databaseService.SaveProjectImageToDatabase(projectDetailsImageUrl, projectImage, projectId);
 
             return Ok(responseDto);
         }
@@ -109,7 +115,7 @@
         {
             try
             {
-                string imageUrl = await this.imagesService.GetProjectDetailsImageUrlAsync(projectId);
+                string imageUrl = await this.projectService.GetProjectDetailsImageUrlAsync(projectId);
 
                 return Ok(new { imageUrl });
             }

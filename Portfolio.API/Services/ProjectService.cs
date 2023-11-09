@@ -73,5 +73,19 @@
 
             return project;
         }
+
+        public async Task<string> GetProjectDetailsImageUrlAsync(int projectId)
+        {
+            var projectImage = await this.projectsRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == projectId)
+                .Select(x => new ProjectDetailsImageDto()
+                {
+                    ImageUrl = x.ProjectDetailsImageUrl
+                })
+                .FirstOrDefaultAsync();
+
+            return projectImage.ImageUrl;
+        }
     }
 }

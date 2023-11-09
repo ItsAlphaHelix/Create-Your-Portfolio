@@ -14,17 +14,20 @@
     public class AboutMeController : ControllerBase
     {
         private readonly IAboutMeService aboutMeService;
-        private readonly IImagesService imagesService;
+        private readonly ICloudinaryService cloudinaryService;
+        private readonly IDatabaseService databaseService;
         private readonly IGitHubApiService gitHubApiService;
         private readonly RateLimitCheckerService rateLimitCheckerService;
         public AboutMeController(
             IAboutMeService usersProfileService,
-            IImagesService imagesService,
+            ICloudinaryService imagesService,
+            IDatabaseService databaseService,
             IGitHubApiService gitHubApiService,
             RateLimitCheckerService rateLimitCheckerService)
         {
             this.aboutMeService = usersProfileService;
-            this.imagesService = imagesService;
+            this.cloudinaryService = cloudinaryService;
+            this.databaseService = databaseService;
             this.gitHubApiService = gitHubApiService;
             this.rateLimitCheckerService = rateLimitCheckerService;
         }
@@ -46,7 +49,7 @@
             int width = 600;
             string publicId = "about" + userId;
 
-            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -61,7 +64,7 @@
 
             string aboutImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveImageUrlToDatabaseAsync(aboutImageUrl, userAboutImage, userId);
+            var responseDto = await this.databaseService.SaveImageUrlToDatabaseAsync(aboutImageUrl, userAboutImage, userId);
 
             return Ok(responseDto);
         }
@@ -88,7 +91,7 @@
         {
             try
             {
-                string imageUrl = await this.imagesService.GetAboutImageUrlAsync(userId);
+                string imageUrl = await this.aboutMeService.GetAboutImageUrlAsync(userId);
 
                 return Ok(new { imageUrl });
             }

@@ -57,10 +57,12 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IAccountsService, AccountsService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-builder.Services.AddScoped<IImagesService, ImagesService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 builder.Services.AddScoped<IAboutMeService, AboutMeService>();
 builder.Services.AddScoped<IGitHubApiService, GitHubApiService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IHomeService, HomeService>();
+builder.Services.AddScoped<IDatabaseService, DatabaseService>();
 builder.Services.AddScoped<RateLimitCheckerService>();
 builder.Services.AddSignalR();
 

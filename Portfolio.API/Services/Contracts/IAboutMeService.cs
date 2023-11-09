@@ -31,5 +31,13 @@
         /// <param name="model"></param>
         /// <returns></returns>
         Task EditAboutUsersInformationAsync(AboutUserDto model);
+
+
+        /// <summary>
+        /// The method should retrieve the user's about image from the database and return it.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<string> GetAboutImageUrlAsync(string userId);
     }
 }

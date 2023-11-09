@@ -8,10 +8,17 @@
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly IImagesService imagesService;
-        public HomeController(IImagesService imagesService)
+        private readonly ICloudinaryService cloudinaryService;
+        private readonly IHomeService homeService;
+        private readonly IDatabaseService databaseService;
+        public HomeController(
+            ICloudinaryService cloudinaryService,
+            IHomeService homeService,
+            IDatabaseService databaseService)
         {
-            this.imagesService = imagesService;
+            this.cloudinaryService = cloudinaryService;
+            this.homeService = homeService;
+            this.databaseService = databaseService;
         }
 
         [HttpPost]
@@ -22,7 +29,7 @@
             int width = 1920;
             string publicId = "home" + userId;
 
-            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -37,7 +44,7 @@
 
             string profilePictureUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveImageUrlToDatabaseAsync(profilePictureUrl, userProfileImage, userId);
+            var responseDto = await this.databaseService.SaveImageUrlToDatabaseAsync(profilePictureUrl, userProfileImage, userId);
 
             return Ok(responseDto);
         }
@@ -50,7 +57,7 @@
             int width = 1920;
             string publicId = "home" + userId;
 
-            var result = await this.imagesService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -65,7 +72,7 @@
 
             string profileHomeUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.imagesService.SaveImageUrlToDatabaseAsync(profileHomeUrl, userHomePageImage, userId);
+            var responseDto = await this.databaseService.SaveImageUrlToDatabaseAsync(profileHomeUrl, userHomePageImage, userId);
 
             return Ok(responseDto);
         }
@@ -76,7 +83,7 @@
         {
             try
             {
-                var imageUrl = await this.imagesService.GetUserProfileImageUrlAsync(userId);
+                var imageUrl = await this.homeService.GetUserProfileImageUrlAsync(userId);
                 return Ok(new { imageUrl });
             }
             catch (Exception ex)
@@ -91,7 +98,7 @@
         {
             try
             {
-                var imageUrl = await this.imagesService.GetUserHomePageImageUrlAsync(userId);
+                var imageUrl = await this.homeService.GetUserHomePageImageUrlAsync(userId);
                 return Ok(new { imageUrl });
             }
             catch (Exception ex)
