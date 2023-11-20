@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, Rendere
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ProjectImageResoponse } from 'src/app/models/project-images-response-model';
-import { UserProject } from 'src/app/models/user-project.model';
 import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
 
@@ -11,7 +10,7 @@ import { ProjectsService } from 'src/app/services/projects.service';
   templateUrl: './project-page.component.html',
   styleUrls: ['./project-page.component.css']
 })
-export class ProjectComponent implements OnInit{
+export class ProjectComponent implements OnInit {
 
   constructor(
     private imagesService: ImagesService,
@@ -41,7 +40,7 @@ export class ProjectComponent implements OnInit{
   }
 
   @HostListener('document:click', ['$event'])
-   handleClick(event: Event): void {
+  handleClick(event: Event): void {
     if (event.target instanceof HTMLAnchorElement) {
       const element = event.target as HTMLAnchorElement;
       if (element.className === 'routerlink') {
@@ -110,7 +109,7 @@ export class ProjectComponent implements OnInit{
     this.renderer.addClass(anchorPortfolioDetails, 'routerlink');
     this.renderer.setAttribute(anchorPortfolioDetails, 'href', `projects/add/34`);
     this.renderer.setAttribute(anchorPortfolioDetails, 'title', 'More Details');
-    
+
     const iBxLink = this.renderer.createElement('i');
     this.renderer.addClass(iBxLink, 'bx');
     this.renderer.addClass(iBxLink, 'bx-link');

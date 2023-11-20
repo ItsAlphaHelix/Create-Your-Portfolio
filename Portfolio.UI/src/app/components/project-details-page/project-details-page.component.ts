@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserProject } from 'src/app/models/user-project.model';
+import { ProjectResponse } from 'src/app/models/project-response.model';
 import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
 
@@ -10,22 +10,21 @@ import { ProjectsService } from 'src/app/services/projects.service';
   templateUrl: './project-details-page.component.html',
   styleUrls: ['./project-details-page.component.css']
 })
-export class ProjectDetailsComponent implements OnInit{
+export class ProjectDetailsComponent implements OnInit {
 
   constructor(
-     private route: ActivatedRoute,
-     private router: Router,
-     private projectService: ProjectsService,
-     private elRef: ElementRef,
-     private imagesService: ImagesService) {
+    private route: ActivatedRoute,
+    private router: Router,
+    private projectService: ProjectsService,
+    private elRef: ElementRef,
+    private imagesService: ImagesService) {
   }
 
-  projectResponse: UserProject | undefined;
+  projectResponse: ProjectResponse | undefined;
   imageUrl!: string;
 
   ngOnInit(): void {
     this.getProject();
-    this.getImage();
   }
 
   getProject() {
@@ -33,21 +32,11 @@ export class ProjectDetailsComponent implements OnInit{
     this.projectService.getProjectById(Number(projectId)).subscribe({
       next: (response) => {
         if (response) {
-          debugger;
+          console.log(response)
           this.projectResponse = response;
         }
       }
     }
     );
-  }
-
-  getImage() {
-    debugger;
-    const projectId = this.route.snapshot.paramMap.get('projectId')!;
-    this.imagesService.getProjectDetailsImage(projectId).subscribe({
-      next: (response) => {
-        this.imageUrl = response.imageUrl;
-      }
-    });
   }
 }

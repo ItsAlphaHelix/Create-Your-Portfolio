@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { UserProject } from 'src/app/models/user-project.model';
+import { ProjectRequest } from 'src/app/models/project-request-model';
 import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
 
@@ -18,9 +18,9 @@ export class AddProjectComponent {
     private route: ActivatedRoute,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private imagesService: ImagesService) {}
+    private imagesService: ImagesService) { }
 
-    projectForm = new FormGroup({
+  projectForm = new FormGroup({
     name: new FormControl("", Validators.required),
     category: new FormControl("", Validators.required),
     environment: new FormControl("Production", Validators.required),
@@ -29,7 +29,7 @@ export class AddProjectComponent {
     description: new FormControl("", Validators.required),
   });
 
-  projectFormRequest!: UserProject
+  projectFormRequest!: ProjectRequest
 
   addProject() {
     const projectId = this.route.snapshot.paramMap.get('projectId');

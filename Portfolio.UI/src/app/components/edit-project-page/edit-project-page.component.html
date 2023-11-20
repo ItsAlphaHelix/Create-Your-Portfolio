@@ -1,0 +1,45 @@
+<div class="container">
+    <form id="contact" [formGroup]="editForm">
+        <h3>Edit Project</h3>
+        <br>
+        <fieldset>
+            <strong>Project Name</strong>
+            <input placeholder="Project Name" type="text" formControlName="name">
+        </fieldset>
+        <fieldset>
+            <strong>Project Category</strong>
+            <input placeholder="Type one or more categories" type="text" formControlName="category">
+        </fieldset>
+        <fieldset>
+            <strong>Project Environment</strong>
+            <select formControlName="environment">
+                <option>Production</option>
+                <option>Development</option>
+                <option>None</option>
+            </select>
+        </fieldset>
+        <fieldset>
+            <strong>Deployment Url</strong>
+            <input type="text"
+                formControlName="deploymentUrl">
+        </fieldset>
+        <fieldset>
+            <strong>Repository Url</strong>
+            <input  type="text"
+                formControlName="gitHubUrl">
+        </fieldset>
+        <fieldset>
+            <strong>Project Description</strong>
+            <textarea formControlName="description"></textarea>
+        </fieldset>
+        <fieldset>
+            <div class="custom-file-input">
+                <input type="file" class="file-input">
+                <label for="upload_file" class="file-label">Choose a new image(optional)</label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <button name="submit" type="submit" id="contact-submit" >Edit</button>
+        </fieldset>
+    </form>
+</div>

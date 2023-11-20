@@ -32,8 +32,8 @@
                 <div class="portfolio-wrap">
                     <img [src]="response.projectMainImageUrl" class="img-fluid" alt="">
                     <div class="portfolio-links">
-                        <a [href]="response.projectMainImageUrl" data-gallery="portfolioGallery" class="portfolio-lightbox"
-                            title="Edit Image"><i class='bx bxs-edit'></i></a>
+                        <a *ngIf="response.name;" [routerLink]="['/project', 'edit', response.projectId]" class="portfolio-lightbox"
+                            title="Edit Project"><i class='bx bxs-edit'></i></a>
                         <a *ngIf="response.name; else project" href="" title="More Details" [routerLink]="['/project', 'details', response.projectId]"><i class="bx bx-link"></i></a>
 
                         <ng-template #project>
