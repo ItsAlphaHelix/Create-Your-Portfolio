@@ -12,6 +12,7 @@ import { AddAboutInformationComponent } from './components/add-about-page/add-ab
 import { ProjectComponent } from './components/project-page/project-page.component';
 import { AddProjectComponent } from './components/add-project-page/add-project-page.component';
 import { ProjectDetailsComponent } from './components/project-details-page/project-details-page.component';
+import { EditProjectPageComponent } from './components/edit-project-page/edit-project-page.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -20,8 +21,10 @@ const routes: Routes = [
   { path: 'about/edit/:aboutId', component: EditAboutPageComponent, canActivate: [AuthGuard] },
   { path: 'about/add', component: AddAboutInformationComponent, canActivate: [AuthGuard] },
   { path: 'projects', component: ProjectComponent, canActivate: [AuthGuard] },
+  { path: 'projects/:projectId', component: ProjectComponent, canActivate: [AuthGuard] },
   { path: 'projects/add/:projectId', component: AddProjectComponent, canActivate: [AuthGuard] },
   { path: 'project/details/:projectId', component: ProjectDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'project/edit/:projectId', component: EditProjectPageComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgottenPasswordComponent },

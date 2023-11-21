@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ProjectRequest } from 'src/app/models/project-request-model';
+import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
 
 @Component({
@@ -13,7 +15,9 @@ export class EditProjectPageComponent implements OnInit {
 
   constructor(
     private projectService: ProjectsService,
-    private route: ActivatedRoute) {}
+    private route: ActivatedRoute,
+    private imageService: ImagesService,
+    private spinner: NgxSpinnerService) {}
 
   ngOnInit(): void {
     this.getProjectForEdit();
@@ -32,8 +36,8 @@ export class EditProjectPageComponent implements OnInit {
 
   getProjectForEdit(): void {
 
-    const aboutId = this.route.snapshot.paramMap.get('projectId');
-    this.projectService.getProjectById(Number(aboutId)).subscribe({
+    const projectId = this.route.snapshot.paramMap.get('projectId');
+    this.projectService.getProjectById(Number(projectId)).subscribe({
       next: (response) => {
         if (response) {
           this.editForm.setValue({
@@ -51,4 +55,19 @@ export class EditProjectPageComponent implements OnInit {
     });
   }
 
+  updateImage(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.spinner.show();
+      this.imageService.updateAboutImage(file).subscribe(
+        (response) => {
+          if (response) {
+            this.spinner.hide();
+            return response.imageUrl;
+          }
+        }
+      );
+    }
+  }
 }

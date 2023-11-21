@@ -88,8 +88,10 @@ export class ImagesService {
         return this.http.get<ProjectImageResoponse[]>(routes.GET_ALL_PROJECT_IMAGES_ENDPOINT, { params: this.authHelperService.getParams() });
     }
 
-    getProjectDetailsImage(projectId: string): Observable<any> {
-        const params = { projectId }
-        return this.http.get<{ imageUrl: string }>(routes.GET_PROJECT_DETAILS_IMAGE_ENDPOINT, { params });
+    updateProjectMainImage(file: File, projectId: Number): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return this.http.put(routes.EDIT_PROJECT_MAIN_IMAGE_ENDPOINT + `${projectId}`, formData);
     }
 }

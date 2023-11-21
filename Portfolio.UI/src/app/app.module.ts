@@ -19,6 +19,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ProjectComponent } from './components/project-page/project-page.component';
 import { AddProjectComponent } from './components/add-project-page/add-project-page.component';
 import { ProjectDetailsComponent } from './components/project-details-page/project-details-page.component';
+import { EditProjectPageComponent } from './components/edit-project-page/edit-project-page.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ProjectDetailsComponent } from './components/project-details-page/proje
     ProjectComponent,
     AddProjectComponent,
     ProjectDetailsComponent,
+    EditProjectPageComponent,
   ],
   imports: [
     BrowserModule,

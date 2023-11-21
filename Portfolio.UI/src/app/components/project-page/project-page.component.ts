@@ -21,19 +21,22 @@ export class ProjectComponent implements OnInit {
     private router: Router) { }
 
   projectImageResponse!: ProjectImageResoponse[];
-  projectId!: Number;
 
   ngOnInit(): void {
     this.getProjectImages();
-    this.projectId = Number(this.route.snapshot.paramMap.get('projectId'));
   }
 
   openFileInput(): void {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.style.display = 'none';
+    const fileInput = GenerateFileInput();
     fileInput.addEventListener('change', (event) => this.uploadProjectImage(event));
+    document.body.appendChild(fileInput);
+    fileInput.click();
+    document.body.removeChild(fileInput);
+  }
+
+  openFileInputUpdateImage(projectId: Number): void {
+    const fileInput = GenerateFileInput();
+    fileInput.addEventListener('change', (event) => this.updateImage(event, projectId));
     document.body.appendChild(fileInput);
     fileInput.click();
     document.body.removeChild(fileInput);
@@ -56,6 +59,7 @@ export class ProjectComponent implements OnInit {
   uploadProjectImage(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
+      
       const file = target.files[0];
       this.spinner.show();
       this.imagesService.uploadMainProjectImage(file).subscribe(
@@ -70,11 +74,31 @@ export class ProjectComponent implements OnInit {
   }
 
   getProjectImages() {
+    this.spinner.show();
     this.imagesService.getAllProjectImages().subscribe(
       (response) => {
         this.projectImageResponse = response;
+        this.spinner.hide();
       }
     );
+  }
+
+
+  updateImage(event: Event, projectId: Number): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      const file = target.files[0];
+      this.spinner.show();
+      this.imagesService.updateProjectMainImage(file, projectId).subscribe(
+        (response) => {
+          if (response) {
+            this.spinner.hide();
+            this.getProjectImages();
+            return response.imageUrl;
+          }
+        }
+      );
+    }
   }
 
   private createProjectDinamically(response: any) {
@@ -125,3 +149,11 @@ export class ProjectComponent implements OnInit {
     this.spinner.hide();
   }
 }
+ function GenerateFileInput() {
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.style.display = 'none';
+  return fileInput;
+}
+

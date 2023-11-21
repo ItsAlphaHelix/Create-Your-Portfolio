@@ -19,17 +19,17 @@ export class ProjectDetailsComponent implements OnInit {
     private elRef: ElementRef,
     private imagesService: ImagesService) {
   }
-
+  
   projectResponse: ProjectResponse | undefined;
   imageUrl!: string;
+  projectId = this.route.snapshot.paramMap.get('projectId');
 
   ngOnInit(): void {
     this.getProject();
   }
 
   getProject() {
-    const projectId = this.route.snapshot.paramMap.get('projectId');
-    this.projectService.getProjectById(Number(projectId)).subscribe({
+    this.projectService.getProjectById(Number(this.projectId)).subscribe({
       next: (response) => {
         if (response) {
           console.log(response)

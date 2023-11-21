@@ -1,4 +1,4 @@
-export interface UserProject {
+export interface ProjectRequest {
     name: string,
     category: string,
     environment: string,
