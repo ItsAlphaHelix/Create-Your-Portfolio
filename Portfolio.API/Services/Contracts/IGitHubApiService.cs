@@ -8,20 +8,20 @@
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task GetUserProgrammingLanguages(string userId);
+        Task GetUserProgrammingLanguagesAsync(string userId);
 
         /// <summary>
         /// Retrieving language usage percentages from the database.
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<LanguageStatsDto>> GetPercentageOfUseOnAllLanguages(string userId);
+        Task<IEnumerable<LanguageStatsDto>> GetPercentageOfUseOnAllLanguagesAsync(string userId);
 
         /// <summary>
         /// Making an API call to the GitHub API to check the existence of an account by username.
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        Task HasUserAccountInGitHub(string username);
+        Task HasUserAccountInGitHubAsync(string username);
     }
 }

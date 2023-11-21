@@ -18,7 +18,7 @@
             cloudinary = new Cloudinary(account);
         }
 
-        public async Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width, string publicId)
+        public async Task<ImageUploadResult> UploadImageToCloudinaryAsync(IFormFile file, int heigth, int width, string publicId)
         {
             var uploadResult = new ImageUploadResult();
 

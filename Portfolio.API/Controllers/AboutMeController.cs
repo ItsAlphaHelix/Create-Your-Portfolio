@@ -20,7 +20,7 @@
         private readonly RateLimitCheckerService rateLimitCheckerService;
         public AboutMeController(
             IAboutMeService usersProfileService,
-            ICloudinaryService imagesService,
+            ICloudinaryService cloudinaryService,
             IDatabaseService databaseService,
             IGitHubApiService gitHubApiService,
             RateLimitCheckerService rateLimitCheckerService)
@@ -49,7 +49,7 @@
             int width = 600;
             string publicId = "about" + userId;
 
-            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -120,7 +120,7 @@
 
                 if (canInvoke)
                 {
-                    await this.gitHubApiService.GetUserProgrammingLanguages(userId);
+                    await this.gitHubApiService.GetUserProgrammingLanguagesAsync(userId);
                 }
                 else
                 {
@@ -139,34 +139,38 @@
         [Route("get-language-percentages")]
         public async Task<IActionResult> GetPercentagesOfLanguages([FromQuery] string userId)
         {
-            var result = await this.gitHubApiService.GetPercentageOfUseOnAllLanguages(userId);
+            var result = await this.gitHubApiService.GetPercentageOfUseOnAllLanguagesAsync(userId);
 
             return Ok(result);
         }
 
-        //[HttpPut]
-        //[Route("edit-about-image")]
-        //public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
-        //{
-        //    var result = await this.imagesService.UploadAboutImageAsync(file, userId);
+        [HttpPut]
+        [Route("edit-about-image")]
+        public async Task<IActionResult> EditAboutImage(IFormFile file, [FromQuery] string userId)
+        {
+            int heigth = 600;
+            int width = 600;
+            string publicId = "about" + userId;
 
-        //    if (result.Error != null)
-        //    {
-        //        return BadRequest(result.Error.Message);
-        //    }
+            var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
 
-        //    var userAboutImage = new UserImage()
-        //    {
-        //        AboutImageUrl = result.SecureUrl.AbsoluteUri,
-        //        UserId = userId
-        //    };
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
 
-        //    string aboutImageUrl = result.Url.AbsoluteUri;
+            var userAboutImage = new UserImage()
+            {
+                AboutImageUrl = result.SecureUrl.AbsoluteUri,
+                UserId = userId
+            };
 
-        //    var response = await this.imagesService.EditImageUrlInDatabaseAsync(aboutImageUrl, userAboutImage, userId);
+            string aboutImageUrl = result.Url.AbsoluteUri;
 
-        //    return Ok(response);
-        //}
+            var response = await this.databaseService.EditImageUrlInDatabaseAsync(aboutImageUrl, userAboutImage, userId);
+
+            return Ok(response);
+        }
 
 
         [HttpPut]

@@ -14,7 +14,7 @@
         {
             this.projectsRepository = projectsRepository;
         }
-        public async Task<Project> AddProjectDetails(ProjectDto model, int projectId)
+        public async Task<Project> AddProjectDetailsAsync(ProjectDto model, int projectId)
         {
             var project = await this.projectsRepository
                 .All()
@@ -32,7 +32,7 @@
             return project; 
         }
 
-        public async Task<IEnumerable<ProjectMainImageDto>> GetAllProjectImages(string userId)
+        public async Task<IEnumerable<ProjectMainImageDto>> GetAllProjectImagesAsync(string userId)
         {
             var projects = await this.projectsRepository
                 .AllAsNoTracking()
@@ -48,7 +48,7 @@
             return projects;
         }
 
-        public async Task<ProjectDto> GetProjectById(int projectId)
+        public async Task<ProjectDto> GetProjectByIdAsync(int projectId)
         {
             var project = await this.projectsRepository
                 .AllAsNoTracking()

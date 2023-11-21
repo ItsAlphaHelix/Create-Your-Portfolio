@@ -10,17 +10,14 @@
     using SendGrid.Helpers.Errors.Model;
     public class AboutMeService : IAboutMeService
     {
-        private readonly IRepository<ApplicationUser> usersRepository;
         private readonly IRepository<UserImage> userImagesRepository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IRepository<AboutUser> usersAboutRepository;
         public AboutMeService(
-            IRepository<ApplicationUser> usersRepository,
             UserManager<ApplicationUser> userManager,
             IRepository<AboutUser> usersAboutRepository,
             IRepository<UserImage> userImagesRepository)
         {
-            this.usersRepository = usersRepository;
             this.userManager = userManager;
             this.usersAboutRepository = usersAboutRepository;
             this.userImagesRepository = userImagesRepository;

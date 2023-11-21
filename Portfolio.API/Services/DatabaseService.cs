@@ -35,6 +35,24 @@
 
             return responseDto;
         }
+
+        public async Task<UploadImageDto> EditProjectImageToDatabaseAsync(string imageUrl, Project image, int projectId)
+        {
+            var imageForEdit = await this.projectRepository
+                 .All()
+                 .FirstOrDefaultAsync(x => x.Id == projectId);
+
+            var responseDto = new UploadImageDto()
+            {
+                ImageUrl = imageUrl
+            };
+
+            imageForEdit.MainImageUrl = imageUrl;
+
+            await projectRepository.SaveChangesAsync();
+
+            return responseDto;
+        }
         public async Task<UploadImageDto> SaveImageUrlToDatabaseAsync(string imageUrl, UserImage image, string userId)
         {
             var userImage = await this.userImagesRepository
@@ -61,7 +79,7 @@
             return responseDto;
         }
 
-        public async Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image, int projectId)
+        public async Task<UploadImageDto> SaveProjectImageToDatabaseAsync(string imageUrl, Project project, int projectId)
         {
             var projectImage = await this.projectRepository
                 .All()
@@ -82,7 +100,7 @@
                 return responseDto;
             }
 
-            await this.projectRepository.AddAsync(image);
+            await this.projectRepository.AddAsync(project);
             await this.projectRepository.SaveChangesAsync();
 
             return responseDto;

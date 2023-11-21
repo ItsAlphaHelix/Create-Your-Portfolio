@@ -21,7 +21,16 @@ namespace Portfolio.API.Services.Contracts
         /// <param name="image"></param>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        Task<UploadImageDto> SaveProjectImageToDatabase(string imageUrl, Project image, int projectId);
+        Task<UploadImageDto> SaveProjectImageToDatabaseAsync(string imageUrl, Project image, int projectId);
+
+        /// <summary>
+        /// Retrieve the existing image URL by project ID and update it.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <param name="image"></param>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        Task<UploadImageDto> EditProjectImageToDatabaseAsync(string imageUrl, Project image, int projectId);
 
         /// <summary>
         /// Retrieve the existing image URL by user ID and update it.

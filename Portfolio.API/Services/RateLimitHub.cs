@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<bool> CanInvokeMethod(string userId)
+        public bool CanInvokeMethod(string userId)
         {
             if (LastInvokeTimes.TryGetValue(userId, out var lastInvokeTime)
                 && DateTime.UtcNow - lastInvokeTime < TimeSpan.FromDays(30))

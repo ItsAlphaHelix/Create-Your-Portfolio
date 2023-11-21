@@ -15,6 +15,6 @@
         /// <param name="width"></param>
         /// <param name="publicId"></param>
         /// <returns></returns>
-        Task<ImageUploadResult> UploadImageToCloudinary(IFormFile file, int heigth, int width, string publicId);
+        Task<ImageUploadResult> UploadImageToCloudinaryAsync(IFormFile file, int heigth, int width, string publicId);
     }
 }

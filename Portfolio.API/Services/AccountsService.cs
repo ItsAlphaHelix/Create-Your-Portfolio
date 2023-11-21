@@ -87,7 +87,7 @@
                 throw new InvalidOperationException("Email address is already taken.");
             }
 
-            await gitHubApiService.HasUserAccountInGitHub(user.UserName);
+            await gitHubApiService.HasUserAccountInGitHubAsync(user.UserName);
 
             var registeredUser = await userManager.CreateAsync(user, applicationUser.Password);
 

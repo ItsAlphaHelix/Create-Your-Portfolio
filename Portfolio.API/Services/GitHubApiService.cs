@@ -34,7 +34,7 @@
             this.client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("portfolio", "1"));
         }
 
-        public async Task HasUserAccountInGitHub(string username)
+        public async Task HasUserAccountInGitHubAsync(string username)
         {
             using HttpResponseMessage userResponse = await client.GetAsync($"{BaseUrl}/users/{username}");
 
@@ -47,7 +47,7 @@
             }
         }
 
-        public async Task<IEnumerable<LanguageStatsDto>> GetPercentageOfUseOnAllLanguages(string userId)
+        public async Task<IEnumerable<LanguageStatsDto>> GetPercentageOfUseOnAllLanguagesAsync(string userId)
         {
             var result = await this.userProgramLanguagesRepository
                 .AllAsNoTracking()
@@ -61,7 +61,7 @@
 
             return result;
         }
-        public async Task GetUserProgrammingLanguages(string userId)
+        public async Task GetUserProgrammingLanguagesAsync(string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
 
@@ -120,7 +120,7 @@
                 sortedLanguagesDictionary.Remove(lastElement.Key);
             }
 
-            await CalcPercentageOfUseProgrammingLanguage(sortedLanguagesDictionary, userId);
+            await CalcPercentageOfUseProgrammingLanguageAsync(sortedLanguagesDictionary, userId);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@
         /// <param name="languageUsage"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        private async Task CalcPercentageOfUseProgrammingLanguage(
+        private async Task CalcPercentageOfUseProgrammingLanguageAsync(
             Dictionary<string,
             int> languageUsage, string userId)
         {
@@ -193,7 +193,7 @@
                 editDict.Add(language, percentage);
             }
 
-            UpdateProgrammingLanguages(programmingLanguages, editDict);
+            UpdateProgrammingLanguagesAsync(programmingLanguages, editDict);
 
             await userProgramLanguagesRepository.SaveChangesAsync();
         }
@@ -203,7 +203,7 @@
         /// </summary>
         /// <param name="programmingLanguages"></param>
         /// <param name="editDict"></param>
-        private void UpdateProgrammingLanguages(List<UserProgramLanguage> programmingLanguages, Dictionary<string, double> editDict)
+        private void UpdateProgrammingLanguagesAsync(List<UserProgramLanguage> programmingLanguages, Dictionary<string, double> editDict)
         {
             if (editDict.Count() != 0)
             {

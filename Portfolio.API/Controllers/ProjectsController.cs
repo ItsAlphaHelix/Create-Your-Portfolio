@@ -5,6 +5,7 @@
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ProjectsDto;
     using Portfolio.API.Services.Contracts;
+    using Portfolio.Data.Repositories;
     using SendGrid.Helpers.Errors.Model;
 
     [Route("api/projects")]
@@ -14,14 +15,17 @@
         private readonly ICloudinaryService cloudinaryService;
         private readonly IProjectService projectService;
         private readonly IDatabaseService databaseService;
+        private readonly IRepository<Project> projectRepo;
         public ProjectsController(
             ICloudinaryService cloudinaryService,
             IProjectService projectService,
-            IDatabaseService databaseService)
+            IDatabaseService databaseService,
+            IRepository<Project> projectRepo)
         {
             this.cloudinaryService = cloudinaryService;
             this.projectService = projectService;
             this.databaseService = databaseService;
+            this.projectRepo = projectRepo;
 
         }
 
@@ -35,7 +39,7 @@
             string uniqueIdentifier = Guid.NewGuid().ToString();
             string publicId = $"project_{uniqueIdentifier}";
 
-            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -50,7 +54,7 @@
 
             string projectMainImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.databaseService.SaveProjectImageToDatabase(projectMainImageUrl, projectImage, 0);
+            var responseDto = await this.databaseService.SaveProjectImageToDatabaseAsync(projectMainImageUrl, projectImage, 0);
 
             return Ok(responseDto);
         }
@@ -64,7 +68,7 @@
             string uniqueIdentifier = Guid.NewGuid().ToString();
             string publicId = $"project_details_{uniqueIdentifier}";
 
-            var result = await this.cloudinaryService.UploadImageToCloudinary(file, heigth, width, publicId);
+            var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
 
             if (result.Error != null)
             {
@@ -78,7 +82,7 @@
 
             string projectDetailsImageUrl = result.Url.AbsoluteUri;
 
-            var responseDto = await this.databaseService.SaveProjectImageToDatabase(projectDetailsImageUrl, projectImage, projectId);
+            var responseDto = await this.databaseService.SaveProjectImageToDatabaseAsync(projectDetailsImageUrl, projectImage, projectId);
 
             return Ok(responseDto);
         }
@@ -87,7 +91,7 @@
         [Route("add-project/{projectId}")]
         public async Task<IActionResult> AddProject([FromBody] ProjectDto project, int projectId)
         {
-            var result = await this.projectService.AddProjectDetails(project, projectId);
+            var result = await this.projectService.AddProjectDetailsAsync(project, projectId);
 
             return Ok(result);
         }
@@ -96,16 +100,16 @@
         [Route("get-all-project-images")]
         public async Task<IActionResult> GetAllProjectImages([FromQuery] string userId)
         {
-            var result = await this.projectService.GetAllProjectImages(userId);
+            var result = await this.projectService.GetAllProjectImagesAsync(userId);
 
             return Ok(result);
         }
 
         [HttpGet]
-        [Route("get-project/{id}")]
-        public async Task<IActionResult> GetProject(int id)
+        [Route("get-project/{projectId}")]
+        public async Task<IActionResult> GetProject(int projectId)
         {
-             var result = await this.projectService.GetProjectById(id);          
+             var result = await this.projectService.GetProjectByIdAsync(projectId);          
              return Ok(result);
         }
 
@@ -123,6 +127,66 @@
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        //[HttpPut]
+        //[Route("edit-project-details-image")]
+        //public async Task<IActionResult> EditProjectDetailsImage(IFormFile file, [FromQuery] int projectId)
+        //{
+        //    int heigth = 600;
+        //    int width = 1288;
+        //    string uniqueIdentifier = Guid.NewGuid().ToString();
+        //    string publicId = $"project_details_{uniqueIdentifier}";
+
+        //    var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
+
+        //    if (result.Error != null)
+        //    {
+        //        return BadRequest(result.Error.Message);
+        //    }
+
+        //    var userAboutImage = new UserImage()
+        //    {
+        //        AboutImageUrl = result.SecureUrl.AbsoluteUri,
+        //        UserId = userId
+        //    };
+
+        //    string aboutImageUrl = result.Url.AbsoluteUri;
+
+        //    var response = await this.databaseService.EditImageUrlInDatabaseAsync(aboutImageUrl, userAboutImage, userId);
+
+        //    return Ok(response);
+        //}
+
+        [HttpPut]
+        [Route("edit-project-main-image/{projectId}")]
+        public async Task<IActionResult> EditProjectMainImage(IFormFile file, int projectId)
+        {
+            var project = this.projectRepo.AllAsNoTracking().FirstOrDefault(x => x.Id == projectId);
+            int heigth = 600;
+            int width = 800;
+
+            var splittedMainImageUrl = project.MainImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var splittedMainImagePublicId = splittedMainImageUrl[6].Split(".");
+            string mainImagePublicId = splittedMainImagePublicId[0];
+
+            var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, mainImagePublicId);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            var projectMainImage = new Project()
+            {
+                MainImageUrl = result.SecureUrl.AbsoluteUri,
+            };
+
+            string projectMainImageUrl = result.Url.AbsoluteUri;
+
+            var response = await this.databaseService.EditProjectImageToDatabaseAsync(projectMainImageUrl, projectMainImage, projectId);
+
+            return Ok(response);
         }
     }
 }
