@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ProjectResponse } from 'src/app/models/project-response.model';
 import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
@@ -17,7 +18,8 @@ export class ProjectDetailsComponent implements OnInit {
     private router: Router,
     private projectService: ProjectsService,
     private elRef: ElementRef,
-    private imagesService: ImagesService) {
+    private imagesService: ImagesService,
+    private spinner: NgxSpinnerService) {
   }
   
   projectResponse: ProjectResponse | undefined;
@@ -35,6 +37,15 @@ export class ProjectDetailsComponent implements OnInit {
           console.log(response)
           this.projectResponse = response;
         }
+      }
+    }
+    );
+  }
+
+  deleteProject() {
+    this.projectService.deleteProjectById(Number(this.projectId)).subscribe({
+      next: () => {
+        this.router.navigate(['/projects']);
       }
     }
     );

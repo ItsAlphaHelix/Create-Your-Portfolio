@@ -74,11 +74,9 @@ export class ProjectComponent implements OnInit {
   }
 
   getProjectImages() {
-    this.spinner.show();
     this.imagesService.getAllProjectImages().subscribe(
       (response) => {
         this.projectImageResponse = response;
-        this.spinner.hide();
       }
     );
   }

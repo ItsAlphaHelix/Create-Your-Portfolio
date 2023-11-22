@@ -23,4 +23,8 @@ export class ProjectsService {
 
     return this.http.get<ProjectResponse>(routes.GET_PROJECT_BY_ID_ENDPOINT + `${projectId}`);
   }
+
+  deleteProjectById(projectId: Number){
+    return this.http.delete(routes.DELETE_PROJECT_ENDPOINT + `${projectId}`);
+  }
 }

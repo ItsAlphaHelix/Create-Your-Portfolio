@@ -52,7 +52,6 @@ export class AddProjectComponent {
   }
 
   uploadImage(event: Event): void {
-    debugger
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];

@@ -11,6 +11,9 @@
                         </div>
                     </div>
                 </div>
+                <br>
+                <a class="btn btn-outline-success" [routerLink]="['/project', 'edit', projectId]" style="margin-right: 15px;" >Edit Details</a>
+                <button type="button" class="btn btn-outline-danger" (click)="deleteProject();">Delete Project</button>
             </div>
 
             <div class="col-lg-4">
@@ -28,7 +31,6 @@
                     <h2>This is description of my project</h2>
                     <p>{{projectResponse?.description}}</p>
                 </div>
-                <a  [routerLink]="['/project', 'edit', projectId]">Edit Details</a>
             </div>
         </div>
     </div>

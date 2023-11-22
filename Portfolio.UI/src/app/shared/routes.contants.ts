@@ -36,3 +36,4 @@ export const GET_PROJECT_DETAILS_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api
 export const ADD_PROJECT_ENDPOINT = `${environment.baseUrlApi}/api/projects/add-project/`;
 export const GET_PROJECT_BY_ID_ENDPOINT = `${environment.baseUrlApi}/api/projects/get-project/`;
 export const EDIT_PROJECT_MAIN_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/projects/edit-project-main-image/`; 
+export const DELETE_PROJECT_ENDPOINT = `${environment.baseUrlApi}/api/projects/delete-project/`; 
