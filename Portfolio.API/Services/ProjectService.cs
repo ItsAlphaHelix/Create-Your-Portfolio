@@ -87,5 +87,13 @@
 
             return projectImage.ImageUrl;
         }
+
+        public async Task DeleteProjectByIdAsync(int projectId)
+        {
+            var project = this.projectsRepository.All().FirstOrDefault(x => x.Id == projectId);
+
+            this.projectsRepository.Delete(project);
+            await this.projectsRepository.SaveChangesAsync();
+        }
     }
 }

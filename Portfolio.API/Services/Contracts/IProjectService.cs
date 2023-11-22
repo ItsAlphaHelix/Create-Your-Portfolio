@@ -35,6 +35,11 @@
         /// <returns></returns>
         Task<string> GetProjectDetailsImageUrlAsync(int projectId);
 
-
+        /// <summary>
+        /// Delete current project by his identifier.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        Task DeleteProjectByIdAsync(int projectId);
     }
 }

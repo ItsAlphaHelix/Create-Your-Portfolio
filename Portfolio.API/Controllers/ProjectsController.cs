@@ -188,5 +188,14 @@
 
             return Ok(response);
         }
+
+        [HttpDelete]
+        [Route("delete-project/{projectId}")]
+        public async Task<IActionResult> AddProject(int projectId)
+        {
+            await this.projectService.DeleteProjectByIdAsync(projectId);
+
+            return Ok();
+        }
     }
 }
