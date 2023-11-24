@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { AuthHelperService } from './auth-helper.service';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import * as routes from 'src/app/shared/routes.contants';
 import { ProjectRequest } from '../models/project-request-model';
 import { ProjectResponse } from '../models/project-response.model';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,13 @@ export class ProjectsService {
 
   deleteProjectById(projectId: Number){
     return this.http.delete(routes.DELETE_PROJECT_ENDPOINT + `${projectId}`);
+  }
+
+  editProjectInformation(editForm: FormGroup): Observable<string> {
+    return this.http.put<ProjectResponse>
+      (routes.EDIT_PROJECT_INFORMATION_ENDPOINT, editForm.value, { headers: this.authHelperService.getHeaders() })
+      .pipe(
+        map((response) => response.id)
+      );
   }
 }

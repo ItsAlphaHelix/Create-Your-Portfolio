@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { ProjectRequest } from 'src/app/models/project-request-model';
+import { ProjectResponse } from 'src/app/models/project-response.model';
 import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
 
@@ -16,17 +18,20 @@ export class EditProjectPageComponent implements OnInit {
   constructor(
     private projectService: ProjectsService,
     private route: ActivatedRoute,
+    private router: Router,
     private imageService: ImagesService,
-    private spinner: NgxSpinnerService) {}
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,) {}
 
   ngOnInit(): void {
     this.getProjectForEdit();
   }
   
-  projectFormRequest!: ProjectRequest
+  projectFormResponse!: ProjectResponse
   projectId = Number(this.route.snapshot.paramMap.get('projectId'));
 
   editForm = new FormGroup({
+    id: new FormControl(""),
     name: new FormControl(""),
     category: new FormControl(""),
     environment: new FormControl(""),
@@ -40,6 +45,7 @@ export class EditProjectPageComponent implements OnInit {
       next: (response) => {
         if (response) {
           this.editForm.setValue({
+            id: response.id,
             name: response.name,
             category: response.category,
             environment: response.environment,
@@ -68,5 +74,25 @@ export class EditProjectPageComponent implements OnInit {
         }
       );
     }
+  }
+
+  editProject(): void {
+
+    // if (this.editForm.invalid) {
+    //   this.clientSideValidation.aboutUserFormValidation(this.editForm);
+    //   return;
+    // }
+
+    this.projectService.editProjectInformation(this.editForm).subscribe({
+      next: (id) => {
+        if (id) {
+          this.toastr.success('You have been successfully edit your information.')
+          this.router.navigate(['/project', 'details', id])
+        }
+      },
+      error: (error) => {
+        console.log("Error!");
+      }
+    });
   }
 }
