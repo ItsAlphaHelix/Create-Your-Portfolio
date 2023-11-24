@@ -29,10 +29,12 @@
                 ImageUrl = imageUrl
             };
 
-            CheckAndEdit(imageUrl, imageForEdit);
-
-            await userImagesRepository.SaveChangesAsync();
-
+            if (imageForEdit != null)
+            {
+                CheckAndEdit(imageUrl, imageForEdit);
+                await userImagesRepository.SaveChangesAsync();
+            }
+            
             return responseDto;
         }
 
@@ -47,9 +49,11 @@
                 ImageUrl = imageUrl
             };
 
-            imageForEdit.MainImageUrl = imageUrl;
-
-            await projectRepository.SaveChangesAsync();
+            if (imageForEdit != null)
+            {
+                CheckAndEditProjectImage(imageUrl, imageForEdit);
+                await projectRepository.SaveChangesAsync();
+            }
 
             return responseDto;
         }
@@ -124,6 +128,23 @@
             else if (imageUrl.Contains("profile"))
             {
                 imageForEdit.ProfileImageUrl = imageUrl;
+            }
+        }
+
+        /// <summary>
+        /// This method checks the public IDs of project images and edit them.
+        /// </summary>
+        /// <param name="imageUrl"></param>
+        /// <param name="imageForEdit"></param>
+        private static void CheckAndEditProjectImage(string imageUrl, Project? imageForEdit)
+        {
+            if (imageUrl.Contains("project_main_image"))
+            {
+                imageForEdit.MainImageUrl = imageUrl;
+            }
+            else if (imageUrl.Contains("project_details_image"))
+            {
+                imageForEdit.ProjectDetailsImageUrl = imageUrl;
             }
         }
     }

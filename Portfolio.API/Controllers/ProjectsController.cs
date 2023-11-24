@@ -37,7 +37,7 @@
             int width = 800;
 
             string uniqueIdentifier = Guid.NewGuid().ToString();
-            string publicId = $"project_{uniqueIdentifier}";
+            string publicId = $"project_main_image_{uniqueIdentifier}";
 
             var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
 
@@ -66,7 +66,7 @@
             int heigth = 600;
             int width = 1288;
             string uniqueIdentifier = Guid.NewGuid().ToString();
-            string publicId = $"project_details_{uniqueIdentifier}";
+            string publicId = $"project_details_image_{uniqueIdentifier}";
 
             var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
 
@@ -129,36 +129,39 @@
             }
         }
 
-        //[HttpPut]
-        //[Route("edit-project-details-image")]
-        //public async Task<IActionResult> EditProjectDetailsImage(IFormFile file, [FromQuery] int projectId)
-        //{
-        //    int heigth = 600;
-        //    int width = 1288;
-        //    string uniqueIdentifier = Guid.NewGuid().ToString();
-        //    string publicId = $"project_details_{uniqueIdentifier}";
-
-        //    var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, publicId);
-
-        //    if (result.Error != null)
-        //    {
-        //        return BadRequest(result.Error.Message);
-        //    }
-
-        //    var userAboutImage = new UserImage()
-        //    {
-        //        AboutImageUrl = result.SecureUrl.AbsoluteUri,
-        //        UserId = userId
-        //    };
-
-        //    string aboutImageUrl = result.Url.AbsoluteUri;
-
-        //    var response = await this.databaseService.EditImageUrlInDatabaseAsync(aboutImageUrl, userAboutImage, userId);
-
-        //    return Ok(response);
-        //}
-
         [HttpPut]
+        [Route("edit-project-details-image/{projectId}")]
+        public async Task<IActionResult> EditProjectDetailsImage(IFormFile file, int projectId)
+        {
+            var project = this.projectRepo.AllAsNoTracking()
+                .FirstOrDefault(x => x.Id == projectId);
+            int heigth = 600;
+            int width = 1288;
+
+            var splittedDetailsImageUrl = project.ProjectDetailsImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var splittedDetailsImagePublicId = splittedDetailsImageUrl[6].Split(".");
+            string detailsImagePublicId = splittedDetailsImagePublicId[0];
+
+            var result = await this.cloudinaryService.UploadImageToCloudinaryAsync(file, heigth, width, detailsImagePublicId);
+
+            if (result.Error != null)
+            {
+                return BadRequest(result.Error.Message);
+            }
+
+            var projectDetailsImage = new Project()
+            {
+                ProjectDetailsImageUrl = result.SecureUrl.AbsoluteUri,
+            };
+
+            string detailsImageUrl = result.Url.AbsoluteUri;
+
+            var response = await this.databaseService.EditProjectImageToDatabaseAsync(detailsImageUrl, projectDetailsImage, projectId);
+
+            return Ok(response);
+        }
+
+            [HttpPut]
         [Route("edit-project-main-image/{projectId}")]
         public async Task<IActionResult> EditProjectMainImage(IFormFile file, int projectId)
         {
@@ -191,7 +194,7 @@
 
         [HttpDelete]
         [Route("delete-project/{projectId}")]
-        public async Task<IActionResult> AddProject(int projectId)
+        public async Task<IActionResult> DeleteProject(int projectId)
         {
             await this.projectService.DeleteProjectByIdAsync(projectId);
 
