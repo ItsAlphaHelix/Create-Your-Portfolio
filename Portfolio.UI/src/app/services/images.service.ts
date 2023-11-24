@@ -94,4 +94,11 @@ export class ImagesService {
 
         return this.http.put(routes.EDIT_PROJECT_MAIN_IMAGE_ENDPOINT + `${projectId}`, formData);
     }
+
+    updateProjectDetailsImage(file: File, projectId: Number): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return this.http.put(routes.EDIT_PROJECT_DETAILS_IMAGE_ENDPOINT + `${projectId}`, formData);
+    }
 }

@@ -24,6 +24,7 @@ export class EditProjectPageComponent implements OnInit {
   }
   
   projectFormRequest!: ProjectRequest
+  projectId = Number(this.route.snapshot.paramMap.get('projectId'));
 
   editForm = new FormGroup({
     name: new FormControl(""),
@@ -35,9 +36,7 @@ export class EditProjectPageComponent implements OnInit {
   });
 
   getProjectForEdit(): void {
-
-    const projectId = this.route.snapshot.paramMap.get('projectId');
-    this.projectService.getProjectById(Number(projectId)).subscribe({
+    this.projectService.getProjectById(this.projectId).subscribe({
       next: (response) => {
         if (response) {
           this.editForm.setValue({
@@ -60,7 +59,7 @@ export class EditProjectPageComponent implements OnInit {
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
       this.spinner.show();
-      this.imageService.updateAboutImage(file).subscribe(
+      this.imageService.updateProjectDetailsImage(file, this.projectId).subscribe(
         (response) => {
           if (response) {
             this.spinner.hide();
