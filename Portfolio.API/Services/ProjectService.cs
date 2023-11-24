@@ -3,6 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ProjectsDto;
+    using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services.Contracts;
     using Portfolio.Data.Repositories;
     using SendGrid.Helpers.Errors.Model;
@@ -55,6 +56,7 @@
                 .Where(x => x.Id == projectId)
                 .Select(x => new ProjectDto()
                 {
+                    Id = x.Id,
                     Name = x.Name,
                     DeploymentUrl = x.DeploymentUrl,
                     ProjectDetailsImageUrl = x.ProjectDetailsImageUrl,
@@ -94,6 +96,28 @@
 
             this.projectsRepository.Delete(project);
             await this.projectsRepository.SaveChangesAsync();
+        }
+
+        public async Task EditProjectInformation(ProjectDto model)
+        {
+            var editProject = await projectsRepository
+                .All()
+                .Where(x => x.Id == model.Id)
+                .FirstOrDefaultAsync();
+
+            if (editProject == null)
+            {
+                throw new NotFoundException("The project is not founded.");
+            }
+
+            editProject.Name = model.Name;
+            editProject.Category = model.Category;
+            editProject.Environment = model.Environment;
+            editProject.DeploymentUrl = model.DeploymentUrl;
+            editProject.Description = model.Description;
+            editProject.GitHubUrl = model.GitHubUrl;
+
+            await projectsRepository.SaveChangesAsync();
         }
     }
 }

@@ -4,6 +4,7 @@
     using Microsoft.OpenApi.Models;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Dtos.ProjectsDto;
+    using Portfolio.API.Dtos.UsersProfileDtos;
     using Portfolio.API.Services.Contracts;
     using Portfolio.Data.Repositories;
     using SendGrid.Helpers.Errors.Model;
@@ -161,7 +162,7 @@
             return Ok(response);
         }
 
-            [HttpPut]
+        [HttpPut]
         [Route("edit-project-main-image/{projectId}")]
         public async Task<IActionResult> EditProjectMainImage(IFormFile file, int projectId)
         {
@@ -199,6 +200,15 @@
             await this.projectService.DeleteProjectByIdAsync(projectId);
 
             return Ok();
+        }
+
+        [HttpPut]
+        [Route("edit-project-information")]
+        public async Task<IActionResult> EditAboutInformation([FromBody] ProjectDto model)
+        {
+            await this.projectService.EditProjectInformation(model);
+
+            return Ok(new { id = model.Id });
         }
     }
 }

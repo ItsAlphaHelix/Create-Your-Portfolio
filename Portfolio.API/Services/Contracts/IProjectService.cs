@@ -41,5 +41,12 @@
         /// <param name="projectId"></param>
         /// <returns></returns>
         Task DeleteProjectByIdAsync(int projectId);
+
+        /// <summary>
+        /// Edit project's information.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task EditProjectInformation(ProjectDto model);
     }
 }

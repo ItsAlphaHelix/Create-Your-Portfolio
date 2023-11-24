@@ -71,9 +71,7 @@
             if (userImage != null)
             {
                 CheckAndEdit(imageUrl, userImage);
-
                 await userImagesRepository.SaveChangesAsync();
-
                 return responseDto;
             }
 
