@@ -11,9 +11,13 @@
     public class ProjectService : IProjectService
     {
         private readonly IRepository<Project> projectsRepository;
-        public ProjectService(IRepository<Project> projectsRepository)
+        private readonly ICloudinaryService cloudinaryService;
+        public ProjectService(
+            IRepository<Project> projectsRepository,
+            ICloudinaryService cloudinaryService)
         {
             this.projectsRepository = projectsRepository;
+            this.cloudinaryService = cloudinaryService;
         }
         public async Task<Project> AddProjectDetailsAsync(ProjectDto model, int projectId)
         {
@@ -94,6 +98,21 @@
         {
             var project = this.projectsRepository.All().FirstOrDefault(x => x.Id == projectId);
 
+            var splittedMainImageUrl = project.MainImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var splittedMainImagePublicId = splittedMainImageUrl[6].Split(".");
+            string mainImagePublicId = splittedMainImagePublicId[0];
+
+            var splittedDetailsImageUrl = project.ProjectDetailsImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            var splittedDetailsImagePublicId = splittedDetailsImageUrl[6].Split(".");
+            string projectDetailsImagePublicId = splittedDetailsImagePublicId[0];
+
+            List<string> projectPublicIds = new List<string>
+            {
+                mainImagePublicId,
+                projectDetailsImagePublicId
+            };
+
+            await this.cloudinaryService.DeleteImageAsync(projectPublicIds);
             this.projectsRepository.Delete(project);
             await this.projectsRepository.SaveChangesAsync();
         }

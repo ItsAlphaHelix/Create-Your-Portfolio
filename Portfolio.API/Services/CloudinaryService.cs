@@ -37,5 +37,36 @@
 
             return uploadResult;
         }
+
+        public async Task DeleteImageAsync(List<string> projectPublicIds)
+        {
+            foreach (var publicId in projectPublicIds)
+            {
+                var deletionParams = new DeletionParams(publicId)
+                {
+                    ResourceType = ResourceType.Image
+                };
+
+                try
+                {
+                    // Perform the image deletion
+                    var result = await cloudinary.DestroyAsync(deletionParams);
+
+                    // Check the result status
+                    if (result.Result == "ok")
+                    {
+                        Console.WriteLine($"Image with public ID '{publicId}' deleted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failed to delete image. Error: {result.Error.Message}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                }
+            }
+        }
     }
 }

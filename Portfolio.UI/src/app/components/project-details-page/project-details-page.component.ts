@@ -43,8 +43,10 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   deleteProject() {
+    this.spinner.show();
     this.projectService.deleteProjectById(Number(this.projectId)).subscribe({
       next: () => {
+        this.spinner.hide();
         this.router.navigate(['/projects']);
       }
     }

@@ -16,5 +16,12 @@
         /// <param name="publicId"></param>
         /// <returns></returns>
         Task<ImageUploadResult> UploadImageToCloudinaryAsync(IFormFile file, int heigth, int width, string publicId);
+
+        /// <summary>
+        /// Delete image from cloudinary.
+        /// </summary>
+        /// <param name="publicId"></param>
+        /// <returns></returns>
+        Task DeleteImageAsync(List<string> projectPublicIds);
     }
 }
