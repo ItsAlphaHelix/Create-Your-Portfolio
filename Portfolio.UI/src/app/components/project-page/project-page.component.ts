@@ -10,7 +10,8 @@ import { ProjectsService } from 'src/app/services/projects.service';
   templateUrl: './project-page.component.html',
   styleUrls: ['./project-page.component.css']
 })
-export class ProjectComponent implements OnInit {
+
+export default class ProjectComponent implements OnInit {
 
   constructor(
     private imagesService: ImagesService,
@@ -27,15 +28,15 @@ export class ProjectComponent implements OnInit {
   }
 
   openFileInput(): void {
-    const fileInput = GenerateFileInput();
+    const fileInput = generateFileInput();
     fileInput.addEventListener('change', (event) => this.uploadProjectImage(event));
     document.body.appendChild(fileInput);
     fileInput.click();
     document.body.removeChild(fileInput);
   }
 
-  openFileInputUpdateImage(projectId: Number): void {
-    const fileInput = GenerateFileInput();
+  openFileInputUpdateImage(projectId: Number) {
+    const fileInput = generateFileInput();
     fileInput.addEventListener('change', (event) => this.updateImage(event, projectId));
     document.body.appendChild(fileInput);
     fileInput.click();
@@ -65,7 +66,9 @@ export class ProjectComponent implements OnInit {
       this.imagesService.uploadMainProjectImage(file).subscribe(
         (response) => {
           if (response) {
+
             this.createProjectDinamically(response);
+            
             console.log(response);
           }
         }
@@ -79,6 +82,7 @@ export class ProjectComponent implements OnInit {
         this.projectImageResponse = response;
       }
     );
+    return this.imagesService
   }
 
 
@@ -118,23 +122,31 @@ export class ProjectComponent implements OnInit {
     const divPortfolioLinks = this.renderer.createElement('div');
     this.renderer.addClass(divPortfolioLinks, 'portfolio-links');
     const anchorImage = this.renderer.createElement('a');
-    this.renderer.setAttribute(anchorImage, 'href', `${response.imageUrl}`);
-    this.renderer.setAttribute(anchorImage, 'data-gallery', 'portfolioGallery');
     this.renderer.addClass(anchorImage, 'portfolio-lightbox');
-    this.renderer.setAttribute(anchorImage, 'title', 'Zoom');
+    this.renderer.setAttribute(anchorImage, 'title', 'Edit Image');
 
     const iBxPlusElement = this.renderer.createElement('i');
     this.renderer.addClass(iBxPlusElement, 'bx');
-    this.renderer.addClass(iBxPlusElement, 'bx-plus');
+    this.renderer.addClass(iBxPlusElement, 'bxs-edit');
+
+    anchorImage.addEventListener('click', () => {
+      
+      this.openFileInputUpdateImage(response.projectId);
+      this.getProjectImages();
+      divPortfolioItem.remove();
+    });
 
     const anchorPortfolioDetails = this.renderer.createElement('a');
     this.renderer.addClass(anchorPortfolioDetails, 'routerlink');
-    this.renderer.setAttribute(anchorPortfolioDetails, 'href', `projects/add/34`);
-    this.renderer.setAttribute(anchorPortfolioDetails, 'title', 'More Details');
+    anchorPortfolioDetails.addEventListener('click', () => {
+      this.router.navigate(['/projects', 'add', response.projectId]);
+    });
+    this.renderer.setAttribute(anchorPortfolioDetails, 'routerLink', `projects/add/${response.projectId}`);
+    this.renderer.setAttribute(anchorPortfolioDetails, 'title', 'Add Project');
 
     const iBxLink = this.renderer.createElement('i');
     this.renderer.addClass(iBxLink, 'bx');
-    this.renderer.addClass(iBxLink, 'bx-link');
+    this.renderer.addClass(iBxLink, 'bx-plus');
 
     anchorPortfolioDetails.appendChild(iBxLink);
     anchorImage.appendChild(iBxPlusElement);
@@ -147,7 +159,7 @@ export class ProjectComponent implements OnInit {
     this.spinner.hide();
   }
 }
- function GenerateFileInput() {
+ function generateFileInput() {
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = 'image/*';

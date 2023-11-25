@@ -9,7 +9,7 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
 import { AboutComponent } from './components/about-page/about-me-page.component';
 import { EditAboutPageComponent } from './components/edit-about-page/edit-about-page.component';
 import { AddAboutInformationComponent } from './components/add-about-page/add-about-page.component';
-import { ProjectComponent } from './components/project-page/project-page.component';
+import ProjectComponent from './components/project-page/project-page.component';
 import { AddProjectComponent } from './components/add-project-page/add-project-page.component';
 import { ProjectDetailsComponent } from './components/project-details-page/project-details-page.component';
 import { EditProjectPageComponent } from './components/edit-project-page/edit-project-page.component';

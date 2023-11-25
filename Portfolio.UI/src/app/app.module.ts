@@ -16,7 +16,7 @@ import { AddAboutInformationComponent } from './components/add-about-page/add-ab
 import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer-page/footer-page.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { ProjectComponent } from './components/project-page/project-page.component';
+import ProjectComponent from './components/project-page/project-page.component';
 import { AddProjectComponent } from './components/add-project-page/add-project-page.component';
 import { ProjectDetailsComponent } from './components/project-details-page/project-details-page.component';
 import { EditProjectPageComponent } from './components/edit-project-page/edit-project-page.component';
