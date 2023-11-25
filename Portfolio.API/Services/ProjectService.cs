@@ -112,7 +112,7 @@
                 projectDetailsImagePublicId
             };
 
-            await this.cloudinaryService.DeleteImageAsync(projectPublicIds);
+            await this.cloudinaryService.DeleteImagesAsync(projectPublicIds);
             this.projectsRepository.Delete(project);
             await this.projectsRepository.SaveChangesAsync();
         }

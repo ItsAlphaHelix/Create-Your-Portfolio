@@ -38,7 +38,7 @@
             return uploadResult;
         }
 
-        public async Task DeleteImageAsync(List<string> projectPublicIds)
+        public async Task DeleteImagesAsync(List<string> projectPublicIds)
         {
             foreach (var publicId in projectPublicIds)
             {

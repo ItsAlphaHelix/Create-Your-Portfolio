@@ -2,8 +2,6 @@
 {
     using CloudinaryDotNet.Actions;
     using Microsoft.AspNetCore.Http;
-    using Portfolio.API.Data.Models;
-    using Portfolio.API.Dtos.ImagesDtos;
 
     public interface ICloudinaryService
     {
@@ -18,10 +16,10 @@
         Task<ImageUploadResult> UploadImageToCloudinaryAsync(IFormFile file, int heigth, int width, string publicId);
 
         /// <summary>
-        /// Delete image from cloudinary.
+        /// Delete all project images from cloudinary service.
         /// </summary>
         /// <param name="publicId"></param>
         /// <returns></returns>
-        Task DeleteImageAsync(List<string> projectPublicIds);
+        Task DeleteImagesAsync(List<string> projectPublicIds);
     }
 }
