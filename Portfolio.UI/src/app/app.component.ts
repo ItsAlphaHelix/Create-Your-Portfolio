@@ -77,25 +77,33 @@ export class AppComponent implements OnInit {
       debugger;
       const file = target.files[0];
       if (this.isUserProfileImageExist == false) {
-        this.imagesService.uploadProfileImage(file).subscribe(
-          (response) => {
+        this.imagesService.uploadProfileImage(file).subscribe({
+          next: (response) => {
             if (response) {
               this.imageURL = response.imageUrl;
               this.toastr.success('You have successfully uploaded your profile image.If you wish to add new one, simply click on the window again.')            
               this.spinner.hide();
             }
+          },
+          error: () => {
+            this.spinner.hide();
+            this.toastr.error('Invalid image type.');
           }
-        );
+      });
       } else {
-        this.imagesService.updateProfileImage(file).subscribe(
-          (response) => {
+        this.imagesService.updateProfileImage(file).subscribe({
+          next: (response) => {
             if (response) {
               this.imageURL = response.imageUrl;
               this.toastr.success('You have successfully updated your profile image.If you wish to add new one, simply click on the window again.')
               this.spinner.hide();
             }
+          },
+          error: () => {
+            this.spinner.hide();
+            this.toastr.error('Invalid image type');
           }
-        );
+      });
       }
     }
   }

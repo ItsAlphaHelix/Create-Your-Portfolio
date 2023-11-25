@@ -65,14 +65,18 @@ export class EditProjectPageComponent implements OnInit {
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
       this.spinner.show();
-      this.imageService.updateProjectDetailsImage(file, this.projectId).subscribe(
-        (response) => {
+      this.imageService.updateProjectDetailsImage(file, this.projectId).subscribe({
+        next: (response) => {
           if (response) {
             this.spinner.hide();
             return response.imageUrl;
           }
+        },
+        error: () => {
+          this.spinner.hide();
+          this.toastr.error('Invalid image type.');
         }
-      );
+    });
     }
   }
 

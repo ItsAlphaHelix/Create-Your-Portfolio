@@ -83,25 +83,33 @@ export default class HomeComponent implements OnInit {
       this.spinner.show();
       const file = target.files[0];
       if (this.isHomeImageExist == false) {
-        this.imagesService.uploadHomePageImage(file).subscribe(
-          (response) => {
+        this.imagesService.uploadHomePageImage(file).subscribe({
+          next: (response) => {
             if (response) {
               this.imageURL = response.imageUrl;
               this.toastr.success('You have successfully uploaded your home image.If you wish to add new one, simply click on the window again.');
               this.spinner.hide();
             }
+          },
+          error: () => {
+            this.spinner.hide();
+            this.toastr.error('Invalid image type');
           }
-        );
+      });
       } else {
-        this.imagesService.updateHomeImage(file).subscribe(
-          (response) => {
+        this.imagesService.updateHomeImage(file).subscribe({
+          next: (response) => {
             if (response) {
               this.imageURL = response.imageUrl;
               this.toastr.success('You have successfully updated your home image.If you wish to add new one, simply click on the window again.');
               this.spinner.hide();
             }
+          },
+          error: () => {
+            this.spinner.hide();
+            this.toastr.error('Invalid image type');
           }
-        );
+      });
       }
     }
   }

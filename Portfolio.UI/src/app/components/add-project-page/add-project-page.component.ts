@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { ProjectRequest } from 'src/app/models/project-request-model';
 import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
@@ -18,7 +19,8 @@ export class AddProjectComponent {
     private route: ActivatedRoute,
     private router: Router,
     private spinner: NgxSpinnerService,
-    private imagesService: ImagesService) { }
+    private imagesService: ImagesService,
+    private toastr: ToastrService) { }
 
   projectForm = new FormGroup({
     name: new FormControl("", Validators.required),
@@ -57,14 +59,18 @@ export class AddProjectComponent {
       const file = target.files[0];
       const projectId = this.route.snapshot.paramMap.get('projectId')!;
       this.spinner.show();
-      this.imagesService.uploadProjectDetailsImage(file, projectId).subscribe(
-        (response) => {
+      this.imagesService.uploadProjectDetailsImage(file, projectId).subscribe({
+        next: (response) => {
           if (response) {
             this.spinner.hide();
             return response.imageUrl;
           }
+        },
+        error: () => {
+          this.spinner.hide();
+          this.toastr.error('Invalid image type');
         }
-      );
+    });
     }
   }
 }

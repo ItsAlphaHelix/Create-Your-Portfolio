@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { ProjectImageResoponse } from 'src/app/models/project-images-response-model';
 import { ImagesService } from 'src/app/services/images.service';
 import { ProjectsService } from 'src/app/services/projects.service';
@@ -19,7 +20,8 @@ export default class ProjectComponent implements OnInit {
     private route: ActivatedRoute,
     private elRef: ElementRef,
     private renderer: Renderer2,
-    private router: Router) { }
+    private router: Router,
+    private toastr: ToastrService) { }
 
   projectImageResponse!: ProjectImageResoponse[];
 
@@ -28,7 +30,7 @@ export default class ProjectComponent implements OnInit {
   }
 
   openFileInput(): void {
-    const fileInput = generateFileInput();
+    const fileInput = this.generateFileInput();
     fileInput.addEventListener('change', (event) => this.uploadProjectImage(event));
     document.body.appendChild(fileInput);
     fileInput.click();
@@ -36,7 +38,7 @@ export default class ProjectComponent implements OnInit {
   }
 
   openFileInputUpdateImage(projectId: Number) {
-    const fileInput = generateFileInput();
+    const fileInput = this.generateFileInput();
     fileInput.addEventListener('change', (event) => this.updateImage(event, projectId));
     document.body.appendChild(fileInput);
     fileInput.click();
@@ -63,16 +65,18 @@ export default class ProjectComponent implements OnInit {
       
       const file = target.files[0];
       this.spinner.show();
-      this.imagesService.uploadMainProjectImage(file).subscribe(
-        (response) => {
+      this.imagesService.uploadMainProjectImage(file).subscribe({
+        next: (response) => {
           if (response) {
-
             this.createProjectDinamically(response);
-            
             console.log(response);
           }
+        },
+        error: () => {
+          this.spinner.hide();
+          this.toastr.error('Invalid image type');
         }
-      );
+    });
     }
   }
 
@@ -91,15 +95,20 @@ export default class ProjectComponent implements OnInit {
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
       this.spinner.show();
-      this.imagesService.updateProjectMainImage(file, projectId).subscribe(
-        (response) => {
+      this.imagesService.updateProjectMainImage(file, projectId).subscribe({
+        next: (response) => {
           if (response) {
             this.spinner.hide();
             this.getProjectImages();
+            this.toastr.success('Successfully')
             return response.imageUrl;
           }
+        },
+        error: () => {
+          this.spinner.hide();
+          this.toastr.error('Invalid image type.');
         }
-      );
+    });
     }
   }
 
@@ -158,12 +167,13 @@ export default class ProjectComponent implements OnInit {
     divPortfolioContainer.appendChild(divPortfolioItem);
     this.spinner.hide();
   }
-}
- function generateFileInput() {
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = 'image/*';
-  fileInput.style.display = 'none';
-  return fileInput;
+
+  private generateFileInput() {
+   const fileInput = document.createElement('input');
+   fileInput.type = 'file';
+   fileInput.accept = 'image/*';
+   fileInput.style.display = 'none';
+   return fileInput;
+ }
 }
 

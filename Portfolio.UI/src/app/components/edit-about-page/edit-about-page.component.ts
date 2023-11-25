@@ -104,14 +104,18 @@ export class EditAboutPageComponent implements OnInit {
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
       this.spinner.show();
-      this.imageService.updateAboutImage(file).subscribe(
-        (response) => {
+      this.imageService.updateAboutImage(file).subscribe({
+        next: (response) => {
           if (response) {
             this.spinner.hide();
             return response.imageUrl;
           }
+        },
+        error: () => {
+          this.spinner.hide();
+          this.toastr.error('Invalid image type');
         }
-      );
+    });
     }
   }
 }
