@@ -71,11 +71,11 @@
                 })
                 .FirstOrDefaultAsync();
 
-            if (project.Environment == null && project.DeploymentUrl == null && project.Description == null
-                && project.GitHubUrl == null && project.Category == null && project.Name == null)
-            {
-                throw new NotFoundException("The project wasn't found.");
-            }
+            //if (project.Environment == null && project.DeploymentUrl == null && project.Description == null
+            //    && project.GitHubUrl == null && project.Category == null && project.Name == null)
+            //{
+            //    throw new NotFoundException("The project wasn't found.");
+            //}
 
             return project;
         }
