@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'about/edit/:aboutId', component: EditAboutPageComponent, canActivate: [AuthGuard] },
   { path: 'about/add', component: AddAboutInformationComponent, canActivate: [AuthGuard] },
   { path: 'projects', component: ProjectComponent, canActivate: [AuthGuard] },
-  { path: 'projects/:projectId', component: ProjectComponent, canActivate: [AuthGuard] },
+  { path: 'projects/:id', component: ProjectComponent, canActivate: [AuthGuard] },
   { path: 'projects/add/:projectId', component: AddProjectComponent, canActivate: [AuthGuard] },
   { path: 'project/details/:projectId', component: ProjectDetailsComponent, canActivate: [AuthGuard] },
   { path: 'project/edit/:projectId', component: EditProjectPageComponent, canActivate: [AuthGuard] },

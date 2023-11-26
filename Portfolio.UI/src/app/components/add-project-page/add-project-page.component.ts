@@ -26,8 +26,8 @@ export class AddProjectComponent {
     name: new FormControl("", Validators.required),
     category: new FormControl("", Validators.required),
     environment: new FormControl("Production", Validators.required),
-    deploymentUrl: new FormControl("", Validators.required),
-    gitHubUrl: new FormControl("", Validators.required),
+    deploymentUrl: new FormControl(""),
+    gitHubUrl: new FormControl(""),
     description: new FormControl("", Validators.required),
   });
 
@@ -45,10 +45,13 @@ export class AddProjectComponent {
     }
     this.projectService.addProject(this.projectFormRequest, Number(projectId)).subscribe({
       next: (response) => {
+        this.toastr.success('You have successfully added the project details.')
         this.router.navigate(['project', 'details', projectId]);
       },
       error: (error) => {
-        console.log(error.error);
+        if (error.status == 400) {
+          this.toastr.error('The project name, category, and description fields are required.')
+        }
       }
     });
   }

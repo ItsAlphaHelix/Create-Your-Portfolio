@@ -23,11 +23,11 @@
                         <li><strong>Name</strong>: {{projectResponse?.name}}</li>
                         <li><strong>Category</strong>: {{projectResponse?.category}}</li>
                         <li><strong>Environment</strong>: {{projectResponse?.environment}}</li>
-                        <li><strong>Deployment Url</strong>: <a [href]="projectResponse?.deploymentUrl" target="_blank">{{projectResponse?.deploymentUrl}}</a></li>
-                        <li><strong>Github Url</strong>: <a [href]="projectResponse?.gitHubUrl" target="_blank">{{projectResponse?.gitHubUrl}}</a></li>
+                        <li *ngIf="projectResponse?.deploymentUrl"><strong>Deployment Url</strong>: <a [href]="projectResponse?.deploymentUrl" target="_blank">{{projectResponse?.deploymentUrl}}</a></li>
+                        <li *ngIf="projectResponse?.gitHubUrl"><strong>Github Url</strong>: <a [href]="projectResponse?.gitHubUrl" target="_blank">{{projectResponse?.gitHubUrl}}</a></li>
                     </ul>
                 </div>
-                <div class="portfolio-description">
+                <div class="portfolio-description" [ngStyle]="{'margin-top.%': (projectResponse?.deploymentUrl && projectResponse?.gitHubUrl) ? 0 : -12}">
                     <h2>This is description of my project</h2>
                     <p>{{projectResponse?.description}}</p>
                 </div>
