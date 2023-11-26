@@ -88,10 +88,7 @@
                 .FirstOrDefaultAsync(x => x.Id == projectId);
 
 
-            var responseDto = new UploadImageDto()
-            {
-                ImageUrl = imageUrl
-            };
+            UploadImageDto responseDto;
 
             if (projectImage != null)
             {
@@ -99,11 +96,23 @@
 
                 await projectRepository.SaveChangesAsync();
 
+                responseDto = new UploadImageDto()
+                {
+                    ProjectId = project.Id,
+                    ImageUrl = imageUrl
+                };
+
                 return responseDto;
             }
 
             await this.projectRepository.AddAsync(project);
             await this.projectRepository.SaveChangesAsync();
+
+            responseDto = new UploadImageDto()
+            {
+                ProjectId = project.Id,
+                ImageUrl = imageUrl
+            };
 
             return responseDto;
         }

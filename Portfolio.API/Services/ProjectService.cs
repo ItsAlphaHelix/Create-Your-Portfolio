@@ -98,19 +98,23 @@
         {
             var project = this.projectsRepository.All().FirstOrDefault(x => x.Id == projectId);
 
-            var splittedMainImageUrl = project.MainImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
-            var splittedMainImagePublicId = splittedMainImageUrl[6].Split(".");
-            string mainImagePublicId = splittedMainImagePublicId[0];
+            List<string> projectPublicIds = new List<string>();
 
-            var splittedDetailsImageUrl = project.ProjectDetailsImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
-            var splittedDetailsImagePublicId = splittedDetailsImageUrl[6].Split(".");
-            string projectDetailsImagePublicId = splittedDetailsImagePublicId[0];
-
-            List<string> projectPublicIds = new List<string>
+            if (project.MainImageUrl != null)
             {
-                mainImagePublicId,
-                projectDetailsImagePublicId
-            };
+                var splittedMainImageUrl = project.MainImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+                var splittedMainImagePublicId = splittedMainImageUrl[6].Split(".");
+                string mainImagePublicId = splittedMainImagePublicId[0];
+                projectPublicIds.Add(mainImagePublicId);
+                
+            } 
+            else if (project.DeploymentUrl != null)
+            {
+                var splittedDetailsImageUrl = project.ProjectDetailsImageUrl.Split("/", StringSplitOptions.RemoveEmptyEntries);
+                var splittedDetailsImagePublicId = splittedDetailsImageUrl[6].Split(".");
+                string projectDetailsImagePublicId = splittedDetailsImagePublicId[0];
+                projectPublicIds.Add(projectDetailsImagePublicId);
+            }
 
             await this.cloudinaryService.DeleteImagesAsync(projectPublicIds);
             this.projectsRepository.Delete(project);
