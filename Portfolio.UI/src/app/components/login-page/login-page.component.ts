@@ -3,9 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, of } from 'rxjs';
 import { LoginRequest } from 'src/app/models/login-request-model';
 import { LoginResponse } from 'src/app/models/login-response-model';
 import { AccountsService } from 'src/app/services/accounts.service';
+import { AuthHelperService } from 'src/app/services/auth-helper.service';
 import { ClientSideValidation } from 'src/app/services/client-side-validation';
 
 @Component({
@@ -20,24 +22,29 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private clientSideValidation: ClientSideValidation,
-    private spinner: NgxSpinnerService) { }
+    private spinner: NgxSpinnerService,
+    private authHelperService: AuthHelperService) { }
     
+    @ViewChild('rememberMeCheckbox', { static: false }) rememberMeCheckbox: ElementRef | undefined;
+
     formRequest!: LoginComponent
     loginRequest!: LoginRequest
 
-  ngOnInit() {
-    if (this.accountsService.getAccessToken()) {
-      this.router.navigate(['/home']);
-    }
-  }
+    
+    ngOnInit() {
+      if (this.authHelperService.getAccessToken()) {
+        this.router.navigate(['/home']);
+      }
+    } 
 
   loginForm = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("",
       [
         Validators.required
-      ])
+      ]),
   });
+
 
   onLogin(): void {
     if (this.loginForm.invalid) {
@@ -47,16 +54,28 @@ export class LoginComponent implements OnInit {
 
     this.loginRequest = {
       email: this.loginForm.value.email!,
-      password: this.loginForm.value.password!
+      password: this.loginForm.value.password!,
     }
     this.spinner.show();
     this.accountsService.loginUser(this.loginRequest)
       .subscribe({
         next: (response: LoginResponse) => {
-          sessionStorage.setItem("userId", response.id);
-          sessionStorage.setItem("email", response.email);
-          sessionStorage.setItem("accessToken", response.accessToken);
-          sessionStorage.setItem("refreshToken", response.refreshToken);
+          const isChecked = this.rememberMeCheckbox?.nativeElement.checked;
+          if (this.rememberMeCheckbox) {
+            if (isChecked) {
+              localStorage.setItem("userId", response.id);
+              localStorage.setItem("email", response.email);
+              localStorage.setItem("access_token", response.accessToken);
+              localStorage.setItem("refresh_token", response.refreshToken);
+              localStorage.setItem("remember_me", isChecked.toString())
+            } else {
+              sessionStorage.setItem("userId", response.id);
+              sessionStorage.setItem("email", response.email);
+              sessionStorage.setItem("access_token", response.accessToken);
+              sessionStorage.setItem("refresh_token", response.refreshToken);
+              sessionStorage.setItem("remember_me", isChecked.toString())
+            }
+          }
           this.toastr.success('You are successfully logged in!');
           this.spinner.hide();
           this.router.navigate(['/']);
