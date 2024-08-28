@@ -23,12 +23,12 @@ export class AddProjectComponent {
     private toastr: ToastrService) { }
 
   projectForm = new FormGroup({
-    name: new FormControl("", Validators.required),
-    category: new FormControl("", Validators.required),
-    environment: new FormControl("Production", Validators.required),
+    name: new FormControl(""),
+    category: new FormControl(""),
+    environment: new FormControl("Production"),
     deploymentUrl: new FormControl(""),
     gitHubUrl: new FormControl(""),
-    description: new FormControl("", Validators.required),
+    description: new FormControl(""),
   });
 
   projectFormRequest!: ProjectRequest
@@ -44,7 +44,7 @@ export class AddProjectComponent {
       description: this.projectForm.value.description!
     }
     this.projectService.addProject(this.projectFormRequest, Number(projectId)).subscribe({
-      next: (response) => {
+      next: () => {
         this.toastr.success('You have successfully added the project details.')
         this.router.navigate(['project', 'details', projectId]);
       },
@@ -65,13 +65,14 @@ export class AddProjectComponent {
       this.imagesService.uploadProjectDetailsImage(file, projectId).subscribe({
         next: (response) => {
           if (response) {
+            this.toastr.success('You have successfully uploaded your project details image.')
             this.spinner.hide();
             return response.imageUrl;
           }
         },
         error: () => {
           this.spinner.hide();
-          this.toastr.error('Invalid image type');
+          this.toastr.error('Invalid image type.');
         }
     });
     }

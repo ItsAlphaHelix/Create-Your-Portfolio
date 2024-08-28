@@ -7,12 +7,11 @@ import { Injectable } from "@angular/core";
 
 export class AuthHelperService {
 
-    private getJwtToken() {
-        return sessionStorage.getItem('accessToken') || '';
-    }
 
-    private getUserId() {
-        return sessionStorage.getItem('userId') || '';
+    public getAccessToken() {
+        const localStorageRememberMe = localStorage.getItem('remember_me');
+
+            return localStorage.getItem('access_token') || '';
     }
 
     public getParams() {
@@ -23,10 +22,16 @@ export class AuthHelperService {
     }
 
     public getHeaders() {
-        const jwtToken = this.getJwtToken();
+        const jwtToken = this.getAccessToken();
         const headers = new HttpHeaders()
             .set('Authorization', `Bearer ${jwtToken}`);
 
         return headers;
+    }
+    
+    private getUserId() {
+        const localStorageRememberMe = localStorage.getItem('userId');
+
+       return localStorage.getItem('userId') || '';
     }
 }

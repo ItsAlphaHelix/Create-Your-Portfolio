@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Portfolio.API.Services.Dtos.AccountsDtos
+﻿namespace Portfolio.API.Services.Dtos.AccountsDtos
 {
+    using System.ComponentModel.DataAnnotations;
     public class ApplicationUserLoginDto
     {
         [Required]

@@ -1,5 +1,6 @@
 ﻿namespace Portfolio.API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
     using Portfolio.API.Services.Contracts;

@@ -71,7 +71,7 @@ export class EditAboutPageComponent implements OnInit {
     this.aboutMeService.editAboutUsersInformation(this.editForm).subscribe({
       next: (response) => {
         if (response) {
-          this.toastr.success('You have been successfully edit your information.')
+          this.toastr.success('You have been successfully updated your information.')
          this.router.navigate(['/about'])
         }
       },
@@ -108,6 +108,7 @@ export class EditAboutPageComponent implements OnInit {
         next: (response) => {
           if (response) {
             this.spinner.hide();
+            this.toastr.success('You have successfully updated your about image.')
             return response.imageUrl;
           }
         },

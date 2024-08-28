@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { AccountsService } from './services/accounts.service';
-import { NavigationEnd, NavigationError, Router } from '@angular/router';
+import { NavigationEnd, NavigationError, Route, Router } from '@angular/router';
 import { UserResponse } from './models/user-response-model';
 import { ToastrService } from 'ngx-toastr';
 import { ImagesService } from './services/images.service';
@@ -13,15 +13,21 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-
   constructor(
     private accountsService: AccountsService,
     private router: Router,
     private imagesService: ImagesService,
     private renderer: Renderer2,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService) { }
+    private spinner: NgxSpinnerService) {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.urlAfterRedirects;
+      }
+    });
+  }
 
+  currentRoute: string | undefined;
   userResonse: UserResponse | undefined
   imageURL: string = '\\assets\\img\\profile-upload-image.png';
   isUserProfileImageExist = false;
@@ -38,8 +44,9 @@ export class AppComponent implements OnInit {
       }
     });
   }
-  private getUserId() {
-    return sessionStorage.getItem('userId') || '';
+
+  isActive(route: string): boolean {
+    return this.currentRoute === route;
   }
 
   onClickMobileNav() {
@@ -81,7 +88,7 @@ export class AppComponent implements OnInit {
           next: (response) => {
             if (response) {
               this.imageURL = response.imageUrl;
-              this.toastr.success('You have successfully uploaded your profile image.If you wish to add new one, simply click on the window again.')            
+              this.toastr.success('You have successfully uploaded your profile image.If you wish to add new one, simply click on the window again.')
               this.spinner.hide();
             }
           },
@@ -89,7 +96,7 @@ export class AppComponent implements OnInit {
             this.spinner.hide();
             this.toastr.error('Invalid image type.');
           }
-      });
+        });
       } else {
         this.imagesService.updateProfileImage(file).subscribe({
           next: (response) => {
@@ -103,17 +110,18 @@ export class AppComponent implements OnInit {
             this.spinner.hide();
             this.toastr.error('Invalid image type');
           }
-      });
+        });
       }
     }
   }
 
   getProfilePicture(): void {
+    debugger
     this.imagesService.getUserProfileImage().subscribe({
       next: (response) => {
         if (response) {
           this.imageURL = response.imageUrl;
-          this.isUserProfileImageExist  = true;
+          this.isUserProfileImageExist = true;
         }
       },
       error: (error) => {
@@ -128,14 +136,12 @@ export class AppComponent implements OnInit {
         }
         this.toastr.error(errorMessage);
       }
-  });
+    });
   }
 
 
 
   getUser(): void {
-    const userId = this.getUserId();
-
     this.accountsService.getUserById().subscribe(
       (response) => {
         this.userResonse = response;

@@ -3,11 +3,13 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Portfolio.API.Services;
     using Portfolio.API.Services.Contracts;
     using Portfolio.API.Services.Dtos;
     using Portfolio.API.Services.Dtos.AccountsDtos;
     using Portfolio.API.Services.Models;
     using SendGrid.Helpers.Errors.Model;
+    using System.Security.Claims;
 
     [Route("api/accounts")]
     [ApiController]
@@ -73,6 +75,10 @@
             {
                 user = await accountsService.AuthenticateUserAsync(userLoginModel);
             }
+            catch(NullReferenceException ex)
+            {
+                return NotFound(ex.Message);
+            }
             catch (Exception e)
             {
                 if (e is InvalidOperationException || e is MemberAccessException)
@@ -98,10 +104,6 @@
             {
                 result = await accountsService.RefreshAccessTokenAsync(refreshToken, userId);
             }
-            catch (NullReferenceException e)
-            {
-                return NotFound(e.Message);
-            }
             catch (MemberAccessException)
             {
                 return Forbid();
@@ -111,7 +113,6 @@
         }
 
         [HttpGet]
-        [AllowAnonymous]
         [Route("get-user")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

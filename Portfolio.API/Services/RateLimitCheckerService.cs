@@ -8,7 +8,7 @@
         public RateLimitCheckerService()
         {
             hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7126/rateLimitHub")
+                .WithUrl("https://localhost:44341/rateLimitHub")
                 .Build();
         }
 

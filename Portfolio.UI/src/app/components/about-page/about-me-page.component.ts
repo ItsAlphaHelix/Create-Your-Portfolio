@@ -34,6 +34,7 @@ export class AboutComponent implements OnInit {
     this.initAos();
     this.getAboutImage();
     this.getAboutInformation();
+    this.githubApiService.getGitHubRepositoryLanguages().subscribe();
     this.timeOut();
   }
   

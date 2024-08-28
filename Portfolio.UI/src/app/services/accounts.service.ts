@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { __param } from 'tslib';
 import { UserResponse } from '../models/user-response-model';
 import { AuthHelperService } from './auth-helper.service';
+import { RefreshAccessTokenResponse } from '../models/refresh-access-token-response-model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,15 +23,10 @@ export class AccountsService {
     private router: Router,
     private authHelperService: AuthHelperService) { }
 
-  //private headers = new HttpHeaders().set('Content-Type', 'application/json');
-
   get isLoggedIn(): Observable<boolean> {
-    return of(this.getAccessToken() ? true : false);
+    return of(this.authHelperService.getAccessToken() ? true : false);
   }
 
-  getAccessToken() {
-    return sessionStorage.getItem('accessToken');
-  }
 
   registerUser(request: RegisterRequest): Observable<RegisterRequest> {
     return this.http.post<RegisterRequest>(routes.REGISTER_ENDPOINT, request)
@@ -42,13 +38,27 @@ export class AccountsService {
   }
 
   getUserById(): Observable<UserResponse> {
-
     return this.http.get<UserResponse>(routes.GET_USER_ENDPOINT, { params: this.authHelperService.getParams() });
   }
 
+  refreshAccessToken() {
+    const refreshToken = localStorage.getItem('refresh_token');
+    const userId = localStorage.getItem('userId');
+
+    return this.http.get<RefreshAccessTokenResponse>(
+      routes.REFRESH_TOKEN_ENDPOINT,
+      {
+        params: {
+          refreshToken: refreshToken!,
+          userId: userId!
+        },
+      }
+    );
+  }
+
   logout() {
-    sessionStorage.clear();
-    if (!this.getAccessToken()) {
+    localStorage.clear();
+    if (!this.authHelperService.getAccessToken()) {
       this.router.navigate(['/login']);
     }
   }

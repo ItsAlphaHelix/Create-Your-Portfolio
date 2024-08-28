@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -69,6 +69,7 @@ export class EditProjectPageComponent implements OnInit {
         next: (response) => {
           if (response) {
             this.spinner.hide();
+            this.toastr.success('You have successfully updated your project details image.')
             return response.imageUrl;
           }
         },
@@ -95,7 +96,9 @@ export class EditProjectPageComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.log("Error!");
+        if (error.status == 400) {
+          this.toastr.error('The project name, category, and description fields are required.')
+        }
       }
     });
   }

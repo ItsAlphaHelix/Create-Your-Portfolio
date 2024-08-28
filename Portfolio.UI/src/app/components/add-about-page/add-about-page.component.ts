@@ -89,6 +89,7 @@ export class AddAboutInformationComponent {
         next: (response) => {
           if (response) {
             this.spinner.hide();
+            this.toastr.success('You have successfully uploaded your about image.')
             return response.imageUrl;
           }
         },

@@ -4,6 +4,7 @@ import { environment } from "src/environments/environment";
 export const REGISTER_ENDPOINT = `${environment.baseUrlApi}/api/accounts/register`;
 export const LOGIN_ENDPOINT = `${environment.baseUrlApi}/api/accounts/login`;
 export const GET_USER_ENDPOINT = `${environment.baseUrlApi}/api/accounts/get-user`;
+export const REFRESH_TOKEN_ENDPOINT = `${environment.baseUrlApi}/api/accounts/refresh-token`;
 
 //Homepage api end-points.
 export const UPLOAD_PROFILE_IMAGE_ENDPOINT = `${environment.baseUrlApi}/api/home/upload-profile-image`;

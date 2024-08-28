@@ -1,5 +1,6 @@
 ﻿namespace Portfolio.API.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Portfolio.API.Data.Models;
@@ -112,7 +113,7 @@
 
         [HttpGet]
         [Route("get-github-repo-languages")]
-        public async Task<IActionResult> getGitHubRepositoryLanguages([FromQuery] string userId)
+        public async Task<IActionResult> GetGitHubRepositoryLanguages([FromQuery] string userId)
         {
             try
             {

@@ -39,7 +39,7 @@
         {
             //I don't need to check if the user is null because, in case they are, the boolean "IsAuthenticated" will automatically throw an exception for invalid email or password.
 
-            var findUser = userManager.FindByEmailAsync(user.Email).GetAwaiter().GetResult();
+            var findUser = await userManager.FindByEmailAsync(user.Email);
 
             //var isEmailConfirmed = await userManager.IsEmailConfirmedAsync(findUser);
 
@@ -100,40 +100,11 @@
 
             return user;
         }
-        private async Task GenerateTokens(ApplicationUser user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(configuration["JWTKey"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(1.5),
-                SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature),
-                IssuedAt = DateTime.UtcNow
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.AccessToken = tokenHandler.WriteToken(token);
-            user.RefreshToken = GenerateRefreshToken();
-            user.RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1.5);
-
-            userRepository.Update(user);
-            await userRepository.SaveChangesAsync();
-        }
 
         public async Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, string userId)
         {
             //var decodedUserId = dataProtector.Unprotect(userId);
-            var user = userManager.FindByIdAsync(userId).GetAwaiter().GetResult();
+            var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 throw new NullReferenceException("The user is not found.");
@@ -154,7 +125,6 @@
 
             return tokensResponse;
         }
-
         public async Task<ApplicationUserDto> GetUserAsync(string userId)
         {
             //var unprotectedUserId = dataProtector.Unprotect(userId);
@@ -169,6 +139,36 @@
 
             return resultUser;
         }
+        private async Task GenerateTokens(ApplicationUser user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(configuration["JWTKey"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddSeconds(15),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature),
+                IssuedAt = DateTime.UtcNow,
+
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            user.AccessToken = tokenHandler.WriteToken(token);
+            user.RefreshToken = GenerateRefreshToken();
+            user.RefreshTokenExpirationDate = DateTime.UtcNow.AddSeconds(30);
+            userRepository.Update(user);
+            await userRepository.SaveChangesAsync();
+        }
+
         private static string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];

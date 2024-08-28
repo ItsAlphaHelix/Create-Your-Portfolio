@@ -27,8 +27,8 @@ export default class HomeComponent implements OnInit {
   imageURL: string | undefined;
   userJobTitle: string | undefined;
   userResonse: UserResponse | undefined
-  isHomeImageExist = false;  
-  
+  isHomeImageExist = false;
+
   ngOnInit(): void {
     //this.getFromGithubRepositoryLanguages();
     this.getHomePagePicture();
@@ -95,7 +95,7 @@ export default class HomeComponent implements OnInit {
             this.spinner.hide();
             this.toastr.error('Invalid image type');
           }
-      });
+        });
       } else {
         this.imagesService.updateHomeImage(file).subscribe({
           next: (response) => {
@@ -109,7 +109,7 @@ export default class HomeComponent implements OnInit {
             this.spinner.hide();
             this.toastr.error('Invalid image type');
           }
-      });
+        });
       }
     }
   }

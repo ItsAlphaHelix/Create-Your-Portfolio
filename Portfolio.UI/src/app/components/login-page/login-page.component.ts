@@ -60,8 +60,8 @@ export class LoginComponent implements OnInit {
     this.accountsService.loginUser(this.loginRequest)
       .subscribe({
         next: (response: LoginResponse) => {
-          const isChecked = this.rememberMeCheckbox?.nativeElement.checked;
           if (this.rememberMeCheckbox) {
+            const isChecked = this.rememberMeCheckbox?.nativeElement.checked;
             if (isChecked) {
               localStorage.setItem("userId", response.id);
               localStorage.setItem("email", response.email);

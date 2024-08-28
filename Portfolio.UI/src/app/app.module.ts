@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -13,13 +13,14 @@ import { ErrorPageComponent } from './components/error-page/error-page.component
 import { AboutComponent } from './components/about-page/about-me-page.component';
 import { EditAboutPageComponent } from './components/edit-about-page/edit-about-page.component';
 import { AddAboutInformationComponent } from './components/add-about-page/add-about-page.component';
-import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer-page/footer-page.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import ProjectComponent from './components/project-page/project-page.component';
 import { AddProjectComponent } from './components/add-project-page/add-project-page.component';
 import { ProjectDetailsComponent } from './components/project-details-page/project-details-page.component';
 import { EditProjectPageComponent } from './components/edit-project-page/edit-project-page.component';
+import { AppComponent } from './app.component';
+import { AuthInterceptor } from './services/authorization.interceptor';
 
 @NgModule({
   declarations: [
@@ -49,8 +50,13 @@ import { EditProjectPageComponent } from './components/edit-project-page/edit-pr
     ToastrModule.forRoot({
     })
   ],
-  providers: [],
+  providers: [
+   {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+   }
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
-
+export class AppModule {}
